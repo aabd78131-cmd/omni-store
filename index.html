@@ -9,11 +9,6 @@
     <style>
         :root { --primary: #c7a13c; --secondary: #8a2be2; --bg: #000; }
 
-        @keyframes royalEntrance {
-            0% { opacity: 0; transform: scale(0.6) rotate(-3deg); filter: blur(10px); }
-            100% { opacity: 1; transform: scale(1) rotate(0deg); filter: blur(0); }
-        }
-
         body, html { 
             margin: 0; padding: 0; width: 100%; height: 100%;
             background: var(--bg); color: white; overflow: hidden;
@@ -21,14 +16,14 @@
         }
 
         header { 
-            position: absolute; top: 3%; width: 100%; z-index: 20;
+            position: absolute; top: 2%; width: 100%; z-index: 50;
             text-align: center; pointer-events: none;
         }
         .logo-frame {
-            width: 90px; height: 90px; margin: 0 auto;
+            width: 80px; height: 80px; margin: 0 auto;
             border-radius: 50%; overflow: hidden;
             border: 2px solid var(--primary);
-            box-shadow: 0 0 25px rgba(199, 161, 60, 0.6);
+            box-shadow: 0 0 20px rgba(199, 161, 60, 0.5);
             background: #000;
         }
         .logo-frame img { width: 100%; height: 100%; object-fit: cover; }
@@ -36,8 +31,6 @@
         .hero-container {
             width: 100vw; height: 100vh;
             position: relative; overflow: hidden;
-            display: flex; align-items: center; justify-content: center;
-            animation: royalEntrance 5s cubic-bezier(0.2, 1, 0.3, 1) forwards;
         }
 
         .hero-image { width: 100%; height: 100%; object-fit: cover; }
@@ -49,42 +42,40 @@
             .pc-only { display: none; }
         }
 
-        /* --- تحديد دقيق للكمبيوتر --- */
-        .map-pc { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
-        .pc-main { position: absolute; top: 31%; left: 3%; width: 94%; height: 35%; cursor: pointer; }
-        .pc-box { position: absolute; bottom: 6%; height: 23%; cursor: pointer; }
-        .pc-b1 { left: 2.5%; width: 22.5%; } .pc-b2 { left: 26.5%; width: 22.5%; } 
-        .pc-b3 { left: 50.8%; width: 22.5%; } .pc-b4 { left: 75%; width: 22.5%; }
-
-        /* --- تحديد دقيق جداً للجوال (بناءً على رسمتك) --- */
-        .map-mobile { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+        /* --- خريطة اللمس للجوال (دقة 100%) --- */
+        .map-mobile { 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+            z-index: 40; pointer-events: none;
+        }
         .map-mobile div { position: absolute; cursor: pointer; pointer-events: auto; }
+
+        /* 1. المنطقة الحمراء (أطلق العنان - جميع المنتجات) */
+        /* تم حصرها في جهة اليسار والوسط فقط لترك اليمين للأيقونات */
+        .mob-red-zone { top: 17%; left: 4%; width: 62%; height: 16%; }
+
+        /* 2. المناطق الخضراء (الأيقونات الطائرة على اليمين) */
+        /* أيقونات الترفيه العلوية */
+        .mob-green-top { top: 17%; left: 68%; width: 28%; height: 35%; }
+        /* أيقونات الذكاء الاصطناعي والسوشال ميديا */
+        .mob-green-mid { top: 53%; left: 68%; width: 28%; height: 35%; }
+
+        /* 3. البراويز الأساسية (جهة اليسار) */
+        .mob-b-entertainment { top: 34%; left: 4%; width: 62%; height: 18%; }
+        .mob-b-ai { top: 53%; left: 4%; width: 62%; height: 18%; }
         
-        /* المنطقة الحمراء: أطلق العنان (تم تصغير العرض من اليمين لتجنب المنطقة الخضراء) */
-        .mob-main { top: 17%; left: 5%; width: 60%; height: 16%; }
+        /* 4. الصناديق السفلية */
+        .mob-b-social { top: 72%; left: 4%; width: 45%; height: 18%; }
+        .mob-b-cards { top: 72%; left: 51%; width: 45%; height: 18%; }
 
-        /* المناطق الخضراء الجانبية (ترفيه وذكاء اصطناعي من جهة اليمين) */
-        .mob-green-1 { top: 18%; left: 66%; width: 30%; height: 34%; } /* تتبع الترفيه */
-        .mob-green-2 { top: 52%; left: 66%; width: 30%; height: 34%; } /* تتبع الذكاء الاصطناعي */
-
-        /* صناديق الجوال الأساسية (اليسار) */
-        .mob-b1 { top: 34.5%; left: 5%; width: 58%; height: 18%; } /* ترفيه بلا حدود */
-        .mob-b2 { top: 54%; left: 5%; width: 58%; height: 18%; } /* أدوات الذكاء الاصطناعي */
-        
-        /* الصناديق السفلية */
-        .mob-b3 { top: 73.5%; left: 5%; width: 44%; height: 17%; } /* دعم السوشال ميديا */
-        .mob-b4 { top: 73.5%; left: 51%; width: 44%; height: 17%; } /* بطاقات وهدايا */
-
-        /* التصميم الداخلي للسلة والمنتجات */
+        /* --- الأقسام الداخلية --- */
         .section-page { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 1000; overflow-y: auto; }
-        .section-page.active { display: block; animation: slideUp 0.4s ease; }
-        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-        .section-header { position: sticky; top: 0; background: #111; padding: 15px; border-bottom: 2px solid var(--primary); display: flex; align-items: center; z-index: 1001; }
-        .back-btn { background: var(--primary); border: none; padding: 8px 15px; border-radius: 5px; font-weight: bold; cursor: pointer; }
-        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(145px, 1fr)); gap: 12px; padding: 15px; padding-bottom: 100px; }
-        .product-card { background: #161616; border-radius: 10px; padding: 10px; text-align: center; border: 1px solid #222; }
-        .product-card img { width: 100%; border-radius: 6px; height: 100px; object-fit: cover; }
-        .cart-bar { position: fixed; bottom: 0; width: 100%; background: #1a1a1a; padding: 15px; border-top: 2px solid var(--primary); display: none; justify-content: space-between; align-items: center; box-sizing: border-box; z-index: 1100; }
+        .section-page.active { display: block; }
+        .section-header { position: sticky; top: 0; background: #111; padding: 15px; border-bottom: 2px solid var(--primary); display: flex; align-items: center; }
+        .back-btn { background: var(--primary); border: none; padding: 10px 15px; border-radius: 5px; font-weight: bold; }
+        .products-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 15px; padding-bottom: 100px; }
+        .product-card { background: #161616; border-radius: 8px; padding: 10px; text-align: center; border: 1px solid #222; }
+        .product-card img { width: 100%; border-radius: 5px; height: 90px; object-fit: cover; }
+        .cart-bar { position: fixed; bottom: 0; width: 100%; background: #1a1a1a; padding: 15px; border-top: 2px solid var(--primary); display: none; justify-content: space-between; align-items: center; z-index: 1100; box-sizing: border-box; }
     </style>
 </head>
 <body>
@@ -95,40 +86,32 @@
 
 <div class="hero-container">
     <img src="اومني القائمه الاوله.jpeg" class="hero-image pc-only">
-    <div class="map-pc pc-only">
-        <div class="pc-main" onclick="openSection('all', 'جميع المنتجات')"></div>
-        <div class="pc-box pc-b1" onclick="openSection('entertainment', 'ترفيه بلا حدود')"></div>
-        <div class="pc-box pc-b2" onclick="openSection('ai', 'أدوات الذكاء الاصطناعي')"></div>
-        <div class="pc-box pc-b3" onclick="openSection('social', 'دعم السوشال ميديا')"></div>
-        <div class="pc-box pc-b4" onclick="openSection('cards', 'بطاقات وهدايا')"></div>
-    </div>
-
     <img src="صوره القائمه الرئيسيه للجوال.jpeg" class="hero-image mobile-only">
     <div class="map-mobile mobile-only">
-        <div class="mob-main" onclick="openSection('all', 'جميع المنتجات الملكية')"></div>
+        <div class="mob-red-zone" onclick="openSection('all', 'جميع المنتجات')"></div>
         
-        <div class="mob-green-1" onclick="openSection('entertainment', 'ترفيه بلا حدود')"></div>
-        <div class="mob-green-2" onclick="openSection('ai', 'أدوات الذكاء الاصطناعي')"></div>
+        <div class="mob-green-top" onclick="openSection('entertainment', 'ترفيه بلا حدود')"></div>
+        <div class="mob-green-mid" onclick="openSection('ai', 'أدوات الذكاء الاصطناعي')"></div>
 
-        <div class="mob-b1" onclick="openSection('entertainment', 'ترفيه بلا حدود')"></div>
-        <div class="mob-b2" onclick="openSection('ai', 'أدوات الذكاء الاصطناعي')"></div>
+        <div class="mob-b-entertainment" onclick="openSection('entertainment', 'ترفيه بلا حدود')"></div>
+        <div class="mob-b-ai" onclick="openSection('ai', 'أدوات الذكاء الاصطناعي')"></div>
         
-        <div class="mob-b3" onclick="openSection('social', 'دعم السوشال ميديا')"></div>
-        <div class="mob-b4" onclick="openSection('cards', 'بطاقات وهدايا وأخرى')"></div>
+        <div class="mob-b-social" onclick="openSection('social', 'دعم السوشال ميديا')"></div>
+        <div class="mob-b-cards" onclick="openSection('cards', 'بطاقات وهدايا')"></div>
     </div>
 </div>
 
 <div class="section-page" id="sectionPage">
     <div class="section-header">
         <button class="back-btn" onclick="closeSection()">🔙 عودة</button>
-        <h2 id="sectionTitle" style="margin-right: 15px; color: var(--primary); font-size: 1.1em;"></h2>
+        <h2 id="sectionTitle" style="margin-right: 15px; color: var(--primary); font-size: 1em;"></h2>
     </div>
     <div class="products-grid" id="sectionProducts"></div>
 </div>
 
 <div class="cart-bar" id="cartBar">
-    <div id="cartCount" style="color: var(--primary); font-weight: bold;">السلة: 0</div>
-    <button style="background:var(--primary); border:none; padding:10px 20px; border-radius:5px; font-weight:bold;" onclick="sendOrder()">إتمام الطلب 👑</button>
+    <div id="cartCount" style="color: var(--primary); font-weight: bold;">0 منتجات</div>
+    <button style="background:var(--primary); border:none; padding:10px 20px; border-radius:5px;" onclick="sendOrder()">طلب الآن 👑</button>
 </div>
 
 <script>
@@ -159,9 +142,9 @@
             display.innerHTML += `
                 <div class="product-card">
                     <img src="${p.image}">
-                    <h4 style="margin:8px 0; font-size:0.9em;">${p.name}</h4>
+                    <h4>${p.name}</h4>
                     <p style="color:var(--primary)">${p.price} ريال</p>
-                    <button style="width:100%; padding:8px; background:var(--secondary); color:white; border:none; border-radius:5px;" onclick="addToCart('${p.name}', '${p.price}')">أضف</button>
+                    <button style="width:100%; padding:8px; background:var(--secondary); color:white; border:none; border-radius:5px;" onclick="addToCart('${p.name}', '${p.price}')">إضافة</button>
                 </div>`;
         });
         document.getElementById('sectionPage').classList.add('active');
@@ -176,7 +159,7 @@
     }
 
     function sendOrder() {
-        let msg = "طلب جديد من Omni Store:\n";
+        let msg = "طلب جديد:\n";
         cart.forEach(i => msg += `- ${i.name}\n`);
         window.open(`https://wa.me/966550000000?text=${encodeURIComponent(msg)}`);
     }
