@@ -7,44 +7,41 @@
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <style>
-        :root { --primary: #c7a13c; --secondary: #8a2be2; --bg: #0a0a0a; }
+        :root { --primary: #c7a13c; --secondary: #8a2be2; --bg: #000; }
 
         /* أنميشن دخول المتجر الملكي (5 ثوانٍ) */
         @keyframes royalEntrance {
-            0% { opacity: 0; transform: scale(0.5) rotate(-5deg); filter: blur(10px); }
+            0% { opacity: 0; transform: scale(0.6) rotate(-3deg); filter: blur(10px); }
             100% { opacity: 1; transform: scale(1) rotate(0deg); filter: blur(0); }
         }
 
-        /* أنميشن القسم (3 ثوانٍ) */
+        /* أنميشن دخول القسم (3 ثوانٍ) */
         @keyframes sectionEnter {
-            0% { transform: translateY(100vh); }
+            0% { transform: translateY(100%); }
             100% { transform: translateY(0); }
         }
 
-        body { 
-            font-family: 'Segoe UI', Tahoma, sans-serif; 
-            background: var(--bg); color: white; margin: 0; padding: 0;
-            overflow: hidden; 
-            height: 100vh; width: 100vw;
+        body, html { 
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            background: var(--bg); color: white; overflow: hidden;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
         }
 
-        /* إخفاء النجمة وأي عناصر زائدة */
-        .no-star { display: none !important; }
-
+        /* الهيدر واللوجو: شفاف ومدمج فوق الصورة */
         header { 
-            position: absolute; top: 0; width: 100%; z-index: 20;
-            text-align: center; padding: 10px 0;
+            position: absolute; top: 5%; width: 100%; z-index: 20;
+            text-align: center; pointer-events: none;
         }
         .logo-frame {
-            width: 85px; height: 85px; margin: 0 auto;
+            width: 110px; height: 110px; margin: 0 auto;
             border-radius: 50%; overflow: hidden;
             border: 2px solid var(--primary);
-            box-shadow: 0 0 15px rgba(199, 161, 60, 0.5);
+            box-shadow: 0 0 25px rgba(199, 161, 60, 0.6);
             background: #000;
         }
         .logo-frame img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* الحاوية ممتدة بالكامل لإلغاء الأسود يمين ويسار */
+        /* حاوية الصورة الكبيرة: ملء الشاشة تماماً في الجوال والكمبيوتر */
         .hero-container {
             width: 100vw; height: 100vh;
             position: relative; overflow: hidden;
@@ -52,43 +49,46 @@
             animation: royalEntrance 5s cubic-bezier(0.2, 1, 0.3, 1) forwards;
         }
         
+        /* ميزة التعبئة الكاملة لإلغاء السواد */
         .hero-image { 
             width: 100%; height: 100%; 
-            object-fit: cover; /* تجعل الصورة تملأ كامل الشاشة بدون حواف سوداء */
+            object-fit: cover; /* تملأ الشاشة تماماً في الجوال */
         }
 
-        /* تحديد دقيق جداً للمناطق (أفضل من التحديد اليدوي) */
+        /* طبقة مناطق الضغط الدقيقة جداً */
         .map-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
 
-        /* منطقة جميع المنتجات (البانر الكبير العلوي) */
-        .area-main { position: absolute; top: 31%; left: 3%; width: 94%; height: 36%; cursor: pointer; }
+        /* تحديد الأقسام بناءً على الصورة الأصلية */
+        .area-main { position: absolute; top: 31%; left: 3%; width: 94%; height: 35%; cursor: pointer; }
+        .area-box { position: absolute; bottom: 6%; height: 23%; cursor: pointer; }
+        .box-1 { left: 2.5%; width: 22.5%; } 
+        .box-2 { left: 26.5%; width: 22.5%; } 
+        .box-3 { left: 50.8%; width: 22.5%; } 
+        .box-4 { left: 75%; width: 22.5%; }
 
-        /* مناطق الأقسام الأربعة السفلية (تحديد احترافي دقيق للبراويز) */
-        .area-box { position: absolute; bottom: 5%; height: 23%; cursor: pointer; }
-        .box-1 { left: 2.5%; width: 22.5%; } /* ترفيه بلا حدود */
-        .box-2 { left: 26.5%; width: 22.5%; } /* أدوات الذكاء الاصطناعي */
-        .box-3 { left: 50.8%; width: 22.5%; } /* دعم السوشال ميديا */
-        .box-4 { left: 75%; width: 22.5%; } /* بطاقات وهدايا */
-
-        /* صفحة عرض المنتجات */
+        /* صفحات المنتجات */
         .section-page { 
             display: none; position: fixed; top: 0; left: 0; 
             width: 100%; height: 100%; background: var(--bg); z-index: 1000; 
             overflow-y: auto;
         }
         .section-page.active { display: block; animation: sectionEnter 3s ease; }
-
         .section-header { 
             position: sticky; top: 0; background: #111; padding: 20px;
             border-bottom: 2px solid var(--primary); display: flex; align-items: center; z-index: 101;
         }
         .back-btn { background: var(--primary); color: #000; border: none; padding: 10px 20px; border-radius: 5px; font-weight: bold; cursor: pointer; }
-
-        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; padding: 20px; padding-bottom: 120px; }
-        .product-card { background: #161616; border-radius: 12px; padding: 12px; text-align: center; border: 1px solid #222; }
-        .product-card img { width: 100%; border-radius: 8px; height: 110px; object-fit: cover; }
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; padding: 15px; padding-bottom: 120px; }
+        .product-card { background: #161616; border-radius: 12px; padding: 10px; text-align: center; border: 1px solid #222; }
+        .product-card img { width: 100%; border-radius: 8px; height: 100px; object-fit: cover; }
         
         .cart-bar { position: fixed; bottom: 0; width: 100%; background: #1a1a1a; padding: 15px; border-top: 2px solid var(--primary); display: none; justify-content: space-between; align-items: center; box-sizing: border-box; z-index: 1100; }
+
+        /* تعديلات خاصة للجوال لضمان عدم وجود سواد */
+        @media (max-width: 600px) {
+            .hero-image { object-fit: cover; } /* يضمن ملء طول الجوال بالكامل */
+            .logo-frame { width: 90px; height: 90px; }
+        }
     </style>
 </head>
 <body>
@@ -104,14 +104,14 @@
         <div class="area-box box-1" onclick="openSection('entertainment', 'ترفيه بلا حدود')"></div>
         <div class="area-box box-2" onclick="openSection('ai', 'أدوات الذكاء الاصطناعي')"></div>
         <div class="area-box box-3" onclick="openSection('social', 'دعم السوشال ميديا')"></div>
-        <div class="area-box box-4" onclick="openSection('cards', 'بطاقات وهدايا وأخرى')"></div>
+        <div class="area-box box-4" onclick="openSection('cards', 'بطاقات وهدايا')"></div>
     </div>
 </div>
 
 <div class="section-page" id="sectionPage">
     <div class="section-header">
         <button class="back-btn" onclick="closeSection()">🔙 العودة</button>
-        <h2 id="sectionTitle" style="margin-right: 20px; color: var(--primary);"></h2>
+        <h2 id="sectionTitle" style="margin-right: 15px; color: var(--primary); font-size: 1.1em;"></h2>
     </div>
     <div class="products-grid" id="sectionProducts"></div>
 </div>
@@ -149,9 +149,9 @@
             display.innerHTML += `
                 <div class="product-card">
                     <img src="${p.image}">
-                    <h3>${p.name}</h3>
-                    <p style="color:var(--primary)">${p.price} ريال</p>
-                    <button style="width:100%; padding:8px; background:var(--secondary); color:white; border:none; border-radius:5px; cursor:pointer;" onclick="addToCart('${p.name}', '${p.price}')">أضف للسلة</button>
+                    <h4 style="margin:8px 0; font-size:0.9em;">${p.name}</h4>
+                    <p style="color:var(--primary); margin:5px 0;">${p.price} ريال</p>
+                    <button style="width:100%; padding:8px; background:var(--secondary); color:white; border:none; border-radius:5px; cursor:pointer;" onclick="addToCart('${p.name}', '${p.price}')">أضف</button>
                 </div>`;
         });
         document.getElementById('sectionPage').classList.add('active');
