@@ -12,10 +12,6 @@
         :root { --primary: #c7a13c; --bg: #000; --secondary: #8a2be2; }
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--bg); color: white; overflow-x: hidden; font-family: sans-serif; }
         
-        header { position: absolute; top: 2%; width: 100%; z-index: 200; text-align: center; pointer-events: none; }
-        .logo-frame { width: 75px; height: 75px; margin: 0 auto; border-radius: 50%; border: 2px solid var(--primary); background: #000; box-shadow: 0 0 15px var(--primary); }
-        .logo-frame img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
-
         .hero-container { width: 100vw; height: 100vh; position: relative; overflow: hidden; }
         .hero-image { width: 100%; height: 100%; object-fit: cover; }
         
@@ -27,20 +23,26 @@
             .mobile-only { display: block; }
         }
 
+        /* طبقة اللمس - الأزرار فقط */
         .touch-grid { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 300; pointer-events: none; }
         .touch-grid button { position: absolute; background: transparent; border: none; cursor: pointer; pointer-events: auto; -webkit-tap-highlight-color: transparent; }
         
-        /* إحداثيات الأزرار (المناطق الحمراء) */
-        .btn-all-hero { top: 32%; left: 10%; width: 55%; height: 28%; }
-        .btn-ent { bottom: 3%; left: 3%; width: 22%; height: 25%; }
-        .btn-ai { bottom: 3%; left: 27%; width: 22%; height: 25%; }
-        .btn-social { bottom: 3%; left: 51%; width: 22%; height: 25%; }
-        .btn-cards { bottom: 3%; left: 75%; width: 22%; height: 25%; }
+        /* إحداثيات الكمبيوتر (أفقي) */
+        .pc-only .btn-all { top: 32%; left: 5%; width: 60%; height: 30%; }
+        .pc-only .btn-ent { bottom: 5%; left: 3%; width: 22%; height: 25%; }
+        .pc-only .btn-ai { bottom: 5%; left: 27%; width: 22%; height: 25%; }
+        .pc-only .btn-social { bottom: 5%; left: 51%; width: 22%; height: 25%; }
+        .pc-only .btn-cards { bottom: 5%; left: 75%; width: 22%; height: 25%; }
+
+        /* إحداثيات الجوال (عمودي) بناءً على صورتك الجديدة */
+        .mobile-only .btn-all { top: 18%; left: 5%; width: 90%; height: 15%; } /* استكشف الخدمات */
+        .mobile-only .btn-ent { top: 35%; left: 5%; width: 45%; height: 18%; } /* ترفيه */
+        .mobile-only .btn-ai { top: 55%; left: 5%; width: 45%; height: 18%; } /* ذكاء اصطناعي */
+        .mobile-only .btn-social { top: 73%; left: 5%; width: 45%; height: 18%; } /* سوشال ميديا */
+        .mobile-only .btn-cards { top: 73%; left: 52%; width: 45%; height: 18%; } /* بطاقات */
 
         #mainSupport { position: fixed; top: 15px; left: 15px; z-index: 2000; }
-        .support-btn { background: #25d366; color: white; padding: 6px 12px; border-radius: 20px; font-weight: bold; cursor: pointer; border: 1px solid white; font-size: 12px; }
-        .support-menu { display: none; background: #1a1a1a; border: 1px solid var(--primary); border-radius: 8px; margin-top: 5px; width: 150px; }
-        .support-menu button { width: 100%; background: none; border: none; color: white; padding: 10px; text-align: right; cursor: pointer; border-bottom: 1px solid #333; font-size: 13px; }
+        .support-btn { background: #25d366; color: white; padding: 8px 15px; border-radius: 20px; font-weight: bold; cursor: pointer; border: 1px solid white; font-size: 13px; }
 
         .section-page { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 1500; overflow-y: auto; }
         .section-page.active { display: block; }
@@ -53,21 +55,15 @@
 </head>
 <body>
 
-<header><div class="logo-frame"><img src="لوقو متجر اومني .jpeg"></div></header>
-
 <div id="mainSupport">
-    <div class="support-btn" onclick="toggleSupport()">Support 💬</div>
-    <div class="support-menu" id="supportMenu">
-        <button onclick="sendSupport('استفسار عام')">❓ استفسار عام</button>
-        <button onclick="sendSupport('مشكلة في طلبي')">⚠️ مشكلة في طلبي</button>
-    </div>
+    <div class="support-btn" onclick="window.open('https://wa.me/966548512295')">الدعم الفني 💬</div>
 </div>
 
 <div class="hero-container">
     <div class="pc-only" style="height: 100%;">
         <img src="اومني القائمه الاوله.jpeg" class="hero-image">
         <div class="touch-grid">
-            <button class="btn-all-hero" onclick="openSection('all', 'جميع الخدمات')"></button>
+            <button class="btn-all" onclick="openSection('all', 'جميع الخدمات')"></button>
             <button class="btn-ent" onclick="openSection('entertainment', 'ترفيه بلا حدود')"></button>
             <button class="btn-ai" onclick="openSection('ai', 'أدوات الذكاء الاصطناعي')"></button>
             <button class="btn-social" onclick="openSection('social', 'دعم السوشال ميديا')"></button>
@@ -76,9 +72,9 @@
     </div>
     
     <div class="mobile-only" style="height: 100%;">
-        <img src="صوره القائمه الرئيسيه للجوال .jpeg" class="hero-image">
+        <img src="صوره القائمه الرئيسيه للجوال.jpeg" class="hero-image">
         <div class="touch-grid">
-            <button class="btn-all-hero" onclick="openSection('all', 'جميع الخدمات')"></button>
+            <button class="btn-all" onclick="openSection('all', 'جميع الخدمات')"></button>
             <button class="btn-ent" onclick="openSection('entertainment', 'ترفيه بلا حدود')"></button>
             <button class="btn-ai" onclick="openSection('ai', 'أدوات الذكاء الاصطناعي')"></button>
             <button class="btn-social" onclick="openSection('social', 'دعم السوشال ميديا')"></button>
@@ -140,16 +136,6 @@
         cart.push({name, price});
         document.getElementById('cartBar').style.display = 'flex';
         document.getElementById('cartCount').innerText = `السلة: ${cart.length}`;
-    }
-
-    function toggleSupport() {
-        const menu = document.getElementById('supportMenu');
-        menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
-    }
-
-    function sendSupport(type) {
-        window.open(`https://wa.me/966548512295?text=${encodeURIComponent("أهلاً أومني ستور، لدي " + type)}`);
-        toggleSupport();
     }
 
     function sendOrder() {
