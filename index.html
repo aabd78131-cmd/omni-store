@@ -3,48 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>متجر أومني - الإصدار الاحترافي</title>
+    <title>متجر أومني - لوحة الإدارة الكاملة</title>
     
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
 
     <style>
-        :root { --gold: #c7a13c; --black: #000; --dark: #121212; --gray: #252525; --red: #ff4d4d; }
+        :root { --gold: #c7a13c; --black: #000; --dark: #121212; --gray: #252525; --red: #ff4d4d; --green: #2ecc71; }
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--black); color: white; font-family: 'Segoe UI', Tahoma, sans-serif; overflow-x: hidden; }
 
-        /* شاشة الدخول */
+        /* شاشة الدخول للزبائن */
         #authOverlay { position: fixed; inset: 0; background: var(--black); z-index: 99999; display: flex; align-items: center; justify-content: center; }
         .login-box { background: var(--dark); padding: 40px 30px; border-radius: 30px; border: 2px solid var(--gold); width: 85%; max-width: 400px; text-align: center; }
-        .login-box input { width: 100%; padding: 15px; margin: 10px 0; background: #000; border: 1px solid #333; color: #fff; border-radius: 12px; text-align: center; outline: none; box-sizing: border-box; }
-        .login-box button { width: 100%; padding: 15px; background: var(--gold); border: none; border-radius: 12px; font-weight: bold; cursor: pointer; color: #000; width: 100%; }
+        .login-box input { width: 100%; padding: 15px; margin: 10px 0; background: #000; border: 1px solid #333; color: #fff; border-radius: 12px; text-align: center; box-sizing: border-box; }
+        .login-box button { width: 100%; padding: 15px; background: var(--gold); border: none; border-radius: 12px; font-weight: bold; cursor: pointer; color: #000; }
 
-        /* القائمة الجانبية والترس */
+        /* العناصر الثابتة */
         #settingsBtn { position: fixed; top: 25px; right: 25px; width: 50px; height: 50px; background: rgba(0,0,0,0.8); border: 2px solid var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 77777; cursor: pointer; }
-        #sideMenu { position: fixed; top: 0; right: -350px; width: 300px; height: 100%; background: var(--dark); z-index: 95000; transition: 0.4s; padding: 20px; box-sizing: border-box; border-left: 3px solid var(--gold); }
-        #sideMenu.active { right: 0; }
-        .close-menu-btn { position: absolute; top: 20px; left: 20px; color: var(--gold); cursor: pointer; font-weight: bold; }
-
-        /* الكروت والمنتجات */
-        .card { background: var(--dark); padding: 20px; border-radius: 20px; border: 1px solid #222; margin: 15px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
-        .product-info { flex-grow: 1; }
-        .price-tag { color: var(--gold); font-weight: bold; display: block; margin-top: 5px; }
-
-        /* نافذة تفاصيل المنتج (التي طلبتها) */
-        #detailsModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 90000; align-items: center; justify-content: center; padding: 20px; }
-        .modal-content { background: var(--dark); border: 2px solid var(--gold); border-radius: 25px; padding: 25px; width: 100%; max-width: 450px; position: relative; }
-        .modal-desc { background: #1a1a1a; padding: 15px; border-radius: 15px; margin: 15px 0; line-height: 1.6; color: #ccc; white-space: pre-line; }
-
-        /* لوحة التحكم (للمالك فقط) */
-        .admin-box { background: #1a1a1a; padding: 15px; border-radius: 15px; margin-top: 20px; border: 1px solid #444; }
-        .admin-box input, .admin-box textarea, .admin-box select { width: 100%; padding: 10px; margin: 5px 0; background: #000; border: 1px solid #333; color: white; border-radius: 8px; box-sizing: border-box; }
-
-        /* السلة العائمة */
-        #floatingCart { position: fixed; bottom: 30px; left: 25px; width: 65px; height: 65px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 88888; cursor: pointer; box-shadow: 0 5px 20px rgba(199, 161, 60, 0.4); }
+        #floatingCart { position: fixed; bottom: 30px; left: 25px; width: 65px; height: 65px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 88888; cursor: pointer; }
         .cart-count { position: absolute; top: -5px; right: -5px; background: red; color: white; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; border: 2px solid #000; }
 
+        /* القائمة الجانبية */
+        #sideMenu { position: fixed; top: 0; right: -350px; width: 300px; height: 100%; background: var(--dark); z-index: 95000; transition: 0.4s; padding: 20px; box-sizing: border-box; border-left: 3px solid var(--gold); }
+        #sideMenu.active { right: 0; }
+        .menu-item { padding: 15px; border-radius: 12px; margin-bottom: 8px; color: #fff; cursor: pointer; display: flex; align-items: center; gap: 15px; }
+
+        /* كروت المنتجات */
+        .card { background: var(--dark); padding: 20px; border-radius: 20px; border: 1px solid #222; margin: 15px; display: flex; justify-content: space-between; align-items: center; position: relative; }
+        .out-of-stock { opacity: 0.4; pointer-events: none; filter: grayscale(1); }
+        .stock-label { color: var(--red); font-size: 12px; font-weight: bold; margin-top: 5px; }
+
+        /* لوحة التحكم (السرية) */
+        .admin-section { padding: 20px; background: #0a0a0a; }
+        .admin-box { background: #1a1a1a; padding: 20px; border-radius: 20px; border: 1px solid var(--gold); margin-bottom: 20px; }
+        .admin-box input, .admin-box textarea, .admin-box select { width: 100%; padding: 12px; margin: 8px 0; background: #000; border: 1px solid #333; color: white; border-radius: 10px; box-sizing: border-box; }
+        .order-card { background: #222; padding: 15px; border-radius: 15px; margin-bottom: 10px; border-right: 4px solid var(--gold); font-size: 14px; }
+
+        /* نافذة التفاصيل */
+        #detailsModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 90000; align-items: center; justify-content: center; padding: 20px; }
+        .modal-content { background: var(--dark); border: 2px solid var(--gold); border-radius: 25px; padding: 25px; width: 100%; max-width: 450px; }
+        
         .page { display: none; position: fixed; inset: 0; background: var(--black); z-index: 80000; overflow-y: auto; padding-bottom: 120px; }
-        .hero { width: 100vw; height: 100vh; position: relative; }
-        .hero img { width: 100%; height: 100%; object-fit: cover; }
+        .hero img { width: 100%; height: 100vh; object-fit: cover; cursor: pointer; }
 
         .pc-v { display: block; } .mob-v { display: none; }
         @media (max-width: 768px) { .pc-v { display: none; } .mob-v { display: block; } }
@@ -52,7 +52,7 @@
 </head>
 <body>
 
-<div id="menuOverlay" onclick="toggleMenu()"></div>
+<div id="menuOverlay" onclick="toggleMenu()" style="position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:94000; display:none;"></div>
 
 <div id="authOverlay">
     <div class="login-box">
@@ -68,14 +68,14 @@
 <div id="floatingCart" onclick="openPage('cartPage')">🛒<div class="cart-count" id="cartBadge">0</div></div>
 
 <div id="sideMenu">
-    <div class="close-menu-btn" onclick="toggleMenu()">✕ إغلاق</div>
-    <div style="height:50px;"></div>
-    <div class="user-name" id="displayUser">أهلاً بك</div>
+    <div onclick="toggleMenu()" style="color:var(--gold); cursor:pointer; font-weight:bold;">✕ إغلاق</div>
+    <div style="height:40px;"></div>
+    <div id="displayUser" style="text-align:center; color:var(--gold); font-weight:bold; margin-bottom:20px;"></div>
     <div class="menu-item" onclick="loadProducts('all', '📦 جميع المنتجات')">📦 جميع الخدمات</div>
     <div class="menu-item" onclick="loadProducts('entertainment', '🎬 الترفيه')">🎬 الترفيه</div>
-    <div class="menu-item" onclick="loadProducts('ai', '🤖 الذكاء الاصطناعي')">🤖 الذكاء الاصطناعي</div>
+    <div class="menu-item" onclick="loadProducts('ai', '🤖 ذكاء اصطناعي')">🤖 ذكاء اصطناعي</div>
     <hr style="border:0.1px solid #333;">
-    <div class="menu-item" onclick="checkAdmin()">🔑 لوحة التحكم (للمالك)</div>
+    <div class="menu-item" onclick="checkAdmin()" style="background:rgba(199,161,60,0.1);">🔑 لوحة الإدارة</div>
     <div class="menu-item" onclick="logout()" style="color:var(--red);">🚪 خروج</div>
 </div>
 
@@ -83,22 +83,22 @@
 <div class="hero pc-v"><img src="اومني القائمه الاوله.jpeg" onclick="loadProducts('all', '📦 جميع الخدمات')"></div>
 
 <div class="page" id="productsPage">
-    <div style="padding:20px; border-bottom:1px solid var(--gold); background:var(--dark); position:sticky; top:0; display:flex; align-items:center;">
-        <button onclick="closeAll()" style="background:var(--gold); border:none; padding:8px 15px; border-radius:8px; margin-left:15px;">🔙</button>
-        <h3 id="pageTitle" style="margin:0; color:var(--gold);"></h3>
+    <div style="padding:20px; background:var(--dark); border-bottom:1px solid var(--gold); position:sticky; top:0; z-index:10; display:flex; align-items:center;">
+        <button onclick="closeAll()" style="background:var(--gold); border:none; padding:8px 15px; border-radius:8px;">🔙</button>
+        <h3 id="pageTitle" style="margin-right:20px; color:var(--gold);"></h3>
     </div>
     <div id="productsGrid"></div>
 </div>
 
 <div id="detailsModal">
     <div class="modal-content">
-        <div onclick="document.getElementById('detailsModal').style.display='none'" style="position:absolute; top:15px; left:20px; cursor:pointer;">✕</div>
         <h2 id="mTitle" style="color:var(--gold); margin-top:0;"></h2>
-        <div class="modal-desc" id="mDesc"></div>
+        <div id="mDesc" style="background:#1a1a1a; padding:15px; border-radius:12px; margin:15px 0; white-space:pre-line; color:#ccc;"></div>
         <div style="display:flex; justify-content:space-between; align-items:center;">
-            <span id="mPrice" style="font-size:20px; font-weight:bold; color:var(--gold);"></span>
-            <button id="addBtnModal" style="background:var(--gold); border:none; padding:12px 25px; border-radius:12px; font-weight:bold;">إضافة للسلة 🛒</button>
+            <span id="mPrice" style="font-size:20px; color:var(--gold); font-weight:bold;"></span>
+            <button id="mAddBtn" style="background:var(--gold); padding:10px 20px; border:none; border-radius:10px; font-weight:bold;">إضافة للسلة</button>
         </div>
+        <button onclick="document.getElementById('detailsModal').style.display='none'" style="width:100%; margin-top:15px; background:none; border:1px solid #444; color:#666; padding:8px; border-radius:8px;">إغلاق</button>
     </div>
 </div>
 
@@ -106,31 +106,36 @@
     <div style="padding:20px; background:var(--dark); border-bottom:1px solid var(--gold);"><button onclick="closeAll()" style="background:var(--gold); border:none; padding:8px 15px; border-radius:8px;">🔙</button></div>
     <div id="cartGrid"></div>
     <div style="padding:20px; background:#1a1a1a; margin:15px; border-radius:20px; border:1px dashed var(--gold);">
-        <label>📧 بريدك الإلكتروني (اختياري)</label>
-        <input type="email" id="userEmail" placeholder="example@gmail.com" style="width:100%; padding:12px; margin-top:10px; background:#000; border:1px solid #333; color:white; border-radius:10px; text-align:center;">
-        <p style="color:var(--gold); font-size:12px; text-align:center; margin-top:10px;">⚠️ لا تضع البريد إلا إذا تطلبه المنتج. في حال الغلط لن يتم التعويض.</p>
+        <label>📧 بريد الحساب (اختياري)</label>
+        <input type="email" id="userEmail" style="width:100%; padding:12px; margin-top:10px; background:#000; color:white; border:1px solid #333; border-radius:10px; text-align:center;">
     </div>
-    <button onclick="sendOrder()" style="width:90%; display:block; margin:20px auto; padding:18px; background:var(--gold); border:none; border-radius:15px; font-weight:bold; font-size:18px;">تأكيد وواتساب ✅</button>
+    <button onclick="sendOrder()" style="width:90%; display:block; margin:20px auto; padding:18px; background:var(--gold); border:none; border-radius:15px; font-weight:bold;">إرسال الطلب ✅</button>
 </div>
 
 <div class="page" id="adminPage">
-    <div style="padding:20px; background:var(--dark); border-bottom:1px solid var(--gold); display:flex; justify-content:space-between;">
-        <h3 style="color:var(--gold); margin:0;">لوحة إدارة المتجر</h3>
-        <button onclick="closeAll()">إغلاق</button>
+    <div class="admin-section">
+        <button onclick="closeAll()" style="float:left;">إغلاق</button>
+        <h2 style="color:var(--gold);">لوحة تحكم أومني</h2>
+        
+        <div class="admin-box">
+            <h4>📦 إضافة منتج جديد</h4>
+            <input type="text" id="pName" placeholder="اسم المنتج">
+            <input type="number" id="pPrice" placeholder="السعر">
+            <select id="pCat">
+                <option value="entertainment">ترفيه</option>
+                <option value="ai">ذكاء اصطناعي</option>
+                <option value="social">سوشال ميديا</option>
+            </select>
+            <textarea id="pDesc" placeholder="الوصف (الضمان، المدة، إلخ...)" rows="3"></textarea>
+            <button onclick="addProduct()" style="width:100%; background:var(--gold); padding:12px; border:none; font-weight:bold; border-radius:10px;">إضافة للمتجر ✅</button>
+        </div>
+
+        <h4 style="color:var(--gold);">📥 أرشيف الطلبات (آخر الطلبات)</h4>
+        <div id="adminOrders"></div>
+
+        <h4 style="color:var(--gold);">⚙️ إدارة المخزون وتعديل المنتجات</h4>
+        <div id="adminProducts"></div>
     </div>
-    <div class="admin-box">
-        <h4>➕ إضافة منتج جديد</h4>
-        <input type="text" id="pName" placeholder="اسم المنتج (مثلاً: نتفليكس شهر)">
-        <input type="number" id="pPrice" placeholder="السعر (ريال)">
-        <select id="pCat">
-            <option value="entertainment">ترفيه</option>
-            <option value="ai">ذكاء اصطناعي</option>
-            <option value="social">سوشال ميديا</option>
-        </select>
-        <textarea id="pDesc" placeholder="وصف المنتج (مميزات الاشتراك، الضمان، شروط التسليم...)" rows="4"></textarea>
-        <button onclick="addProduct()" style="width:100%; padding:12px; background:var(--gold); border:none; border-radius:8px; font-weight:bold; margin-top:10px;">حفظ المنتج في المتجر ✅</button>
-    </div>
-    <div id="adminList" style="margin-top:20px; padding:10px;"></div>
 </div>
 
 <script>
@@ -145,16 +150,17 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    let myCart = [];
-    let productsData = {};
+    let myCart = [], productsData = {};
 
     window.onload = () => {
         const u = localStorage.getItem('omni_user');
         if(u) { document.getElementById('authOverlay').style.display = 'none'; document.getElementById('displayUser').innerText = "مرحباً، " + u; }
+        
         db.ref('products').on('value', s => { 
             productsData = s.val() || {}; 
-            renderAdminList();
+            renderAdminProducts();
         });
+        db.ref('orders').limitToLast(10).on('value', s => { renderAdminOrders(s.val()); });
     };
 
     function saveSession() {
@@ -162,38 +168,46 @@
         if(n && p) { localStorage.setItem('omni_user', n); localStorage.setItem('omni_phone', p); location.reload(); }
     }
 
-    function toggleMenu() { document.getElementById('sideMenu').classList.toggle('active'); document.getElementById('menuOverlay').style.display = document.getElementById('sideMenu').classList.contains('active')?'block':'none'; }
+    function toggleMenu() {
+        const m = document.getElementById('sideMenu');
+        m.classList.toggle('active');
+        document.getElementById('menuOverlay').style.display = m.classList.contains('active') ? 'block' : 'none';
+    }
 
     function openPage(id) { 
-        document.querySelectorAll('.page').forEach(p => p.style.display = 'none'); 
-        document.getElementById(id).style.display = 'block'; 
-        toggleMenu(); 
+        document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+        document.getElementById(id).style.display = 'block';
+        if(id !== 'adminPage') toggleMenu();
     }
     function closeAll() { document.querySelectorAll('.page').forEach(p => p.style.display = 'none'); }
 
-    // عرض المنتجات للزبون
     function loadProducts(cat, title) {
         document.getElementById('pageTitle').innerText = title;
         const grid = document.getElementById('productsGrid'); grid.innerHTML = '';
         Object.keys(productsData).forEach(key => {
             const p = productsData[key];
             if(cat === 'all' || p.category === cat) {
-                grid.innerHTML += `<div class="card" onclick="showDetails('${key}')">
-                    <div class="product-info"><b>${p.name}</b><span class="price-tag">${p.price} ريال</span></div>
-                    <button onclick="event.stopPropagation(); addToCart('${p.name}', ${p.price})" style="background:var(--gold); border:none; padding:10px; border-radius:10px;">➕</button>
-                </div>`;
+                const isOut = p.inStock === false;
+                grid.innerHTML += `
+                    <div class="card ${isOut ? 'out-of-stock' : ''}" onclick="showDetails('${key}')">
+                        <div>
+                            <b>${p.name}</b><br>
+                            <span style="color:var(--gold)">${p.price} ريال</span>
+                            ${isOut ? '<div class="stock-label">نفذت الكمية ❌</div>' : ''}
+                        </div>
+                        <button onclick="event.stopPropagation(); addToCart('${p.name}', ${p.price})" style="background:var(--gold); border:none; padding:10px; border-radius:10px;">➕</button>
+                    </div>`;
             }
         });
         openPage('productsPage');
     }
 
-    // إظهار نافذة الوصف (الميزة الجديدة)
     function showDetails(key) {
         const p = productsData[key];
         document.getElementById('mTitle').innerText = p.name;
         document.getElementById('mDesc').innerText = p.description || "لا يوجد وصف حالياً.";
         document.getElementById('mPrice').innerText = p.price + " ريال";
-        document.getElementById('addBtnModal').onclick = () => { addToCart(p.name, p.price); document.getElementById('detailsModal').style.display='none'; };
+        document.getElementById('mAddBtn').onclick = () => { addToCart(p.name, p.price); document.getElementById('detailsModal').style.display='none'; };
         document.getElementById('detailsModal').style.display = 'flex';
     }
 
@@ -210,32 +224,60 @@
     }
 
     function sendOrder() {
-        if(myCart.length === 0) return;
-        const email = document.getElementById('userEmail').value;
-        let t = `طلب جديد (${localStorage.getItem('omni_user')}):\n`;
+        if(myCart.length === 0) return alert("السلة فارغة");
+        const u = localStorage.getItem('omni_user'), p = localStorage.getItem('omni_phone'), e = document.getElementById('userEmail').value;
+        const orderData = { user: u, phone: p, email: e, items: myCart, time: new Date().toLocaleString() };
+        
+        // حفظ الطلب في أرشيف Firebase أولاً
+        db.ref('orders').push(orderData);
+
+        let t = `طلب جديد من المتجر:\n👤 الاسم: ${u}\n📱 الجوال: ${p}\n`;
         myCart.forEach(i => t += `- ${i.n} (${i.p} ريال)\n`);
-        t += (email) ? `\n📧 البريد: ${email}` : "";
+        if(e) t += `📧 البريد: ${e}`;
         window.open(`https://wa.me/966548512295?text=${encodeURIComponent(t)}`);
     }
 
-    // وظائف لوحة التحكم للمالك
+    // --- وظائف الإدارة الخاصة بك ---
     function checkAdmin() {
-        const pin = prompt("أدخل رمز الدخول السري:");
-        if(pin === "1234") openPage('adminPage');
-        else alert("الرمز خطأ!");
+        if(prompt("رمز الإدارة السري:") === "1234") openPage('adminPage');
+        else alert("خطأ!");
     }
 
     function addProduct() {
         const n = document.getElementById('pName').value, p = document.getElementById('pPrice').value, c = document.getElementById('pCat').value, d = document.getElementById('pDesc').value;
-        if(n && p) { db.ref('products').push({name: n, price: parseFloat(p), category: c, description: d}); alert("تم الإضافة!"); }
+        if(n && p) {
+            db.ref('products').push({ name: n, price: parseFloat(p), category: c, description: d, inStock: true });
+            alert("تمت الإضافة!");
+        }
     }
 
-    function renderAdminList() {
-        const list = document.getElementById('adminList'); list.innerHTML = '<h4>المنتجات الحالية:</h4>';
+    function renderAdminProducts() {
+        const list = document.getElementById('adminProducts'); list.innerHTML = '';
         Object.keys(productsData).forEach(key => {
-            list.innerHTML += `<div style="background:#222; padding:10px; border-radius:10px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
-                <span>${productsData[key].name}</span>
-                <button onclick="db.ref('products/${key}').remove()" style="background:red; border:none; color:white; padding:5px; border-radius:5px;">حذف</button>
+            const p = productsData[key];
+            list.innerHTML += `
+                <div class="admin-box" style="display:flex; justify-content:space-between; align-items:center;">
+                    <span>${p.name}</span>
+                    <div>
+                        <button onclick="toggleStock('${key}', ${p.inStock})" style="background:${p.inStock?'var(--green)':'var(--red)'}; color:white; border:none; padding:5px 10px; border-radius:5px;">
+                            ${p.inStock ? 'متوفر' : 'غير متوفر'}
+                        </button>
+                        <button onclick="db.ref('products/${key}').remove()" style="background:none; border:none; color:var(--red); margin-right:10px;">🗑️</button>
+                    </div>
+                </div>`;
+        });
+    }
+
+    function toggleStock(key, current) { db.ref(`products/${key}`).update({ inStock: !current }); }
+
+    function renderAdminOrders(orders) {
+        const list = document.getElementById('adminOrders'); list.innerHTML = '';
+        if(!orders) return;
+        Object.values(orders).reverse().forEach(o => {
+            list.innerHTML += `<div class="order-card">
+                <b>${o.user} (${o.phone})</b><br>
+                <span>${o.items.map(i => i.n).join(', ')}</span><br>
+                <small style="color:#888;">${o.time}</small>
             </div>`;
         });
     }
