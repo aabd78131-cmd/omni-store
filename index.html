@@ -5,123 +5,141 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>متجر أومني | OMNI STORE</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --gold: #D4AF37; --black: #050505; }
-        * { box-sizing: border-box; font-family: 'Cairo', sans-serif; }
-        body { background: var(--black); color: white; margin: 0; overflow: hidden; }
+        :root { --gold: #D4AF37; --black: #050505; --dark: #111; }
+        * { box-sizing: border-box; font-family: 'Cairo', sans-serif; margin: 0; padding: 0; }
+        body { background: var(--black); color: white; overflow-x: hidden; }
 
-        /* --- شاشة الدخول السينمائية (7 ثواني) --- */
-        #intro-screen {
+        /* شاشة الدخول (5 ثواني) */
+        #intro {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--black); display: flex; flex-direction: column;
             justify-content: center; align-items: center; z-index: 9999;
-            transition: opacity 1.5s ease-in-out;
+            transition: opacity 1s ease-out;
         }
+        .intro-logo { width: 120px; border-radius: 50%; animation: pulse 1.5s infinite; margin-bottom: 20px; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); box-shadow: 0 0 10px var(--gold); } 50% { transform: scale(1.1); box-shadow: 0 0 30px var(--gold); } }
 
-        .intro-logo {
-            width: 150px; border-radius: 50%;
-            animation: logoPulse 2s infinite ease-in-out;
-            box-shadow: 0 0 50px rgba(212, 175, 55, 0.2);
-            margin-bottom: 20px;
-        }
+        /* الهيدر */
+        header { padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; background: #0a0a0a; border-bottom: 1px solid rgba(212,175,55,0.2); }
+        .logo-header { width: 40px; border-radius: 50%; }
 
-        @keyframes logoPulse {
-            0% { transform: scale(1); filter: drop-shadow(0 0 10px var(--gold)); }
-            50% { transform: scale(1.1); filter: drop-shadow(0 0 40px var(--gold)); }
-            100% { transform: scale(1); filter: drop-shadow(0 0 10px var(--gold)); }
-        }
-
-        .loading-bar-container {
-            width: 250px; height: 3px; background: rgba(255,255,255,0.1);
-            border-radius: 10px; overflow: hidden; position: relative;
-        }
-
-        .loading-bar {
-            width: 0%; height: 100%; background: var(--gold);
-            box-shadow: 0 0 15px var(--gold);
-            animation: fillBar 7s forwards linear;
-        }
-
-        @keyframes fillBar { to { width: 100%; } }
-
-        .intro-text {
-            margin-top: 15px; font-size: 1.1rem; color: var(--gold);
-            letter-spacing: 2px; animation: textFade 1.5s infinite;
-        }
-
-        @keyframes textFade { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
-
-        /* --- محتوى المتجر الرئيسي --- */
-        #main-content { opacity: 0; transition: opacity 2s ease-in; }
-
-        header { padding: 20px 8%; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(212,175,55,0.2); }
-        .nav-logo img { width: 50px; border-radius: 50%; }
-
-        .container { max-width: 1200px; margin: 50px auto; padding: 0 20px; text-align: center; }
+        /* نظام الصفحات المعزولة */
+        .page-view { display: none; padding: 20px; max-width: 1200px; margin: auto; animation: slideIn 0.5s ease-out forwards; }
+        .page-view.active { display: block; }
         
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
-        
-        .card {
-            background: rgba(255,255,255,0.03); border: 1px solid rgba(212,175,55,0.2);
-            border-radius: 25px; overflow: hidden; cursor: pointer; position: relative;
-        }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(30px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
 
-        .card:hover { transform: translateY(-10px); border-color: var(--gold); box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
-        .card img { width: 100%; height: 300px; object-fit: cover; }
+        /* تصميم الصفحة الرئيسية */
+        .banner-img { width: 100%; border-radius: 20px; border: 1px solid var(--gold); margin-bottom: 30px; }
         
-        .card-info { padding: 20px; background: linear-gradient(transparent, #000); position: absolute; bottom: 0; width: 100%; }
+        .categories-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        .cat-btn {
+            background: var(--dark); border: 1px solid rgba(212,175,55,0.3); padding: 30px;
+            border-radius: 15px; text-align: center; cursor: pointer; transition: 0.3s;
+        }
+        .cat-btn:hover { background: rgba(212,175,55,0.1); border-color: var(--gold); transform: translateY(-5px); }
+        .cat-btn i { font-size: 2.5rem; color: var(--gold); margin-bottom: 15px; }
+        .cat-btn h3 { color: white; font-size: 1.2rem; }
+
+        /* تصميم صفحة المنتجات (الداخلية) */
+        .back-btn { background: transparent; color: var(--gold); border: 1px solid var(--gold); padding: 8px 20px; border-radius: 8px; cursor: pointer; margin-bottom: 20px; font-weight: bold; transition: 0.3s; }
+        .back-btn:hover { background: var(--gold); color: black; }
+        
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .product-card { background: var(--dark); border: 1px solid #333; border-radius: 15px; padding: 20px; text-align: center; transition: 0.3s; }
+        .product-card:hover { border-color: var(--gold); }
+        .product-card h4 { color: var(--gold); font-size: 1.3rem; margin-bottom: 10px; }
+        .price { font-size: 1.5rem; font-weight: bold; margin: 15px 0; }
+        .buy-btn { background: var(--gold); color: black; border: none; padding: 10px 25px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; }
+
     </style>
 </head>
 <body>
 
-    <div id="intro-screen">
+    <div id="intro">
         <img src="لوقو متجر اومني .jpeg" class="intro-logo" alt="OMNI">
-        <div class="loading-bar-container">
-            <div class="loading-bar"></div>
-        </div>
-        <div class="intro-text">جاري تحضير الفخامة...</div>
+        <h2 style="color: var(--gold);">جاري الدخول لعالم أومني...</h2>
     </div>
 
-    <div id="main-content">
-        <header>
-            <div class="nav-logo"><img src="لوقو متجر اومني .jpeg" alt="OMNI"></div>
-            <h2 style="color: var(--gold); margin: 0;">أومني ستور</h2>
-            <button style="background: var(--gold); border: none; padding: 8px 20px; border-radius: 10px; font-weight: bold; cursor: pointer;">دخول</button>
-        </header>
+    <header>
+        <img src="لوقو متجر اومني .jpeg" class="logo-header" alt="OMNI">
+        <h3 style="color: var(--gold); margin: 0;">أومني ستور</h3>
+        <button style="background: var(--gold); color: black; border: none; padding: 8px 15px; border-radius: 5px; font-weight: bold; cursor: pointer;" onclick="alert('سيتم تفعيل نظام الدخول الحقيقي قريباً')">دخول / تسجيل</button>
+    </header>
 
-        <div class="container">
-            <h1 style="font-size: 2.5rem; margin-bottom: 40px;">أهلاً بك في عالم <span style="color: var(--gold)">أومني</span></h1>
-            <div class="grid">
-                <div class="card">
-                    <img src="اومني القائمه الاوله.jpeg" alt="ترفيه">
-                    <div class="card-info">
-                        <h3 style="color: var(--gold)">قسم الترفيه المميز</h3>
-                    </div>
-                </div>
+    <div id="home-page" class="page-view active">
+        <img src="اومني القائمه الاوله.jpeg" class="banner-img" alt="عروض أومني">
+        
+        <h2 style="margin-bottom: 20px; color: #ccc;">تصفح الأقسام</h2>
+        <div class="categories-grid">
+            <div class="cat-btn" onclick="openPage('ai-page')">
+                <i class="fas fa-robot"></i>
+                <h3>أدوات الذكاء الاصطناعي</h3>
+            </div>
+            <div class="cat-btn" onclick="openPage('entertainment-page')">
+                <i class="fas fa-film"></i>
+                <h3>ترفيه بلا حدود</h3>
+            </div>
+            <div class="cat-btn" onclick="openPage('social-page')">
+                <i class="fas fa-rocket"></i>
+                <h3>دعم السوشيال ميديا</h3>
+            </div>
+        </div>
+    </div>
+
+    <div id="ai-page" class="page-view">
+        <button class="back-btn" onclick="openPage('home-page')"><i class="fas fa-arrow-right"></i> عودة للرئيسية</button>
+        <h2 style="color: var(--gold); margin-bottom: 25px;"><i class="fas fa-robot"></i> قسم الذكاء الاصطناعي</h2>
+        
+        <div class="products-grid">
+            <div class="product-card">
+                <h4>اشتراك ChatGPT Plus</h4>
+                <p>حساب خاص لمدة شهر كامل</p>
+                <div class="price">80 ر.س</div>
+                <button class="buy-btn">شراء الآن</button>
+            </div>
+            <div class="product-card">
+                <h4>اشتراك Midjourney</h4>
+                <p>توليد صور احترافية</p>
+                <div class="price">120 ر.س</div>
+                <button class="buy-btn">شراء الآن</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="entertainment-page" class="page-view">
+        <button class="back-btn" onclick="openPage('home-page')"><i class="fas fa-arrow-right"></i> عودة للرئيسية</button>
+        <h2 style="color: var(--gold); margin-bottom: 25px;"><i class="fas fa-film"></i> ترفيه بلا حدود</h2>
+        
+        <div class="products-grid">
+            <div class="product-card">
+                <h4>نتفليكس أعلى باقة</h4>
+                <p>ملف خاص بدقة 4K</p>
+                <div class="price">30 ر.س</div>
+                <button class="buy-btn">شراء الآن</button>
             </div>
         </div>
     </div>
 
     <script>
-        // الكود المسؤول عن التوقيت (7 ثواني)
-        window.onload = function() {
-            setTimeout(function() {
-                const intro = document.getElementById('intro-screen');
-                const main = document.getElementById('main-content');
-                
-                // إخفاء الانترو وإظهار المتجر
-                intro.style.opacity = '0';
-                main.style.opacity = '1';
-                
-                // منع التمرير أثناء الانترو
-                document.body.style.overflow = 'auto';
-
-                // حذف شاشة الانترو نهائياً بعد الاختفاء لعدم ثقل الموقع
-                setTimeout(() => {
-                    intro.style.display = 'none';
-                }, 1500);
-            }, 7000); // 7000 ملي ثانية = 7 ثواني
+        // إزالة مؤثر البداية بعد 5 ثواني بالضبط
+        window.onload = () => {
+            setTimeout(() => {
+                document.getElementById('intro').style.opacity = '0';
+                setTimeout(() => document.getElementById('intro').style.display = 'none', 1000);
+            }, 5000);
         };
+
+        // دالة الانتقال بين الصفحات (تخفي كل شيء وتظهر القسم المطلوب بأنيميشن)
+        function openPage(pageId) {
+            document.querySelectorAll('.page-view').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(pageId).classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
     </script>
 
 </body>
