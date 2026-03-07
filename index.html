@@ -9,6 +9,7 @@
     <style>
         :root { --primary: #c7a13c; --secondary: #8a2be2; --bg: #000; }
 
+        /* أنميشن الدخول السينمائي */
         @keyframes royalEntrance {
             0% { opacity: 0; transform: scale(0.6) rotate(-3deg); filter: blur(10px); }
             100% { opacity: 1; transform: scale(1) rotate(0deg); filter: blur(0); }
@@ -20,7 +21,7 @@
             font-family: 'Segoe UI', Tahoma, sans-serif;
         }
 
-        /* اللوقو المنظف عائم فوق الصورة */
+        /* اللوجو المنظف عائم */
         header { 
             position: absolute; top: 3%; width: 100%; z-index: 20;
             text-align: center; pointer-events: none;
@@ -41,7 +42,6 @@
             animation: royalEntrance 5s cubic-bezier(0.2, 1, 0.3, 1) forwards;
         }
 
-        /* عرض الصور بناءً على نوع الجهاز */
         .hero-image { width: 100%; height: 100%; object-fit: cover; }
         .mobile-only { display: none; }
         .pc-only { display: block; }
@@ -52,31 +52,42 @@
             .logo-frame { width: 85px; height: 85px; }
         }
 
-        /* مناطق الضغط لجهاز الكمبيوتر (صورة العرض) */
+        /* --- تحديد دقيق جداً لمناطق الضغط (الكمبيوتر) --- */
         .map-pc { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
         .pc-main { position: absolute; top: 31%; left: 3%; width: 94%; height: 35%; cursor: pointer; }
         .pc-box { position: absolute; bottom: 6%; height: 23%; cursor: pointer; }
-        .pc-b1 { left: 2.5%; width: 22.5%; } .pc-b2 { left: 26.5%; width: 22.5%; } 
-        .pc-b3 { left: 50.8%; width: 22.5%; } .pc-b4 { left: 75%; width: 22.5%; }
+        .pc-b1 { left: 2.5%; width: 22.5%; } 
+        .pc-b2 { left: 26.5%; width: 22.5%; } 
+        .pc-b3 { left: 50.8%; width: 22.5%; } 
+        .pc-b4 { left: 75%; width: 22.5%; }
 
-        /* مناطق الضغط للجوال (صورة الطول الجديدة) */
-        .map-mobile { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
-        .mob-main { position: absolute; top: 18%; left: 5%; width: 90%; height: 15%; cursor: pointer; }
-        .mob-box { position: absolute; left: 5%; width: 44%; height: 18%; cursor: pointer; }
-        .mob-b1 { top: 35%; width: 90%; } /* ترفيه بلا حدود */
-        .mob-b2 { top: 54%; width: 90%; } /* أدوات الذكاء الاصطناعي */
-        .mob-b3 { top: 73%; width: 44%; } /* دعم السوشال ميديا */
-        .mob-b4 { top: 73%; left: 51%; width: 44%; } /* بطاقات وهدايا */
+        /* --- تحديد دقيق جداً لمناطق الضغط (الجوال) --- */
+        .map-mobile { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+        .map-mobile div { position: absolute; cursor: pointer; pointer-events: auto; }
+        
+        /* منطقة أطلق العنان الجوال */
+        .mob-main { top: 18.5%; left: 4%; width: 92%; height: 14.5%; }
+        /* ترفيه بلا حدود */
+        .mob-b1 { top: 34.8%; left: 5%; width: 90%; height: 17.5%; }
+        /* أدوات الذكاء الاصطناعي */
+        .mob-b2 { top: 54.2%; left: 5%; width: 90%; height: 17.5%; }
+        /* دعم السوشال ميديا */
+        .mob-b3 { top: 73.5%; left: 5%; width: 44%; height: 17.5%; }
+        /* بطاقات وهدايا */
+        .mob-b4 { top: 73.5%; left: 51%; width: 44%; height: 17.5%; }
 
         /* تصميم الصفحات الداخلية */
         .section-page { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 1000; overflow-y: auto; }
         .section-page.active { display: block; animation: slideUp 0.5s ease forwards; }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-        .section-header { position: sticky; top: 0; background: #111; padding: 20px; border-bottom: 2px solid var(--primary); display: flex; align-items: center; }
+        
+        .section-header { position: sticky; top: 0; background: #111; padding: 20px; border-bottom: 2px solid var(--primary); display: flex; align-items: center; z-index: 1001; }
         .back-btn { background: var(--primary); border: none; padding: 10px 20px; border-radius: 5px; font-weight: bold; cursor: pointer; }
+        
         .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; padding: 20px; padding-bottom: 120px; }
         .product-card { background: #161616; border-radius: 12px; padding: 12px; text-align: center; border: 1px solid #222; }
         .product-card img { width: 100%; border-radius: 8px; height: 110px; object-fit: cover; }
+        
         .cart-bar { position: fixed; bottom: 0; width: 100%; background: #1a1a1a; padding: 15px; border-top: 2px solid var(--primary); display: none; justify-content: space-between; align-items: center; box-sizing: border-box; z-index: 1100; }
     </style>
 </head>
@@ -98,11 +109,11 @@
 
     <img src="صوره القائمه الرئيسيه للجوال.jpeg" class="hero-image mobile-only">
     <div class="map-mobile mobile-only">
-        <div class="mob-main" onclick="openSection('all', 'جميع المنتجات')"></div>
-        <div class="mob-box mob-b1" onclick="openSection('entertainment', 'ترفيه بلا حدود')"></div>
-        <div class="mob-box mob-b2" onclick="openSection('ai', 'أدوات الذكاء الاصطناعي')"></div>
-        <div class="mob-box mob-b3" onclick="openSection('social', 'دعم السوشال ميديا')"></div>
-        <div class="mob-box mob-b4" onclick="openSection('cards', 'بطاقات وهدايا')"></div>
+        <div class="mob-main" onclick="openSection('all', 'جميع المنتجات الملكية')"></div>
+        <div class="mob-b1" onclick="openSection('entertainment', 'ترفيه بلا حدود')"></div>
+        <div class="mob-b2" onclick="openSection('ai', 'أدوات الذكاء الاصطناعي')"></div>
+        <div class="mob-b3" onclick="openSection('social', 'دعم السوشال ميديا')"></div>
+        <div class="mob-b4" onclick="openSection('cards', 'بطاقات وهدايا وأخرى')"></div>
     </div>
 </div>
 
@@ -161,12 +172,11 @@
         cart.push({name, price});
         document.getElementById('cartBar').style.display = 'flex';
         document.getElementById('cartCount').innerText = `السلة: ${cart.length}`;
-        alert("تمت الإضافة!");
     }
 
     function sendOrder() {
-        let msg = "طلب جديد:\n";
-        cart.forEach(i => msg += `- ${i.name}\n`);
+        let msg = "طلب جديد من Omni Store:\n";
+        cart.forEach(i => msg += `- ${i.name} (${i.price} ريال)\n`);
         window.open(`https://wa.me/966550000000?text=${encodeURIComponent(msg)}`);
     }
 </script>
