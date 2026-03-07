@@ -11,40 +11,44 @@
     <style>
         body { background-color: #000; color: #fff; font-family: 'Arial', sans-serif; margin: 0; overflow-x: hidden; }
         
-        /* شاشة الدخول */
+        /* واجهة الدخول */
         #authOverlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #000; z-index: 10000; display: flex;
-            align-items: center; justify-content: center;
+            background: #000; z-index: 10000; display: flex; align-items: center; justify-content: center;
         }
         .login-card {
-            background: #111; padding: 35px; border-radius: 20px;
-            border: 2px solid #c7a13c; width: 90%; max-width: 380px; text-align: center;
-            box-shadow: 0 0 20px rgba(199, 161, 60, 0.2);
+            background: #111; padding: 35px; border-radius: 20px; border: 2px solid #c7a13c;
+            width: 90%; max-width: 380px; text-align: center; box-shadow: 0 0 20px rgba(199, 161, 60, 0.2);
         }
-        .login-card h2 { color: #c7a13c; margin-bottom: 10px; font-size: 24px; }
-        .login-card p { color: #888; font-size: 14px; margin-bottom: 25px; }
-        
+        .login-card h2 { color: #c7a13c; margin-bottom: 25px; }
         input {
             width: 100%; padding: 14px; margin: 10px 0; background: #050505;
-            border: 1px solid #333; color: #fff; border-radius: 10px; text-align: center;
-            font-size: 16px; outline: none; transition: 0.3s;
+            border: 1px solid #333; color: #fff; border-radius: 10px; text-align: center; font-size: 16px; box-sizing: border-box;
         }
-        input:focus { border-color: #c7a13c; }
-        
         .btn-login {
-            width: 100%; padding: 14px; background: #c7a13c; color: #000;
-            border: none; border-radius: 10px; font-weight: bold; font-size: 16px;
-            cursor: pointer; margin-top: 15px; transition: 0.3s;
+            width: 100%; padding: 14px; background: #c7a13c; color: #000; border: none;
+            border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 15px;
         }
-        .btn-login:hover { background: #e0b84d; transform: scale(1.02); }
 
-        /* محتوى المتجر الرئيسي */
-        #mainStore {
-            display: none; padding: 20px; text-align: center;
+        /* واجهة المتجر والمنتجات */
+        #mainStore { display: none; padding: 20px; text-align: center; }
+        .store-header { color: #c7a13c; margin-top: 40px; font-size: 28px; }
+        .products-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px; padding: 30px; max-width: 1000px; margin: 0 auto;
         }
-        .store-header { color: #c7a13c; margin-top: 50px; font-size: 28px; }
-        .store-subtitle { color: #aaa; margin-top: 10px; }
+        .product-card {
+            background: #111; border: 1px solid #333; border-radius: 15px; padding: 20px;
+            text-align: center; transition: 0.3s;
+        }
+        .product-card:hover { border-color: #c7a13c; transform: translateY(-5px); }
+        .product-img { width: 100%; height: 150px; object-fit: contain; border-radius: 10px; margin-bottom: 15px; }
+        .product-title { color: #c7a13c; font-size: 20px; font-weight: bold; }
+        .product-price { color: #fff; margin: 10px 0; font-size: 18px; }
+        .btn-order {
+            display: inline-block; padding: 10px 20px; background: #25d366; color: #fff;
+            text-decoration: none; border-radius: 8px; font-weight: bold; margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -52,7 +56,6 @@
     <div id="authOverlay">
         <div class="login-card">
             <h2>أهلاً بك في أومني</h2>
-            <p>يرجى التسجيل للوصول إلى أقوى العروض</p>
             <input type="text" id="userName" placeholder="الاسم الكريم">
             <input type="tel" id="userPhone" placeholder="رقم الجوال (05xxxxxxx)">
             <button class="btn-login" onclick="handleLogin()">دخول للمتجر</button>
@@ -61,15 +64,27 @@
 
     <div id="mainStore">
         <h1 class="store-header">متجر أومني للاشتراكات</h1>
-        <p class="store-subtitle">مرحباً بك مجدداً.. جاري تحميل المنتجات الحصرية</p>
-        
-        <div style="margin-top: 50px; border: 1px dashed #444; padding: 40px; border-radius: 15px;">
-            <p style="color: #666;">قائمة الاشتراكات (يوتيوب، نيتفليكس) ستظهر هنا</p>
+        <p style="color: #888;">أفضل العروض الحصرية بين يديك</p>
+
+        <div class="products-grid">
+            <div class="product-card">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/e/ef/Youtube_Premium_logo.svg" class="product-img" alt="YouTube">
+                <div class="product-title">يوتيوب بريميوم</div>
+                <div class="product-price">15 ريال / شهر</div>
+                <a href="https://wa.me/9665XXXXXXXX" class="btn-order">طلب عبر واتساب</a>
+            </div>
+
+            <div class="product-card">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg" class="product-img" alt="Netflix">
+                <div class="product-title">نيتفليكس 4K</div>
+                <div class="product-price">25 ريال / شهر</div>
+                <a href="https://wa.me/9665XXXXXXXX" class="btn-order">طلب عبر واتساب</a>
+            </div>
         </div>
     </div>
 
     <script>
-        // 1. تهيئة Firebase - استناداً لبيانات مشروعك OmniStore
+        // 1. إعدادات Firebase الخاصة بمشروعك OmniStore
         const firebaseConfig = {
             apiKey: "AIzaSyCWkjGbA5gZBqr60Qa98WXsyrDZQJlv07I",
             authDomain: "omnistore-a5251.firebaseapp.com",
@@ -87,43 +102,30 @@
             const name = document.getElementById('userName').value.trim();
             const phone = document.getElementById('userPhone').value.trim();
 
-            if (name.length < 3) {
-                alert("لطفاً، أدخل اسماً صحيحاً");
-                return;
-            }
-            if (phone.length < 10) {
-                alert("يرجى التأكد من رقم الجوال");
+            if (name.length < 3 || phone.length < 10) {
+                alert("يرجى إدخال البيانات بشكل صحيح");
                 return;
             }
 
-            // حفظ البيانات في قاعدة البيانات
+            // حفظ البيانات في Realtime Database
             database.ref('customers/' + phone).set({
                 full_name: name,
                 phone_number: phone,
                 last_login: new Date().toLocaleString('ar-SA')
             }).then(() => {
-                // حفظ الجلسة محلياً لعدم تكرار الدخول
                 localStorage.setItem('omni_session', JSON.stringify({name, phone}));
                 enterStore();
-            }).catch((err) => {
-                alert("حدث خطأ في الاتصال: " + err.message);
-            });
+            }).catch((err) => { alert("خطأ: " + err.message); });
         }
 
-        // 3. دالة الدخول للمتجر
         function enterStore() {
             document.getElementById('authOverlay').style.display = 'none';
             document.getElementById('mainStore').style.display = 'block';
         }
 
-        // 4. التحقق عند تحميل الصفحة
         window.onload = function() {
-            const session = localStorage.getItem('omni_session');
-            if (session) {
-                enterStore();
-            }
+            if (localStorage.getItem('omni_session')) { enterStore(); }
         };
     </script>
-
 </body>
 </html>
