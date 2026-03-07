@@ -9,127 +9,116 @@
     <style>
         :root { --primary: #c7a13c; --secondary: #8a2be2; --bg: #0a0a0a; }
 
-        /* أنميشن دخول المتجر السينمائي (5 ثوانٍ) */
+        /* أنميشن دخول المتجر الملكي (5 ثوانٍ) */
         @keyframes royalEntrance {
-            0% { opacity: 0; transform: scale(0.4) rotate(-8deg); filter: blur(10px); }
-            50% { opacity: 0.9; transform: scale(1.08) rotate(2deg); filter: blur(2px); }
+            0% { opacity: 0; transform: scale(0.5) rotate(-5deg); filter: blur(10px); }
             100% { opacity: 1; transform: scale(1) rotate(0deg); filter: blur(0); }
         }
 
-        /* أنميشن دخول الأقسام (3 ثوانٍ) */
-        @keyframes sectionSlideUp {
-            0% { transform: translateY(100%); opacity: 0; }
-            100% { transform: translateY(0); opacity: 1; }
+        /* أنميشن القسم (3 ثوانٍ) */
+        @keyframes sectionEnter {
+            0% { transform: translateY(100vh); }
+            100% { transform: translateY(0); }
         }
 
         body { 
             font-family: 'Segoe UI', Tahoma, sans-serif; 
             background: var(--bg); color: white; margin: 0; padding: 0;
-            overflow: hidden; /* لجعل التجربة سينمائية ممتدة */
-            height: 100vh;
+            overflow: hidden; 
+            height: 100vh; width: 100vw;
         }
 
-        /* الهيدر واللوجو المنظف */
+        /* إخفاء النجمة وأي عناصر زائدة */
+        .no-star { display: none !important; }
+
         header { 
             position: absolute; top: 0; width: 100%; z-index: 20;
-            text-align: center; padding: 15px 0;
+            text-align: center; padding: 10px 0;
         }
         .logo-frame {
-            width: 95px; height: 95px; margin: 0 auto;
+            width: 85px; height: 85px; margin: 0 auto;
             border-radius: 50%; overflow: hidden;
             border: 2px solid var(--primary);
-            box-shadow: 0 0 20px rgba(199, 161, 60, 0.5);
-            background: #000; /* يضمن إخفاء أي بياض في اللوجو */
+            box-shadow: 0 0 15px rgba(199, 161, 60, 0.5);
+            background: #000;
         }
         .logo-frame img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* حاوية الصورة الكبيرة (الشاشة الكاملة) */
+        /* الحاوية ممتدة بالكامل لإلغاء الأسود يمين ويسار */
         .hero-container {
             width: 100vw; height: 100vh;
             position: relative; overflow: hidden;
             display: flex; align-items: center; justify-content: center;
-            animation: royalEntrance 5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+            animation: royalEntrance 5s cubic-bezier(0.2, 1, 0.3, 1) forwards;
         }
+        
         .hero-image { 
             width: 100%; height: 100%; 
-            object-fit: contain; /* لضمان ظهور كامل تفاصيل الصورة */
-            background: black;
+            object-fit: cover; /* تجعل الصورة تملأ كامل الشاشة بدون حواف سوداء */
         }
 
-        /* طبقة مناطق الضغط الدقيقة */
+        /* تحديد دقيق جداً للمناطق (أفضل من التحديد اليدوي) */
         .map-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
 
-        /* منطقة "جميع المنتجات" (الزرقاء) */
-        .area-all { position: absolute; top: 30%; left: 5%; width: 90%; height: 35%; cursor: pointer; }
+        /* منطقة جميع المنتجات (البانر الكبير العلوي) */
+        .area-main { position: absolute; top: 31%; left: 3%; width: 94%; height: 36%; cursor: pointer; }
 
-        /* مناطق الأقسام الأربعة (الحمراء) */
-        .area-box { position: absolute; bottom: 8%; height: 21%; cursor: pointer; }
-        .box-ent  { left: 3%; width: 23%; }  
-        .box-ai   { left: 27%; width: 23%; } 
-        .box-soc  { left: 51%; width: 23%; } 
-        .box-card { left: 74%; width: 23%; }
+        /* مناطق الأقسام الأربعة السفلية (تحديد احترافي دقيق للبراويز) */
+        .area-box { position: absolute; bottom: 5%; height: 23%; cursor: pointer; }
+        .box-1 { left: 2.5%; width: 22.5%; } /* ترفيه بلا حدود */
+        .box-2 { left: 26.5%; width: 22.5%; } /* أدوات الذكاء الاصطناعي */
+        .box-3 { left: 50.8%; width: 22.5%; } /* دعم السوشال ميديا */
+        .box-4 { left: 75%; width: 22.5%; } /* بطاقات وهدايا */
 
-        /* صفحة القسم مع أنميشن الستارة */
+        /* صفحة عرض المنتجات */
         .section-page { 
             display: none; position: fixed; top: 0; left: 0; 
             width: 100%; height: 100%; background: var(--bg); z-index: 1000; 
             overflow-y: auto;
         }
-        .section-page.active { 
-            display: block; 
-            animation: sectionSlideUp 3s cubic-bezier(0.16, 1, 0.3, 1); 
-        }
+        .section-page.active { display: block; animation: sectionEnter 3s ease; }
 
         .section-header { 
             position: sticky; top: 0; background: #111; padding: 20px;
             border-bottom: 2px solid var(--primary); display: flex; align-items: center; z-index: 101;
         }
-        .back-btn { background: var(--primary); color: #000; border: none; padding: 12px 25px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .back-btn { background: var(--primary); color: #000; border: none; padding: 10px 20px; border-radius: 5px; font-weight: bold; cursor: pointer; }
 
-        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; padding: 25px; padding-bottom: 120px; }
-        .product-card { background: #161616; border-radius: 15px; padding: 15px; text-align: center; border: 1px solid #222; }
-        .product-card img { width: 100%; border-radius: 10px; height: 120px; object-fit: cover; }
-        .price-tag { color: var(--primary); font-weight: bold; font-size: 1.2em; display: block; margin: 10px 0; }
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; padding: 20px; padding-bottom: 120px; }
+        .product-card { background: #161616; border-radius: 12px; padding: 12px; text-align: center; border: 1px solid #222; }
+        .product-card img { width: 100%; border-radius: 8px; height: 110px; object-fit: cover; }
         
-        /* شريط السلة السفلي */
-        .cart-bar { 
-            position: fixed; bottom: 0; width: 100%; background: #1a1a1a; 
-            padding: 20px; border-top: 2px solid var(--primary); 
-            display: none; justify-content: space-between; align-items: center; box-sizing: border-box; z-index: 1100;
-        }
-        .checkout-btn { background: var(--primary); color: #000; padding: 12px 30px; border-radius: 8px; font-weight: bold; border: none; cursor: pointer; }
+        .cart-bar { position: fixed; bottom: 0; width: 100%; background: #1a1a1a; padding: 15px; border-top: 2px solid var(--primary); display: none; justify-content: space-between; align-items: center; box-sizing: border-box; z-index: 1100; }
     </style>
 </head>
 <body>
 
 <header>
-    <div class="logo-frame">
-        <img src="لوقو متجر اومني .jpeg">
-    </div>
+    <div class="logo-frame"><img src="لوقو متجر اومني .jpeg"></div>
 </header>
 
 <div class="hero-container">
     <img src="اومني القائمه الاوله.jpeg" class="hero-image">
     <div class="map-overlay">
-        <div class="area-all" onclick="openSection('all', 'جميع منتجات المتجر الملكي')"></div>
-        <div class="area-box box-ent" onclick="openSection('entertainment', 'قسم الترفيه')"></div>
-        <div class="area-box box-ai" onclick="openSection('ai', 'الذكاء الاصطناعي')"></div>
-        <div class="area-box box-soc" onclick="openSection('social', 'دعم السوشال ميديا')"></div>
-        <div class="area-box box-card" onclick="openSection('cards', 'بطاقات وهدايا')"></div>
+        <div class="area-main" onclick="openSection('all', 'جميع المنتجات الملكية')"></div>
+        <div class="area-box box-1" onclick="openSection('entertainment', 'ترفيه بلا حدود')"></div>
+        <div class="area-box box-2" onclick="openSection('ai', 'أدوات الذكاء الاصطناعي')"></div>
+        <div class="area-box box-3" onclick="openSection('social', 'دعم السوشال ميديا')"></div>
+        <div class="area-box box-4" onclick="openSection('cards', 'بطاقات وهدايا وأخرى')"></div>
     </div>
 </div>
 
 <div class="section-page" id="sectionPage">
     <div class="section-header">
-        <button class="back-btn" onclick="closeSection()">🔙 عودة للرئيسية</button>
-        <h2 id="sectionTitle" style="margin-right: 20px; color: var(--primary); font-size: 1.2em;"></h2>
+        <button class="back-btn" onclick="closeSection()">🔙 العودة</button>
+        <h2 id="sectionTitle" style="margin-right: 20px; color: var(--primary);"></h2>
     </div>
     <div class="products-grid" id="sectionProducts"></div>
 </div>
 
 <div class="cart-bar" id="cartBar">
-    <div id="cartCount" style="color: var(--primary); font-weight: bold;">السلة: 0 منتجات</div>
-    <button class="checkout-btn" onclick="sendOrder()">إتمام الطلب الملكي 👑</button>
+    <div id="cartCount" style="color: var(--primary); font-weight: bold;">السلة: 0</div>
+    <button style="background:var(--primary); border:none; padding:10px 20px; border-radius:5px; font-weight:bold; cursor:pointer;" onclick="sendOrder()">إتمام الطلب 👑</button>
 </div>
 
 <script>
@@ -141,13 +130,10 @@
       storageBucket: "omnistore-a5251.firebasestorage.app",
       appId: "1:542087784992:web:5ed1e7ec4d4a423bc3aa45"
     };
-
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
-    let cart = [];
-    let allProducts = [];
+    let cart = []; let allProducts = [];
 
-    // جلب البيانات من Firebase
     db.ref('products').on('value', (snapshot) => {
         const data = snapshot.val();
         allProducts = [];
@@ -158,22 +144,16 @@
         document.getElementById('sectionTitle').innerText = title;
         const display = document.getElementById('sectionProducts');
         display.innerHTML = '';
-        
         const filtered = (cat === 'all') ? allProducts : allProducts.filter(p => p.category === cat);
-        
-        if(filtered.length === 0) {
-            display.innerHTML = '<p style="grid-column: 1/-1; text-align: center; padding: 50px;">سيتم توفير المنتجات قريباً جداً 💎</p>';
-        } else {
-            filtered.forEach(p => {
-                display.innerHTML += `
-                    <div class="product-card">
-                        <img src="${p.image}">
-                        <h3 style="font-size: 1em; margin: 10px 0;">${p.name}</h3>
-                        <span class="price-tag">${p.price} ريال</span>
-                        <button style="width:100%; padding:10px; background:var(--secondary); color:white; border:none; border-radius:8px; cursor:pointer; font-weight:bold;" onclick="addToCart('${p.name}', '${p.price}')">أضف للسلة</button>
-                    </div>`;
-            });
-        }
+        filtered.forEach(p => {
+            display.innerHTML += `
+                <div class="product-card">
+                    <img src="${p.image}">
+                    <h3>${p.name}</h3>
+                    <p style="color:var(--primary)">${p.price} ريال</p>
+                    <button style="width:100%; padding:8px; background:var(--secondary); color:white; border:none; border-radius:5px; cursor:pointer;" onclick="addToCart('${p.name}', '${p.price}')">أضف للسلة</button>
+                </div>`;
+        });
         document.getElementById('sectionPage').classList.add('active');
     }
 
@@ -182,13 +162,12 @@
     function addToCart(name, price) {
         cart.push({name, price});
         document.getElementById('cartBar').style.display = 'flex';
-        document.getElementById('cartCount').innerText = `السلة: ${cart.length} منتجات`;
-        alert("تمت الإضافة بنجاح إلى سلتك!");
+        document.getElementById('cartCount').innerText = `السلة: ${cart.length}`;
     }
 
     function sendOrder() {
-        let msg = "طلب جديد من متجر Omni:\n";
-        cart.forEach(i => msg += `- ${i.name} (${i.price} ريال)\n`);
+        let msg = "طلب جديد:\n";
+        cart.forEach(i => msg += `- ${i.name}\n`);
         window.open(`https://wa.me/966550000000?text=${encodeURIComponent(msg)}`);
     }
 </script>
