@@ -3,144 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>متجر أومني | OMNI STORE</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Omni Store</title>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <style>
-        :root { --gold: #D4AF37; --black: #050505; --dark: #111; }
-        * { box-sizing: border-box; font-family: 'Cairo', sans-serif; margin: 0; padding: 0; }
-        body { background: var(--black); color: white; overflow-x: hidden; }
-
-        /* شاشة الدخول (5 ثواني) */
-        #intro {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--black); display: flex; flex-direction: column;
-            justify-content: center; align-items: center; z-index: 9999;
-            transition: opacity 1s ease-out;
-        }
-        .intro-logo { width: 120px; border-radius: 50%; animation: pulse 1.5s infinite; margin-bottom: 20px; }
-        @keyframes pulse { 0%, 100% { transform: scale(1); box-shadow: 0 0 10px var(--gold); } 50% { transform: scale(1.1); box-shadow: 0 0 30px var(--gold); } }
-
-        /* الهيدر */
-        header { padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; background: #0a0a0a; border-bottom: 1px solid rgba(212,175,55,0.2); }
-        .logo-header { width: 40px; border-radius: 50%; }
-
-        /* نظام الصفحات المعزولة */
-        .page-view { display: none; padding: 20px; max-width: 1200px; margin: auto; animation: slideIn 0.5s ease-out forwards; }
-        .page-view.active { display: block; }
-        
-        @keyframes slideIn { from { opacity: 0; transform: translateY(30px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
-
-        /* تصميم الصفحة الرئيسية */
-        .banner-img { width: 100%; border-radius: 20px; border: 1px solid var(--gold); margin-bottom: 30px; }
-        
-        .categories-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
-        .cat-btn {
-            background: var(--dark); border: 1px solid rgba(212,175,55,0.3); padding: 30px;
-            border-radius: 15px; text-align: center; cursor: pointer; transition: 0.3s;
-        }
-        .cat-btn:hover { background: rgba(212,175,55,0.1); border-color: var(--gold); transform: translateY(-5px); }
-        .cat-btn i { font-size: 2.5rem; color: var(--gold); margin-bottom: 15px; }
-        .cat-btn h3 { color: white; font-size: 1.2rem; }
-
-        /* تصميم صفحة المنتجات (الداخلية) */
-        .back-btn { background: transparent; color: var(--gold); border: 1px solid var(--gold); padding: 8px 20px; border-radius: 8px; cursor: pointer; margin-bottom: 20px; font-weight: bold; transition: 0.3s; }
-        .back-btn:hover { background: var(--gold); color: black; }
-        
-        .products-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
-        .product-card { background: var(--dark); border: 1px solid #333; border-radius: 15px; padding: 20px; text-align: center; transition: 0.3s; }
-        .product-card:hover { border-color: var(--gold); }
-        .product-card h4 { color: var(--gold); font-size: 1.3rem; margin-bottom: 10px; }
-        .price { font-size: 1.5rem; font-weight: bold; margin: 15px 0; }
-        .buy-btn { background: var(--gold); color: black; border: none; padding: 10px 25px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; }
-
+        :root { --primary: #ff4500; --bg: #0a0a0a; --card: #161616; }
+        body { font-family: sans-serif; background: var(--bg); color: white; margin: 0; padding-bottom: 80px; }
+        header { text-align: center; padding: 25px; background: #1a1a1a; border-bottom: 2px solid var(--primary); }
+        .tabs { display: flex; overflow-x: auto; gap: 10px; padding: 15px; background: #111; }
+        .tab-btn { background: var(--card); border: 1px solid #333; color: white; padding: 10px 18px; cursor: pointer; border-radius: 20px; white-space: nowrap; font-size: 14px; }
+        .tab-btn.active { background: var(--primary); border-color: var(--primary); }
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; padding: 15px; }
+        .product-card { background: var(--card); border-radius: 12px; padding: 10px; text-align: center; border: 1px solid #222; position: relative; }
+        .product-card img { width: 100%; border-radius: 8px; height: 110px; object-fit: cover; }
+        .desc { font-size: 0.85em; color: #bbb; margin: 8px 0; min-height: 40px; }
+        .price { color: var(--primary); font-weight: bold; margin-bottom: 10px; display: block; }
+        .buy-btn { background: var(--primary); color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; }
+        .cart-bar { position: fixed; bottom: 0; width: 100%; background: #1a1a1a; padding: 15px; border-top: 2px solid var(--primary); display: none; justify-content: space-between; align-items: center; box-sizing: border-box; }
     </style>
 </head>
 <body>
 
-    <div id="intro">
-        <img src="لوقو متجر اومني .jpeg" class="intro-logo" alt="OMNI">
-        <h2 style="color: var(--gold);">جاري الدخول لعالم أومني...</h2>
-    </div>
+<header><h1>OMNI STORE</h1></header>
 
-    <header>
-        <img src="لوقو متجر اومني .jpeg" class="logo-header" alt="OMNI">
-        <h3 style="color: var(--gold); margin: 0;">أومني ستور</h3>
-        <button style="background: var(--gold); color: black; border: none; padding: 8px 15px; border-radius: 5px; font-weight: bold; cursor: pointer;" onclick="alert('سيتم تفعيل نظام الدخول الحقيقي قريباً')">دخول / تسجيل</button>
-    </header>
+<div class="tabs">
+    <button class="tab-btn active" onclick="filterItems('all')">الكل</button>
+    <button class="tab-btn" onclick="filterItems('cat1')">بطاقات وهدايا واشتراكات اخرى</button>
+    <button class="tab-btn" onclick="filterItems('cat2')">دعم سوشل ميديا</button>
+    <button class="tab-btn" onclick="filterItems('cat3')">ادوات الذكاء الاصطناعي</button>
+    <button class="tab-btn" onclick="filterItems('cat4')">ترفيه بلا حدود</button>
+</div>
 
-    <div id="home-page" class="page-view active">
-        <img src="اومني القائمه الاوله.jpeg" class="banner-img" alt="عروض أومني">
-        
-        <h2 style="margin-bottom: 20px; color: #ccc;">تصفح الأقسام</h2>
-        <div class="categories-grid">
-            <div class="cat-btn" onclick="openPage('ai-page')">
-                <i class="fas fa-robot"></i>
-                <h3>أدوات الذكاء الاصطناعي</h3>
-            </div>
-            <div class="cat-btn" onclick="openPage('entertainment-page')">
-                <i class="fas fa-film"></i>
-                <h3>ترفيه بلا حدود</h3>
-            </div>
-            <div class="cat-btn" onclick="openPage('social-page')">
-                <i class="fas fa-rocket"></i>
-                <h3>دعم السوشيال ميديا</h3>
-            </div>
-        </div>
-    </div>
+<div class="products-grid" id="productsDisplay"></div>
 
-    <div id="ai-page" class="page-view">
-        <button class="back-btn" onclick="openPage('home-page')"><i class="fas fa-arrow-right"></i> عودة للرئيسية</button>
-        <h2 style="color: var(--gold); margin-bottom: 25px;"><i class="fas fa-robot"></i> قسم الذكاء الاصطناعي</h2>
-        
-        <div class="products-grid">
-            <div class="product-card">
-                <h4>اشتراك ChatGPT Plus</h4>
-                <p>حساب خاص لمدة شهر كامل</p>
-                <div class="price">80 ر.س</div>
-                <button class="buy-btn">شراء الآن</button>
-            </div>
-            <div class="product-card">
-                <h4>اشتراك Midjourney</h4>
-                <p>توليد صور احترافية</p>
-                <div class="price">120 ر.س</div>
-                <button class="buy-btn">شراء الآن</button>
-            </div>
-        </div>
-    </div>
+<div class="cart-bar" id="cartBar">
+    <div id="cartCount">السلة: 0 منتجات</div>
+    <button class="buy-btn" style="width: auto; padding: 10px 20px;" onclick="sendOrder()">طلب عبر واتساب 💬</button>
+</div>
 
-    <div id="entertainment-page" class="page-view">
-        <button class="back-btn" onclick="openPage('home-page')"><i class="fas fa-arrow-right"></i> عودة للرئيسية</button>
-        <h2 style="color: var(--gold); margin-bottom: 25px;"><i class="fas fa-film"></i> ترفيه بلا حدود</h2>
-        
-        <div class="products-grid">
-            <div class="product-card">
-                <h4>نتفليكس أعلى باقة</h4>
-                <p>ملف خاص بدقة 4K</p>
-                <div class="price">30 ر.س</div>
-                <button class="buy-btn">شراء الآن</button>
-            </div>
-        </div>
-    </div>
+<script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCWkjGbA5gZBqr60Qa98WXsyrDZQJlv07I",
+      authDomain: "omnistore-a5251.firebaseapp.com",
+      databaseURL: "https://omnistore-a5251-default-rtdb.firebaseio.com",
+      projectId: "omnistore-a5251",
+      storageBucket: "omnistore-a5251.firebasestorage.app",
+      appId: "1:542087784992:web:5ed1e7ec4d4a423bc3aa45"
+    };
 
-    <script>
-        // إزالة مؤثر البداية بعد 5 ثواني بالضبط
-        window.onload = () => {
-            setTimeout(() => {
-                document.getElementById('intro').style.opacity = '0';
-                setTimeout(() => document.getElementById('intro').style.display = 'none', 1000);
-            }, 5000);
-        };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+    let cart = [];
+    let allProducts = [];
 
-        // دالة الانتقال بين الصفحات (تخفي كل شيء وتظهر القسم المطلوب بأنيميشن)
-        function openPage(pageId) {
-            document.querySelectorAll('.page-view').forEach(page => {
-                page.classList.remove('active');
-            });
-            document.getElementById(pageId).classList.add('active');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-    </script>
+    db.ref('products').on('value', (snapshot) => {
+        const data = snapshot.val();
+        allProducts = [];
+        for (let id in data) { allProducts.push(data[id]); }
+        renderProducts(allProducts);
+    });
 
+    function renderProducts(products) {
+        const display = document.getElementById('productsDisplay');
+        display.innerHTML = '';
+        products.forEach(p => {
+            display.innerHTML += `
+                <div class="product-card">
+                    <img src="${p.image}">
+                    <h3>${p.name}</h3>
+                    <p class="desc">${p.description}</p>
+                    <span class="price">${p.price} ريال</span>
+                    <button class="buy-btn" onclick="addToCart('${p.name}', '${p.price}')">إضافة للسلة</button>
+                </div>
+            `;
+        });
+    }
+
+    function filterItems(cat) {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        event.target.classList.add('active');
+        if(cat === 'all') return renderProducts(allProducts);
+        const filtered = allProducts.filter(p => p.category === cat);
+        renderProducts(filtered);
+    }
+
+    function addToCart(name, price) {
+        cart.push({name, price});
+        document.getElementById('cartBar').style.display = 'flex';
+        document.getElementById('cartCount').innerText = `السلة: ${cart.length} منتجات`;
+        alert("تمت إضافة " + name + " لسلة المشتريات");
+    }
+
+    function sendOrder() {
+        let msg = "طلب جديد من Omni Store:\n";
+        cart.forEach(item => { msg += `- ${item.name} (${item.price} ريال)\n`; });
+        window.open(`https://wa.me/966550000000?text=${encodeURIComponent(msg)}`);
+    }
+</script>
 </body>
 </html>
