@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>متجر أومني | الدفع الآمن</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root { --gold: #D4AF37; --purple: #7a28ff; --black: #050505; --dark: #121212; }
+        * { box-sizing: border-box; font-family: 'Cairo', sans-serif; }
+        body { background: var(--black); color: white; margin: 0; }
+        
+        header { background: rgba(10,10,10,0.95); padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--gold); position: sticky; top: 0; z-index: 1000; }
+        .logo-area { display: flex; align-items: center; gap: 10px; }
+        .logo-area img { width: 45px; border-radius: 50%; border: 1px solid var(--gold); }
+
+        .container { max-width: 1200px; margin: 20px auto; padding: 0 15px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+        
+        .product-card { background: #1a1a1a; border: 1px solid var(--purple); padding: 15px; border-radius: 20px; text-align: center; position: relative; }
+        .product-img { width: 100%; height: 160px; object-fit: cover; border-radius: 12px; margin-bottom: 10px; }
+        .price { color: var(--gold); font-size: 1.4rem; font-weight: bold; }
+
+        #checkout-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 3000; justify-content: center; align-items: center; padding: 20px; }
+        .modal-content { background: var(--dark); padding: 25px; border-radius: 20px; border: 2px solid var(--gold); width: 100%; max-width: 500px; text-align: center; }
+        
+        /* تنسيق قسم الراجحي الجديد */
+        .bank-card { background: #f8f9fa; color: #000; padding: 15px; border-radius: 15px; margin: 15px 0; border-left: 5px solid #0067b1; text-align: right; }
+        .alrajhi-logo { width: 80px; float: left; margin-top: -5px; }
+        .iban-box { background: #eef2f7; padding: 10px; border-radius: 8px; font-family: monospace; font-size: 0.95rem; margin-top: 10px; display: block; word-break: break-all; border: 1px solid #ccc; }
+        
+        .confirm-btn { background: var(--gold); color: black; border: none; padding: 15px; width: 100%; border-radius: 12px; font-weight: bold; cursor: pointer; }
+        .cart-float { position: fixed; bottom: 25px; left: 25px; background: var(--gold); color: black; padding: 15px 30px; border-radius: 50px; font-weight: 900; cursor: pointer; z-index: 2000; }
+        .sub-page { display: none; } .active { display: block; }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo-area">
+        <img src="لوقو متجر اومني .jpeg">
+        <span style="color: var(--gold);">OMNI</span>
+    </div>
+</header>
+
+<div class="container">
+    <div id="home-view" class="active">
+        <img src="اومني القائمه الاوله.jpeg" style="width:100%; border-radius:20px; border:2px solid var(--gold); margin-bottom:20px;">
+        <div class="grid">
+            <div onclick="openCat('ent')" style="background:var(--dark); padding:30px; border-radius:20px; text-align:center; cursor:pointer; border:1px solid #333"><h3>ترفيه بلا حدود</h3></div>
+            <div onclick="openCat('ai')" style="background:var(--dark); padding:30px; border-radius:20px; text-align:center; cursor:pointer; border:1px solid #333"><h3>أدوات الذكاء الاصطناعي</h3></div>
+            <div onclick="openCat('social')" style="background:var(--dark); padding:30px; border-radius:20px; text-align:center; cursor:pointer; border:1px solid #333"><h3>دعم السوشال ميديا</h3></div>
+            <div onclick="openCat('cards')" style="background:var(--dark); padding:30px; border-radius:20px; text-align:center; cursor:pointer; border:1px solid #333"><h3>بطاقات هدايا واشتراكات</h3></div>
+        </div>
+    </div>
+
+    <div id="cat-view" class="sub-page">
+        <button onclick="goHome()" style="background:none; border:1px solid var(--gold); color:var(--gold); padding:5px 15px; border-radius:50px; margin-bottom:20px;">⬅️ عودة</button>
+        <div class="grid" id="products-render"></div>
+    </div>
+</div>
+
+<div id="checkout-modal">
+    <div class="modal-content">
+        <h2 style="color:var(--gold)">بيانات التحويل</h2>
+        
+        <div class="bank-card">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Al_Rajhi_Bank_Logo.svg/1200px-Al_Rajhi_Bank_Logo.svg.png" class="alrajhi-logo">
+            <div style="font-weight: bold; font-size: 1.1rem;">مصرف الراجحي</div>
+            <div style="margin-top: 5px; color: #555;">اسم الحساب: <br><b style="color:#000">عابد متجر اومني</b></div>
+            <div class="iban-box" id="iban-display">SA8680000867608016366759</div>
+            <button onclick="copyIBAN()" style="background:#0067b1; color:white; border:none; padding:5px 12px; border-radius:5px; margin-top:10px; cursor:pointer; font-size: 12px;">نسخ الآيبان 📋</button>
+        </div>
+
+        <p>المجموع المطلوب: <span id="total-price" style="color:var(--gold)">0</span> ريال</p>
+        <p style="font-size: 0.9rem;">بعد التحويل، ارفق صورة الإيصال هنا:</p>
+        <input type="file" id="receipt-file" accept="image/*" style="width:100%; margin-bottom:15px; color:#fff">
+        <button class="confirm-btn" onclick="processOrder()">إرسال الطلب للمتجر ✅</button>
+        <button onclick="closeCheckout()" style="background:none; border:none; color:#777; margin-top:10px; cursor:pointer">إلغاء</button>
+    </div>
+</div>
+
+<div class="cart-float" id="cart-btn" onclick="openCheckout()">إتمام الطلب (<span id="count">0</span>)</div>
+
+<script>
+    // --- بياناتك الشخصية المحدثة ---
+    const ADMIN_PASSWORD = "Aa@998877"; 
+    const MY_IBAN = "SA8680000867608016366759"; 
+    const BOT_TOKEN = "8537832020:AAFKGgc2shCfap73Sy6fNahmnb71GZxl3jI"; 
+    const CHAT_ID = "8028328354"; 
+    const IMG_BB_API = "92697851d95015b60098679d95f4e69b";
+
+    let omniData = JSON.parse(localStorage.getItem('omni_db_v2')) || { ent: [], ai: [], social: [], cards: [] };
+    let cart = [];
+
+    function openCat(id) {
+        document.getElementById('home-view').classList.remove('active');
+        document.getElementById('cat-view').classList.add('active');
+        renderProducts(id);
+    }
+
+    function renderProducts(id) {
+        const container = document.getElementById('products-render');
+        container.innerHTML = omniData[id].map(p => `
+            <div class="product-card">
+                <img src="${p.img || 'لوقو متجر اومني .jpeg'}" class="product-img">
+                <h4>${p.name}</h4>
+                <div class="price">${p.price} ريال</div>
+                <button onclick="addToCart('${p.name}', ${p.price})" style="background:var(--purple); color:white; border:none; padding:10px; width:100%; border-radius:10px; cursor:pointer">إضافة</button>
+            </div>`).join('');
+    }
+
+    function addToCart(name, price) {
+        cart.push({name, price});
+        document.getElementById('count').innerText = cart.length;
+    }
+
+    function openCheckout() {
+        if(!cart.length) return alert("السلة فارغة!");
+        const total = cart.reduce((s, i) => s + parseInt(i.price), 0);
+        document.getElementById('total-price').innerText = total;
+        document.getElementById('checkout-modal').style.display = 'flex';
+    }
+
+    function closeCheckout() { document.getElementById('checkout-modal').style.display = 'none'; }
+    function copyIBAN() { navigator.clipboard.writeText(MY_IBAN); alert("تم نسخ الآيبان بنجاح ✅"); }
+
+    async function processOrder() {
+        const fileInput = document.getElementById('receipt-file');
+        if(!fileInput.files[0]) return alert("يرجى إرفاق صورة إيصال التحويل أولاً!");
+
+        const btn = document.querySelector('.confirm-btn');
+        btn.innerText = "جاري إرسال الطلب...";
+        btn.disabled = true;
+
+        const formData = new FormData();
+        formData.append("image", fileInput.files[0]);
+
+        try {
+            const uploadRes = await fetch(`https://api.imgbb.com/1/upload?key=${IMG_BB_API}`, { method: "POST", body: formData });
+            const imgData = await uploadRes.json();
+            const receiptUrl = imgData.data.url;
+
+            let msg = `📦 *طلب جديد لمتجر أومني*%0A%0A🛒 *المنتجات:*%0A`;
+            cart.forEach(i => msg += `- ${i.name} (${i.price} ريال)%0A`);
+            msg += `%0A💰 *الإجمالي:* ${cart.reduce((s, i) => s + parseInt(i.price), 0)} ريال%0A🖼️ [مشاهدة صورة الإيصال](${receiptUrl})`;
+
+            await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${msg}&parse_mode=Markdown`);
+            alert("تم إرسال طلبك! سيتم تفعيل الخدمة بعد مراجعة الحوالة.");
+            location.reload();
+        } catch (err) { alert("فشل في الإرسال"); btn.innerText = "إرسال الطلب ✅"; btn.disabled = false; }
+    }
+
+    function goHome() { document.getElementById('cat-view').classList.remove('active'); document.getElementById('home-view').classList.add('active'); }
+</script>
+</body>
+</html>
