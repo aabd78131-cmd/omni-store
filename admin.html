@@ -2,21 +2,23 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>لوحة تحكم OmniStore الماركة</title>
+    <title>لوحة تحكم OmniStore الملكية</title>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <style>
-        body { font-family: sans-serif; background: #1a1a1a; color: white; padding: 20px; text-align: center; }
-        .card { background: #2d2d2d; padding: 20px; border-radius: 10px; max-width: 450px; margin: auto; border: 1px solid #ff4500; }
-        input, select, textarea { width: 90%; padding: 12px; margin: 10px 0; border-radius: 5px; border: none; background: #3d3d3d; color: white; }
+        body { font-family: sans-serif; background: #0a0a0a; color: white; padding: 20px; text-align: center; }
+        .card { background: #1a1a1a; padding: 20px; border-radius: 10px; max-width: 450px; margin: auto; border: 1px solid #c7a13c; box-shadow: 0 0 15px rgba(199, 161, 60, 0.3); }
+        h2 { color: #c7a13c; }
+        input, select, textarea { width: 90%; padding: 12px; margin: 10px 0; border-radius: 5px; border: 1px solid #333; background: #2d2d2d; color: white; }
         textarea { height: 80px; resize: none; }
-        button { background: #ff4500; color: white; border: none; padding: 15px; cursor: pointer; border-radius: 5px; width: 95%; font-weight: bold; font-size: 16px; }
+        button { background: linear-gradient(45deg, #8a2be2, #c7a13c); color: white; border: none; padding: 15px; cursor: pointer; border-radius: 5px; width: 95%; font-weight: bold; font-size: 16px; transition: 0.3s; }
+        button:hover { opacity: 0.9; transform: scale(1.02); }
     </style>
 </head>
 <body>
 
 <div class="card">
-    <h2>إضافة منتج جديد</h2>
+    <h2>إضافة منتج جديد لمتجر أومني الملكي</h2>
     <input type="text" id="pName" placeholder="اسم المنتج">
     <input type="number" id="pPrice" placeholder="السعر">
     <input type="text" id="pImg" placeholder="رابط صورة المنتج">
@@ -24,16 +26,17 @@
     
     <label>اختر القائمة الصحيحة:</label>
     <select id="pCategory">
-        <option value="cat1">بطاقات وهدايا واشتراكات اخرى</option>
-        <option value="cat2">دعم السوشال ميديا</option>
-        <option value="cat3">ادوات الذكاء الاصطناعي</option>
-        <option value="cat4">ترفيه بلا حدود</option>
+        <option value="cards">بطاقات وهدايا واشتراكات اخرى</option>
+        <option value="social">دعم سوشل ميديا</option>
+        <option value="ai">ادوات الذكاء الاصطناعي</option>
+        <option value="entertainment">ترفيه بلا حدود</option>
     </select>
 
     <button onclick="addProduct()">حفظ المنتج في المتجر</button>
 </div>
 
 <script>
+    // مفتاح الربط الخاص بك
     const firebaseConfig = {
       apiKey: "AIzaSyCWkjGbA5gZBqr60Qa98WXsyrDZQJlv07I",
       authDomain: "omnistore-a5251.firebaseapp.com",
@@ -61,7 +64,7 @@
                 description: desc,
                 category: cat
             }).then(() => {
-                alert("تمت الإضافة بنجاح في القائمة المختارة!");
+                alert("تمت الإضافة بنجاح!");
                 location.reload();
             });
         } else {
