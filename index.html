@@ -150,9 +150,9 @@
         <div class="total-box">المجموع: <span id="cart-total-price">0</span> ريال</div>
 
         <div id="email-box" class="email-box">
-            <label style="color: #d4af37; font-weight: bold;">أدخل البريد الإلكتروني لاستلام الطلب:</label>
+            <label style="color: #d4af37; font-size: 0.95rem; font-weight: bold;">إذا كان المنتج يطلب بريد إلكتروني، ضعه هنا (اختياري):</label>
             <input type="email" id="user-email" placeholder="example@gmail.com">
-            <div class="warning-text">ملاحظة: عدم التعويض إذا البريد خطأ!</div>
+            <div class="warning-text">ملاحظة: عدم التعويض إذا البريد المكتوب خطأ!</div>
         </div>
 
         <div class="warranty-text">
@@ -196,7 +196,7 @@
 
     <script>
         // --- قاعدة بيانات المنتجات (تجريبية) ---
-        // reqEmail: true تعني أن هذا المنتج يحتاج بريد إلكتروني
+        // reqEmail: true تعني أن الخانة ستظهر، ولكنها لم تعد إجبارية
         const storeProducts = {
             'قسم تيك توك': [
                 { id: 1, name: 'حساب تيك توك جاهز', price: 40, reqEmail: true },
@@ -217,7 +217,7 @@
             ]
         };
 
-        let cart = []; // السلة تحفظ البيانات حتى لو تنقلت
+        let cart = [];
 
         const mainContent = document.getElementById('main-content');
         const sectionView = document.getElementById('section-view');
@@ -228,16 +228,15 @@
         const cartModal = document.getElementById('cart-modal');
         const ratingModal = document.getElementById('rating-modal');
 
-        // 1. التنقل بين الرئيسية والأقسام
+        // التنقل بين الرئيسية والأقسام
         function openSection(catName) {
             mainContent.style.display = 'none';
             sectionView.style.display = 'block';
             backBtn.style.display = 'block';
-            mainTitle.style.display = 'none'; // نخفي اسم المتجر ليظهر سهم الرجوع
+            mainTitle.style.display = 'none';
             
             document.getElementById('sec-title').innerText = catName;
             
-            // جلب منتجات القسم
             const list = document.getElementById('products-list');
             list.innerHTML = '';
             
@@ -258,7 +257,6 @@
             window.scrollTo(0,0);
         }
 
-        // الرجوع للرئيسية
         function goHome() {
             mainContent.style.display = 'block';
             sectionView.style.display = 'none';
@@ -266,7 +264,7 @@
             mainTitle.style.display = 'flex';
         }
 
-        // 2. إدارة السلة
+        // إدارة السلة
         function addToCart(id, name, price, reqEmail) {
             let item = cart.find(i => i.id === id);
             if(item) { item.qty++; } 
@@ -285,11 +283,9 @@
         }
 
         function updateCartUI() {
-            // تحديث رقم الدائرة الحمراء
             let totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
             document.getElementById('cart-count').innerText = totalItems;
 
-            // تحديث داخل السلة
             const list = document.getElementById('cart-items');
             list.innerHTML = '';
             let totalCost = 0;
@@ -315,23 +311,15 @@
             });
 
             document.getElementById('cart-total-price').innerText = totalCost;
-            
-            // إظهار خانة البريد إذا لزم الأمر
             document.getElementById('email-box').style.display = needsEmail ? 'block' : 'none';
         }
 
-        // 3. الطلب والتحويل للواتساب (للرقم 0548512295)
+        // الطلب والتحويل للواتساب
         function checkout(type) {
             if(cart.length === 0) { alert('السلة فارغة!'); return; }
             
             let email = document.getElementById('user-email').value;
-            let needsEmail = cart.some(i => i.reqEmail);
             
-            if(needsEmail && !email) {
-                alert('الرجاء إدخال البريد الإلكتروني لاستلام طلبك!');
-                return;
-            }
-
             // تجهيز الرسالة
             let msg = `*${type}*\n\nالمنتجات:\n`;
             let total = 0;
@@ -340,14 +328,17 @@
                 total += (item.price * item.qty);
             });
             msg += `\nالمجموع الكلي: *${total} ريال*`;
-            if(needsEmail) { msg += `\n\nالبريد المسجل: ${email}`; }
+            
+            // إضافة البريد إذا كتبه العميل (لأنه أصبح اختياري)
+            if(email.trim() !== "") {
+                msg += `\n\nالبريد المسجل: ${email}`;
+            }
 
-            // رابط واتساب برقمك الخاص 0548512295
             let waLink = `https://wa.me/966548512295?text=${encodeURIComponent(msg)}`;
             window.open(waLink, '_blank');
         }
 
-        // 4. النوافذ والقوائم
+        // النوافذ والقوائم
         function toggleMenu() { sideMenu.classList.toggle('active'); checkOverlay(); }
         function toggleCart() { cartModal.classList.toggle('active'); checkOverlay(); updateCartUI(); }
         function toggleRating() { ratingModal.classList.toggle('active'); checkOverlay(); }
@@ -367,7 +358,7 @@
             overlay.style.display = 'none';
         }
 
-        // 5. نظام التقييم (النجوم)
+        // نظام التقييم
         let starVal = 0;
         const starElements = document.querySelectorAll('#stars-box span');
         starElements.forEach(s => {
@@ -384,7 +375,6 @@
             alert('شكراً ' + name + ' لتقييمك المتجر بـ ' + starVal + ' نجوم!');
             closeAll();
         }
-
     </script>
 </body>
 </html>
