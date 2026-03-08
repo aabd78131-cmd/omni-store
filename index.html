@@ -5,190 +5,155 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>متجر أومني | OMNI STORE</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
-    
     <style>
-        /* إعدادات المتجر العامة */
+        /* --- الأساسيات والتنسيق الفخم --- */
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { 
-            background: #000; color: white; 
-            font-family: 'Cairo', sans-serif; 
-            overflow-x: hidden; 
-        }
+        body { background: #000; color: white; font-family: 'Cairo', sans-serif; overflow-x: hidden; }
 
-        /* الشريط العلوي الفخم */
+        /* الهيدر الزجاجي */
         header {
-            position: fixed; top: 10px; left: 5%; width: 90%; height: 60px;
-            background: rgba(15, 15, 15, 0.7); backdrop-filter: blur(20px);
+            position: fixed; top: 12px; left: 5%; width: 90%; height: 60px;
+            background: rgba(15, 15, 15, 0.75); backdrop-filter: blur(20px);
             border: 1px solid rgba(212, 175, 55, 0.4); border-radius: 20px;
             display: flex; justify-content: space-between; align-items: center;
-            padding: 0 20px; z-index: 999;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            padding: 0 20px; z-index: 1000; box-shadow: 0 10px 30px rgba(0,0,0,0.8);
         }
+        .header-title { color: #d4af37; font-weight: 900; font-size: 1.1rem; display: flex; align-items: center; gap: 10px; }
+        .saudi-flag { width: 24px; animation: wave 2s infinite ease-in-out; }
+        @keyframes wave { 0%, 100% { transform: rotate(0) translateY(0); } 50% { transform: rotate(8deg) translateY(-3px); } }
+        .menu-dots { font-size: 30px; color: #d4af37; cursor: pointer; }
 
-        .header-title {
-            color: #d4af37; font-weight: 900; font-size: 1.1rem;
-            text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
-            display: flex; align-items: center; gap: 8px;
-        }
-
-        /* علم السعودية المتحرك */
-        .saudi-flag {
-            width: 22px; animation: wave 2s infinite ease-in-out;
-        }
-        @keyframes wave {
-            0%, 100% { transform: rotate(0) translateY(0); }
-            50% { transform: rotate(10deg) translateY(-3px); }
-        }
-
-        .menu-dots { font-size: 28px; color: #d4af37; cursor: pointer; }
-        .back-arrow { font-size: 26px; color: #fff; cursor: pointer; display: none; }
-
-        /* القائمة الجانبية */
+        /* القائمة الجانبية الممتدة */
         #side-menu {
-            position: fixed; top: 0; right: -100%; width: 75%; height: 100vh;
+            position: fixed; top: 0; right: -100%; width: 85%; height: 100vh;
             background: rgba(5, 5, 5, 0.98); backdrop-filter: blur(15px);
-            z-index: 1001; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            padding: 40px 20px; border-left: 2px solid #d4af37;
+            z-index: 2000; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 30px 20px; border-left: 2px solid #d4af37; overflow-y: auto;
         }
         #side-menu.active { right: 0; }
+        .menu-logo { width: 90px; height: 90px; border-radius: 50%; border: 2px solid #d4af37; display: block; margin: 0 auto 15px; }
 
-        .menu-header { text-align: center; margin-bottom: 30px; }
-        .menu-logo {
-            width: 100px; height: 100px; border-radius: 50%;
-            border: 2px solid #d4af37; padding: 5px; margin-bottom: 15px;
-            box-shadow: 0 0 15px rgba(212, 175, 55, 0.3); object-fit: cover;
-        }
+        /* روابط القائمة */
+        .menu-list { list-style: none; margin-bottom: 20px; }
+        .menu-list li { padding: 15px; border-bottom: 1px solid #1a1a1a; cursor: pointer; color: #fff; font-size: 0.95rem; }
+        .sub-menu { padding: 10px 20px; background: #0a0a0a; display: none; }
+        .sub-menu a { display: block; color: #aaa; text-decoration: none; padding: 10px 0; font-size: 0.85rem; }
 
-        .menu-list { list-style: none; }
-        .menu-list li {
-            padding: 15px; border-bottom: 1px solid #1a1a1a;
-            font-size: 1rem; color: #fff; cursor: pointer;
-        }
+        /* نظام التقييم */
+        .review-section { background: #111; padding: 15px; border-radius: 15px; margin-top: 20px; border: 1px solid #222; }
+        .stars { color: #555; font-size: 1.5rem; cursor: pointer; margin: 10px 0; }
+        .stars .star.active { color: #d4af37; }
+        input, textarea { width: 100%; background: #1a1a1a; border: 1px solid #333; color: #fff; padding: 10px; border-radius: 8px; margin-bottom: 10px; font-family: 'Cairo'; }
+        .btn-submit { background: #d4af37; color: #000; border: none; padding: 10px; width: 100%; border-radius: 8px; font-weight: bold; }
 
         /* المحتوى الرئيسي */
-        #store-content { padding-top: 85px; }
-
-        /* الصورة التي أرفقتها (البنر الرئيسي) */
-        .main-banner {
+        #main-store { padding-top: 90px; }
+        
+        /* الصورة الرئيسية (البنر اللي طلبتها) */
+        .main-hero {
             width: 92%; margin: 0 auto 25px; display: block;
-            border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.7);
-            border: 1px solid #222;
+            border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            border: 1px solid #222; min-height: 150px;
         }
 
         .container { padding: 0 15px 40px; }
-        .category-card { margin-bottom: 30px; cursor: pointer; transition: 0.3s; }
-        .category-card:active { transform: scale(0.97); }
-        .category-card img {
-            width: 100%; border-radius: 20px; aspect-ratio: 2 / 1;
-            object-fit: cover; border: 1px solid #1a1a1a;
-        }
-        .cat-name {
-            text-align: center; color: #d4af37; font-weight: bold;
-            font-size: 1.2rem; margin-top: 10px;
-        }
+        .cat-card { margin-bottom: 30px; text-align: center; }
+        .cat-card img { width: 100%; border-radius: 20px; aspect-ratio: 2/1; object-fit: cover; border: 1px solid #1a1a1a; }
+        .cat-name { color: #d4af37; font-weight: bold; margin-top: 10px; font-size: 1.1rem; }
 
-        #overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
-            background: rgba(0,0,0,0.8); z-index: 1000; display: none;
-        }
+        #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: rgba(0,0,0,0.8); z-index: 1500; display: none; }
     </style>
 </head>
 <body>
 
     <header>
-        <div id="header-branding" class="header-title">
+        <div class="header-title">
             <img src="https://upload.wikimedia.org/wikipedia/commons/0/0d/Flag_of_Saudi_Arabia.svg" class="saudi-flag">
             متجر أومني
         </div>
-        <div id="back-icon" class="back-arrow" onclick="goBackMain()">&#8594;</div>
         <div class="menu-dots" onclick="toggleMenu()">&#8942;</div>
     </header>
 
     <div id="overlay" onclick="toggleMenu()"></div>
+
     <div id="side-menu">
-        <div class="menu-header">
-            <img src="لوقو المتجر.jpeg" class="menu-logo">
-            <div style="color: #d4af37; font-weight: 900;">OMNI STORE</div>
-        </div>
+        <img src="لوقو المتجر.jpeg" class="menu-logo" onerror="this.src='https://via.placeholder.com/100?text=OMNI'">
+        <div style="text-align: center; color: #d4af37; font-weight: 900; margin-bottom: 25px;">OMNI STORE</div>
+        
         <ul class="menu-list">
-            <li onclick="goBackMain(); toggleMenu();">🏠 الرئيسية</li>
-            <li onclick="openSection('تيك توك'); toggleMenu();">📱 قسم تيك توك</li>
-            <li onclick="openSection('انستقرام'); toggleMenu();">📸 قسم انستا</li>
-            <li onclick="openSection('الذكاء الاصطناعي'); toggleMenu();">🤖 ذكاء اصطناعي</li>
-            <li onclick="openSection('ستيم أونلاين'); toggleMenu();">🎮 ستيم أونلاين</li>
-            <li onclick="openSection('ستيم أوفلاين'); toggleMenu();">🕹️ ستيم أوفلاين</li>
+            <li onclick="location.reload()">🏠 الرئيسية</li>
+            <li onclick="toggleSub('contact-sub')">📞 تواصل مع المتجر ▼</li>
+            <div id="contact-sub" class="sub-menu">
+                <a href="https://wa.me/9665XXXXXXXX?text=عندي مشكلة في طلبي">⚠️ مشكلة في طلبي</a>
+                <a href="https://wa.me/9665XXXXXXXX?text=استفسار بخصوص طلبي">🔍 استفسار لطلبي</a>
+                <a href="https://wa.me/9665XXXXXXXX?text=عندي استفسار عام">💡 استفسار عام</a>
+            </div>
+            <li>💬 جميع الأقسام</li>
         </ul>
+
+        <div class="review-section">
+            <div style="font-size: 0.9rem; margin-bottom: 10px; color: #d4af37;">قيم تجربتك معنا:</div>
+            <input type="text" id="rev-name" placeholder="اسمك الكريم">
+            <div class="stars" id="star-rating">
+                <span class="star" data-v="1">★</span><span class="star" data-v="2">★</span><span class="star" data-v="3">★</span><span class="star" data-v="4">★</span><span class="star" data-v="5">★</span>
+            </div>
+            <textarea id="rev-text" placeholder="اكتب تقييمك هنا..." rows="3"></textarea>
+            <button class="btn-submit" onclick="submitReview()">إرسال التقييم</button>
+        </div>
     </div>
 
-    <div id="store-content">
-        
-        <div id="home-view">
-            <img src="صورة_الرئيسيه.png" class="main-banner">
+    <div id="main-store">
+        <img src="my_hero_image.png" class="main-hero" id="hero-img" onerror="showImageError()">
 
-            <div class="container">
-                <div class="category-card" onclick="openSection('تيك توك')">
-                    <img src="قسم تيك توك .jpeg">
-                    <div class="cat-name">قسم تيك توك</div>
-                </div>
-
-                <div class="category-card" onclick="openSection('انستقرام')">
-                    <img src="قسم انستا .jpeg">
-                    <div class="cat-name">قسم انستقرام</div>
-                </div>
-
-                <div class="category-card" onclick="openSection('الذكاء الاصطناعي')">
-                    <img src="قسم الذكاء الاصطناعي .jpeg">
-                    <div class="cat-name">قسم الذكاء الاصطناعي</div>
-                </div>
-
-                <div class="category-card" onclick="openSection('ستيم أونلاين')">
-                    <img src="قسم ستيم اولاين .jpeg">
-                    <div class="cat-name">ألعاب ستيم أونلاين</div>
-                </div>
-
-                <div class="category-card" onclick="openSection('ستيم أوفلاين')">
-                    <img src="قسم ستيم اوفلاين.jpeg">
-                    <div class="cat-name">ألعاب ستيم أوفلاين</div>
-                </div>
-            </div>
+        <div class="container">
+            <div class="cat-card"><img src="قسم تيك توك .jpeg"><div class="cat-name">قسم تيك توك</div></div>
+            <div class="cat-card"><img src="قسم انستا .jpeg"><div class="cat-name">قسم انستا</div></div>
+            <div class="cat-card"><img src="قسم الذكاء الاصطناعي .jpeg"><div class="cat-name">قسم الذكاء الاصطناعي</div></div>
+            <div class="cat-card"><img src="قسم ستيم اولاين .jpeg"><div class="cat-name">ألعاب ستيم أونلاين</div></div>
+            <div class="cat-card"><img src="قسم ستيم اوفلاين.jpeg"><div class="cat-name">ألعاب ستيم أوفلاين</div></div>
         </div>
-
-        <div id="section-view" style="display: none; padding: 20px; text-align: center;">
-            <h2 id="current-sec-name" style="color: #d4af37; margin-bottom: 20px;"></h2>
-            <div style="background: #0a0a0a; padding: 40px; border-radius: 20px; border: 1px dashed #333; color: #666;">
-                قريباً.. أفضل العروض والخدمات الرقمية
-            </div>
-        </div>
-
     </div>
 
     <script>
-        const sideMenu = document.getElementById('side-menu');
-        const overlay = document.getElementById('overlay');
-        const backBtn = document.getElementById('back-icon');
-        const branding = document.getElementById('header-branding');
-
+        // فتح وإغلاق القائمة
         function toggleMenu() {
-            sideMenu.classList.toggle('active');
-            overlay.style.display = sideMenu.classList.contains('active') ? 'block' : 'none';
+            const menu = document.getElementById('side-menu');
+            const overlay = document.getElementById('overlay');
+            menu.classList.toggle('active');
+            overlay.style.display = menu.classList.contains('active') ? 'block' : 'none';
         }
 
-        function openSection(name) {
-            document.getElementById('home-view').style.display = 'none';
-            document.getElementById('section-view').style.display = 'block';
-            document.getElementById('current-sec-name').innerText = name;
-            
-            backBtn.style.display = 'block';
-            branding.style.display = 'none';
-            window.scrollTo(0,0);
+        // فتح القوائم الفرعية
+        function toggleSub(id) {
+            const sub = document.getElementById(id);
+            sub.style.display = (sub.style.display === 'block') ? 'none' : 'block';
         }
 
-        function goBackMain() {
-            document.getElementById('home-view').style.display = 'block';
-            document.getElementById('section-view').style.display = 'none';
-            
-            backBtn.style.display = 'none';
-            branding.style.display = 'flex';
+        // نظام النجوم
+        const stars = document.querySelectorAll('.star');
+        let selectedRating = 0;
+        stars.forEach(s => {
+            s.onclick = function() {
+                selectedRating = this.getAttribute('data-v');
+                stars.forEach(st => st.classList.remove('active'));
+                for(let i=0; i<selectedRating; i++) stars[i].classList.add('active');
+            }
+        });
+
+        // إرسال التقييم
+        function submitReview() {
+            const name = document.getElementById('rev-name').value;
+            if(!name || selectedRating == 0) { alert('فضلاً ضع اسمك والتقييم'); return; }
+            alert('شكراً لك ' + name + '! تم استلام تقييمك بنجاح.');
+            toggleMenu();
+        }
+
+        // معالجة خطأ الصورة (إذا لم يجد الملف)
+        function showImageError() {
+            const img = document.getElementById('hero-img');
+            console.log("الصورة لم تظهر! تأكد أن اسم الملف هو my_hero_image.png");
+            // سأضع رابطاً مؤقتاً لترى كيف يظهر الشكل لو كانت الصورة مفقودة
+            img.src = "https://via.placeholder.com/1000x500/000000/d4af37?text=OMNI+STORE+HERO";
         }
     </script>
 </body>
