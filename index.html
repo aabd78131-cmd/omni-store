@@ -4,185 +4,334 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>أومني - العقل الرقمي</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=Noto+Sans+Arabic:wght@300&display=swap" rel="stylesheet">
     
     <style>
         /* --- CSS Section --- */
+        :root {
+            --bg-black: #000000;
+            --main-gold: #d4af37;
+            --deep-red-glow: rgba(139, 0, 0, 0.15);
+            --text-gray: #a0a0a0;
+        }
+
         body {
             margin: 0;
-            background-color: #000000; /* أسود فخم يتناسب مع صورك */
+            background-color: var(--bg-black);
             color: #ffffff;
             font-family: 'Cairo', sans-serif;
             direction: rtl;
             overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent; /* تحسين اللمس للجوال */
         }
 
-        /* شاشة البداية (Splash Screen) */
+        /* --- 1. شاشة الإعلان الاحترافية (Splash) --- */
         #splash-screen {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100vh;
-            z-index: 9999;
-            background: #000;
+            top: 0; left: 0; width: 100%; height: 100vh;
+            background-color: var(--bg-black);
+            background-image: radial-gradient(circle at center, var(--deep-red-glow) 0%, var(--bg-black) 70%);
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.8s ease, visibility 0.8s;
         }
 
-        .splash-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+        .splash-logo {
+            width: 150px;
+            filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.5));
+            animation: pulse-gold 3s infinite;
         }
 
-        /* زر تخطي شفاف يوضع فوق كلمة "تخطي" في صورتك */
+        .splash-tagline {
+            font-family: 'Noto Sans Arabic', sans-serif;
+            color: var(--text-gray);
+            font-size: 0.9rem;
+            margin-top: 20px;
+            letter-spacing: 1px;
+        }
+
+        /* زر تخطي زجاجي محترف */
         #skip-overlay {
             position: absolute;
-            top: 2%; /* يغطي منطقة التخطي العلوية */
-            left: 50%;
+            top: 5%; left: 50%;
             transform: translateX(-50%);
-            width: 50%;
-            height: 10%;
-            background: rgba(255, 255, 255, 0); 
+            padding: 10px 30px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            color: rgba(255, 255, 255, 0.6);
             cursor: pointer;
-            z-index: 10000;
+            z-index: 10001;
+            font-size: 0.8rem;
         }
 
-        /* واجهة المتجر */
-        .hidden { display: none; }
-
-        header {
-            text-align: center;
-            padding: 20px;
-            background: linear-gradient(to bottom, #111, #000);
+        @keyframes pulse-gold {
+            0% { filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.4)); }
+            50% { filter: drop-shadow(0 0 25px rgba(212, 175, 55, 0.7)); }
+            100% { filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.4)); }
         }
 
-        .store-logo {
-            width: 80px;
-            border-radius: 50%;
-            border: 2px solid #d4af37; /* إطار ذهبي */
+        /* --- 2. واجهة المتجر وقوائم الجوال --- */
+        #main-store { display: none; }
+
+        /* الهيدر الجديد (بدون لوقو، مع أزرار التحكم) */
+        .store-header {
+            position: fixed;
+            top: 0; width: 100%;
+            height: 60px;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 15px;
+            box-sizing: border-box;
+            z-index: 900;
+            border-bottom: 1px solid #1a1a1a;
         }
 
+        /* ثلاث نقاط (قائمة) - تعمل فقط في الرئيسية */
+        .menu-dots {
+            font-size: 1.5rem;
+            color: var(--main-gold);
+            cursor: pointer;
+            display: block; /* تظهر في الرئيسية */
+        }
+
+        /* زر الرجوع - يظهر فقط في الأقسام */
+        .back-arrow {
+            font-size: 1.5rem;
+            color: #ffffff;
+            cursor: pointer;
+            display: none; /* مخفي في الرئيسية */
+        }
+
+        /* البنر التعريفي (كاملاً) */
         .hero-banner {
             width: 100%;
+            margin-top: 60px; /* مكان الهيدر */
             display: block;
         }
 
-        .container { padding: 15px; }
+        /* --- 3. بنرات الأقسام (Mobile Gold Ratio 2:1) --- */
+        .container { padding: 15px; margin-bottom: 50px; }
 
-        /* بنرات الأقسام (المقاس الذهبي 2:1) */
-        .category-item { margin-bottom: 40px; }
+        .category-item { margin-bottom: 30px; cursor: pointer; }
 
         .banner-wrapper img {
             width: 100%;
             aspect-ratio: 2 / 1; 
-            border-radius: 15px;
+            border-radius: 12px;
             object-fit: cover;
-            box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease;
         }
+
+        .category-item:active .banner-wrapper img { transform: scale(0.98); }
 
         .category-title {
             text-align: center;
-            font-size: 1.4rem;
-            margin-top: 15px;
-            color: #d4af37; /* لون ذهبي */
+            font-size: 1.2rem;
+            margin-top: 10px;
+            color: var(--main-gold);
+            font-weight: 700;
         }
 
-        /* نظام السحب العرضي (Horizontal Scroll) */
-        .product-slider {
-            display: flex;
-            overflow-x: auto;
-            gap: 15px;
+        /* --- 4. القائمة الجانبية (Drawer) --- */
+        #side-menu {
+            position: fixed;
+            top: 0; right: -100%; /* مخفية */
+            width: 70%; height: 100vh;
+            background-color: #0a0a0a;
+            z-index: 1000;
+            transition: right 0.4s ease;
+            padding: 20px;
+            border-left: 1px solid #1a1a1a;
+        }
+
+        #side-menu.open { right: 0; }
+
+        .menu-close {
+            font-size: 1.8rem;
+            color: var(--text-gray);
+            cursor: pointer;
+            margin-bottom: 30px;
+        }
+
+        .menu-link {
+            display: block;
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.1rem;
             padding: 15px 0;
-            scrollbar-width: none; /* إخفاء شريط التمرير */
+            border-bottom: 1px solid #1a1a1a;
         }
 
-        .product-slider::-webkit-scrollbar { display: none; }
-
-        .product-card {
-            min-width: 160px;
-            height: 200px;
-            background: #111;
-            border: 1px solid #222;
-            border-radius: 12px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: #555;
+        /* خلفية ضبابية عند فتح القائمة */
+        #menu-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100vh;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 999;
+            display: none;
         }
     </style>
 </head>
 <body>
 
     <div id="splash-screen">
-        <div id="skip-overlay" onclick="startStore()"></div>
-        <img src="صورة دخول المتجر.jpeg" alt="Splash" class="splash-img">
+        <div id="skip-overlay" onclick="startStore()">تخطي X</div>
+        <img src="omni-logo.png" alt="Omni" class="splash-logo">
+        <div class="splash-tagline">العقل الرقمي بوابة المستقبل</div>
     </div>
 
-    <div id="main-content" class="hidden">
-        <header>
-            <img src="لوقو المتجر.jpeg" alt="Omni Logo" class="store-logo">
+    <div id="main-store">
+        <header class="store-header">
+            <div id="dots-icon" class="menu-dots" onclick="toggleMenu()">&#8942;</div>
+            <div id="back-icon" class="back-arrow" onclick="goBackToMain()">&#8592;</div>
         </header>
 
-        <section>
-            <img src="صورة الرئيسيه.jpeg" alt="الرئيسية" class="hero-banner">
-        </section>
-
-        <div class="container">
-            
-            <div class="category-item">
-                <div class="banner-wrapper">
-                    <img src="قسم انستا .jpeg" alt="Instagram">
-                </div>
-                <h2 class="category-title">قسم انستقرام</h2>
-                <div class="product-slider">
-                    <div class="product-card">قريباً..</div>
-                    <div class="product-card">قريباً..</div>
-                    <div class="product-card">قريباً..</div>
-                </div>
-            </div>
-
-            <div class="category-item">
-                <div class="banner-wrapper">
-                    <img src="قسم تيك توك .jpeg" alt="TikTok">
-                </div>
-                <h2 class="category-title">قسم تيك توك</h2>
-                <div class="product-slider">
-                    <div class="product-card">قريباً..</div>
-                    <div class="product-card">قريباً..</div>
-                </div>
-            </div>
-
-            <div class="category-item">
-                <div class="banner-wrapper">
-                    <img src="قسم الذكاء الاصطناعي .jpeg" alt="AI">
-                </div>
-                <h2 class="category-title">قسم الذكاء الاصطناعي</h2>
-            </div>
-
+        <div id="side-menu">
+            <div class="menu-close" onclick="toggleMenu()">X</div>
+            <a href="#" class="menu-link">من نحن</a>
+            <a href="#" class="menu-link">سياسة الاسترجاع</a>
+            <a href="#" class="menu-link">تواصل معنا</a>
         </div>
+        <div id="menu-overlay" onclick="toggleMenu()"></div>
+
+        <div id="main-page-content">
+            <img src="main-hero.png" alt="Omni Store" class="hero-banner">
+
+            <div class="container">
+                
+                <div class="category-item" onclick="openSection('tiktok')">
+                    <div class="banner-wrapper">
+                        <img src="tiktok-cat.png" alt="تيك توك">
+                    </div>
+                    <h2 class="category-title">قسم تيك توك</h2>
+                </div>
+
+                <div class="category-item" onclick="openSection('insta')">
+                    <div class="banner-wrapper">
+                        <img src="insta-cat.png" alt="انستقرام">
+                    </div>
+                    <h2 class="category-title">قسم انستقرام</h2>
+                </div>
+
+                <div class="category-item" onclick="openSection('ai')">
+                    <div class="banner-wrapper">
+                        <img src="ai-cat.png" alt="الذكاء الاصطناعي">
+                    </div>
+                    <h2 class="category-title">قسم الذكاء الاصطناعي</h2>
+                </div>
+
+                <div class="category-item" onclick="openSection('steam-online')">
+                    <div class="banner-wrapper">
+                        <img src="steam-online.png" alt="ستيم أونلاين">
+                    </div>
+                    <h2 class="category-title">ألعاب ستيم أونلاين</h2>
+                </div>
+
+                <div class="category-item" onclick="openSection('steam-offline')">
+                    <div class="banner-wrapper">
+                        <img src="steam-offline.png" alt="ستيم أوفلاين">
+                    </div>
+                    <h2 class="category-title">ألعاب ستيم أوفلاين</h2>
+                </div>
+
+            </div>
+        </div>
+
+        <div id="section-content" style="display: none; padding: 80px 15px;">
+            <h1 id="section-title" style="color: var(--main-gold); text-align: center;"></h1>
+            <p style="color: var(--text-gray); text-align: center;">المنتجات ستظهر هنا قريباً...</p>
+        </div>
+
     </div>
 
     <script>
         /* --- JavaScript Section --- */
+        
+        // 1. تشغيل المتجر وتلاشي الإعلان
         function startStore() {
             const splash = document.getElementById('splash-screen');
-            const main = document.getElementById('main-content');
-
-            // تأثير التلاشي (Fade Out) لمدة 0.8 ثانية
-            splash.style.transition = "opacity 0.8s ease";
-            splash.style.opacity = "0";
-
+            const store = document.getElementById('main-store');
+            
+            splash.style.opacity = '0';
+            splash.style.visibility = 'hidden';
+            
             setTimeout(() => {
-                splash.style.display = "none";
-                main.classList.remove('hidden');
-                window.scrollTo(0, 0);
+                splash.style.display = 'none';
+                store.style.display = 'block';
+                // التأكد من ظهور النقاط الثلاث وإخفاء زر الرجوع عند الدخول
+                goBackToMain(); 
             }, 800);
+        }
+
+        // 2. التحكم في القائمة الجانبية (الثلاث نقاط)
+        function toggleMenu() {
+            const menu = document.getElementById('side-menu');
+            const overlay = document.getElementById('menu-overlay');
+            menu.classList.toggle('open');
+            overlay.style.display = (overlay.style.display === 'block') ? 'none' : 'block';
+        }
+
+        // 3. فتح الأقسام والتحكم في أزرار الهيدر
+        function openSection(sectionName) {
+            const mainContent = document.getElementById('main-page-content');
+            const sectionContent = document.getElementById('section-content');
+            const sectionTitle = document.getElementById('section-title');
+            const dots = document.getElementById('dots-icon');
+            const back = document.getElementById('back-icon');
+
+            // تبديل المحتوى
+            mainContent.style.display = 'none';
+            sectionContent.style.display = 'block';
+            
+            // تعيين عنوان القسم
+            sectionTitle.innerText = getSectionTitle(sectionName);
+
+            // تبديل أزرار الهيدر (إخفاء النقاط، إظهار الرجوع)
+            dots.style.display = 'none';
+            back.style.display = 'block';
+            window.scrollTo(0, 0); // العودة لأعلى
+        }
+
+        // 4. زر الرجوع (العودة للرئيسية)
+        function goBackToMain() {
+            const mainContent = document.getElementById('main-page-content');
+            const sectionContent = document.getElementById('section-content');
+            const dots = document.getElementById('dots-icon');
+            const back = document.getElementById('back-icon');
+
+            // العودة للمحتوى الرئيسي
+            mainContent.style.display = 'block';
+            sectionContent.style.display = 'none';
+
+            // إعادة أزرار الهيدر (إظهار النقاط، إخفاء الرجوع)
+            dots.style.display = 'block';
+            back.style.display = 'none';
+        }
+
+        // دالة مساعدة للحصول على عناوين الأقسام
+        function getSectionTitle(name) {
+            switch(name) {
+                case 'tiktok': return 'منتجات تيك توك';
+                case 'insta': return 'منتجات انستقرام';
+                case 'ai': return 'الذكاء الاصطناعي';
+                case 'steam-online': return 'ستيم أونلاين';
+                case 'steam-offline': return 'ستيم أوفلاين';
+                default: return 'القسم';
+            }
         }
 
         // تلاشي تلقائي بعد 5 ثوانٍ
         setTimeout(() => {
-            if (document.getElementById('splash-screen').style.display !== "none") {
+            if (document.getElementById('splash-screen').style.display !== 'none') {
                 startStore();
             }
         }, 5000);
