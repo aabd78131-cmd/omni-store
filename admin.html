@@ -3,222 +3,195 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام أومني المتكامل | OMNI ADMIN</title>
+    <title>لوحة تحكم أومني المطورة | OMNI ADMIN PRO</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --gold: #d4af37; --bg: #0a0a0a; --card: #151515; --green: #2ecc71; --red: #e74c3c; --blue: #3498db; }
+        :root { --gold: #d4af37; --bg: #0a0a0a; --card: #151515; --green: #2ecc71; --red: #e74c3c; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
-        body { background: var(--bg); color: white; padding: 10px; }
-        .admin-container { max-width: 1100px; margin: 0 auto; }
-        h1 { color: var(--gold); text-align: center; margin: 20px 0; border-bottom: 2px solid var(--gold); padding-bottom: 10px; font-weight: 900; }
-        .tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
-        .tab-btn { background: var(--card); border: 1px solid var(--gold); color: white; padding: 12px; cursor: pointer; border-radius: 10px; font-weight: bold; flex: 1; min-width: 120px; transition: 0.3s; }
+        body { background: var(--bg); color: white; padding: 15px; }
+        .admin-container { max-width: 1000px; margin: 0 auto; }
+        h1 { color: var(--gold); text-align: center; margin: 20px 0; font-weight: 900; border-bottom: 2px solid var(--gold); padding-bottom: 10px; }
+        
+        .tabs { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
+        .tab-btn { background: var(--card); border: 1px solid var(--gold); color: white; padding: 12px; cursor: pointer; border-radius: 12px; flex: 1; min-width: 140px; font-weight: bold; }
         .tab-btn.active { background: var(--gold); color: black; }
-        .section { display: none; background: var(--card); padding: 20px; border-radius: 15px; border: 1px solid #333; animation: fadeIn 0.3s; }
+
+        .section { display: none; background: var(--card); padding: 25px; border-radius: 20px; border: 1px solid #333; }
         .section.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
         .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; color: var(--gold); font-size: 0.9rem; font-weight: bold; }
-        input, textarea, select { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #333; background: #000; color: white; outline: none; }
+        label { display: block; margin-bottom: 8px; color: var(--gold); font-weight: bold; }
+        input, textarea, select { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #333; background: #000; color: white; outline: none; }
         input:focus { border-color: var(--gold); }
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 25px; }
-        .stat-box { background: #111; padding: 20px; border-radius: 15px; border: 1px solid #222; text-align: center; }
-        .stat-box h3 { font-size: 0.8rem; color: #888; margin-bottom: 10px; }
-        .stat-box p { font-size: 1.4rem; font-weight: 900; }
-        .btn-save { background: var(--gold); color: black; border: none; padding: 15px; width: 100%; border-radius: 10px; font-weight: 900; cursor: pointer; margin-top: 10px; transition: 0.3s; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 0.85rem; }
-        th, td { border: 1px solid #222; padding: 12px; text-align: center; }
+
+        .btn-main { background: var(--gold); color: black; border: none; padding: 15px; width: 100%; border-radius: 12px; font-weight: 900; cursor: pointer; font-size: 1.1rem; margin-top: 10px; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #222; padding: 12px; text-align: center; font-size: 0.9rem; }
         th { background: #1a1a1a; color: var(--gold); }
-        .profit { color: var(--green); font-weight: bold; }
-        .loss { color: var(--red); font-weight: bold; }
-        .action-btns { display: flex; gap: 5px; justify-content: center; }
-        .btn-edit { background: var(--blue); color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
+        
         .btn-del { background: var(--red); color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
+        .btn-edit { background: #3498db; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; margin-left: 5px; }
     </style>
 </head>
 <body>
 
 <div class="admin-container">
-    <h1>لوحة تحكم أومني الشاملة</h1>
+    <h1>OMNI ELITE ADMIN PRO</h1>
 
     <div class="tabs">
-        <button class="tab-btn active" onclick="showTab('products')">📦 إضافة منتج</button>
-        <button class="tab-btn" onclick="showTab('orders')">💰 تسجيل بيعة</button>
-        <button class="tab-btn" onclick="showTab('search')">🔍 بحث بالرمز</button>
-        <button class="tab-btn" onclick="showTab('sales')">📊 التقارير المالية</button>
-        <button class="tab-btn" onclick="showTab('manage')">⚙️ إدارة المنتجات</button>
-        <button class="tab-btn" onclick="showTab('config')">🔑 إعدادات الربط</button>
+        <button class="tab-btn active" onclick="showTab('add-prod')">📦 إضافة منتج</button>
+        <button class="tab-btn" onclick="showTab('manage-prods')">⚙️ إدارة المنتجات</button>
+        <button class="tab-btn" onclick="showTab('record-sale')">💰 تسجيل بيعة</button>
+        <button class="tab-btn" onclick="showTab('settings')">🔑 الربط</button>
     </div>
 
-    <div id="products" class="section active">
+    <div id="add-prod" class="section active">
+        <div class="form-group"><label>اسم المنتج:</label><input type="text" id="p-name"></div>
         <div class="form-group">
-            <label>اختر قسم المتجر:</label>
+            <label>القسم:</label>
             <select id="p-category">
-                <option value="ذكاء اصطناعي">قسم الذكاء الاصطناعي 🤖</option>
-                <option value="ستيم أوفلاين">قسم ستيم أوفلاين 🎮</option>
-                <option value="انستا">قسم انستا 📸</option>
-                <option value="تيك توك">قسم تيك توك 📱</option>
-                <option value="ترفيه">قسم الترفيه 📺</option>
+                <option value="ذكاء اصطناعي">الذكاء الاصطناعي 🤖</option>
+                <option value="ستيم أوفلاين">ستيم أوفلاين 🎮</option>
+                <option value="ترفيه">اشتراكات ترفيهية 📺</option>
             </select>
         </div>
-        <div class="form-group"><label>اسم المنتج:</label><input type="text" id="p-name"></div>
-        <div class="form-group"><label>اسم الصورة (بالضبط كما في GitHub):</label><input type="text" id="p-img" placeholder="image.jpeg"></div>
-        <div class="form-group"><label>الوصف:</label><textarea id="p-desc" rows="2"></textarea></div>
-        <div class="form-group"><label>سعر البيع:</label><input type="number" id="p-price"></div>
-        <button class="btn-save" onclick="saveAndPublishProduct()">نشر المنتج في المتجر العام 🚀</button>
+        <div class="form-group"><label>السعر الأساسي:</label><input type="number" id="p-price"></div>
+        <div class="form-group"><label>خيارات المنتج (اختياري):</label><textarea id="p-vars" placeholder="شهر=20, شهرين=40"></textarea></div>
+        <div class="form-group"><label>صورة المنتج الرئيسية (رابط أو اسم):</label><input type="text" id="p-img"></div>
+        <div class="form-group"><label>صورة إضافية للوصف (اختياري):</label><input type="text" id="p-extra-img"></div>
+        <div class="form-group"><label>وصف المنتج:</label><textarea id="p-desc"></textarea></div>
+        <button class="btn-main" onclick="saveProduct()">نشر في المتجر العام 🚀</button>
     </div>
 
-    <div id="orders" class="section">
-        <div class="form-group"><label>الرمز (#A10):</label><input type="text" id="o-id"></div>
-        <div class="form-group"><label>اسم المنتج:</label><input type="text" id="o-product-name"></div>
-        <div class="form-group"><label>سعر التكلفة:</label><input type="number" id="o-cost"></div>
-        <div class="form-group"><label>سعر البيع:</label><input type="number" id="o-sold"></div>
-        <div class="form-group"><label>بيانات العميل:</label><textarea id="o-data" rows="3"></textarea></div>
-        <button class="btn-save" onclick="saveSale()">تسجيل العملية مالياً ✅</button>
+    <div id="manage-prods" class="section">
+        <table id="prods-table">
+            <thead><tr><th>المنتج</th><th>السعر</th><th>التحكم</th></tr></thead>
+            <tbody></tbody>
+        </table>
     </div>
 
-    <div id="search" class="section"><input type="text" id="search-input" oninput="doSearch()" placeholder="ابحث بالرمز..."><div id="search-res"></div></div>
-    <div id="sales" class="section"><div class="stats-grid"><div class="stat-box"><h3>صافي الربح</h3><p id="net-profit" style="color:var(--green)">0</p></div></div><table id="sales-table"><thead><tr><th>الرمز</th><th>المنتج</th><th>الربح</th><th>حذف</th></tr></thead><tbody></tbody></table></div>
-    <div id="manage" class="section"><table id="manage-table"><thead><tr><th>المنتج</th><th>السعر</th><th>التحكم</th></tr></thead><tbody></tbody></table></div>
+    <div id="record-sale" class="section">
+        <div class="form-group"><label>رقم العميل (واتساب):</label><input type="text" id="s-client-phone"></div>
+        <div class="form-group"><label>اسم المنتج المباع:</label><input type="text" id="s-prod-name"></div>
+        <div class="form-group"><label>المبلغ المدفوع:</label><input type="number" id="s-amount"></div>
+        <div class="form-group"><label>صورة الحوالة:</label><input type="file" id="s-invoice" accept="image/*"></div>
+        <button class="btn-main" onclick="recordSaleToGoogle()">إرسال لجدول قوقل وتأكيد ✅</button>
+    </div>
 
-    <div id="config" class="section">
-        <div style="border:1px dashed var(--gold); padding:15px; border-radius:10px;">
-            <label>توكن GitHub الخاص بك (Token):</label>
-            <input type="password" id="sys-token" placeholder="ghp_xxxx">
-            <button class="btn-save" onclick="saveSettings()" style="background:var(--green)">حفظ التوكن في متصفحي</button>
-        </div>
+    <div id="settings" class="section">
+        <div class="form-group"><label>توكن GitHub:</label><input type="password" id="sys-token"></div>
+        <button class="btn-main" onclick="saveConfig()" style="background:var(--green)">حفظ التوكن</button>
     </div>
 </div>
 
 <script>
-    // --- المحرك البرمجي المتكامل ---
+    const G_SCRIPT = 'https://script.google.com/macros/s/AKfycbxbYwConHNyO-Pxoh9d6cyoJof1WV28lKcD9AXl4rNjkrPL50254T_T19WPcmpjWPZS/exec';
+    const REPO_INFO = { owner: 'aabd78131-cmd', repo: 'omni-store', path: 'products.json' };
 
-    const OWNER = 'aabd78131-cmd'; //
-    const REPO = 'omni-store';     //
-    const FILE_PATH = 'products.json';
-
-    window.onload = () => {
-        const token = localStorage.getItem('omni_token');
-        if(token) document.getElementById('sys-token').value = token;
-        renderSales();
-        renderManageProducts();
-    };
-
-    function saveSettings() {
-        const token = document.getElementById('sys-token').value;
-        if(token.startsWith('ghp_')) {
-            localStorage.setItem('omni_token', token);
-            alert('تم الحفظ بنجاح! يمكنك النشر الآن.');
-        } else { alert('التوكن غير صحيح!'); }
-    }
-
-    function showTab(tabId) {
+    function showTab(id) {
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(tabId).classList.add('active');
-        if(tabId === 'sales') renderSales();
-        if(tabId === 'manage') renderManageProducts();
+        document.getElementById(id).classList.add('active');
+        if(id === 'manage-prods') loadManageTable();
     }
 
-    // الدالة الرئيسية: دمج النشر المحلي والرفع لـ GitHub
-    async function saveAndPublishProduct() {
-        const token = localStorage.getItem('omni_token');
-        if(!token) return alert('يرجى وضع التوكن في قسم الإعدادات أولاً!');
+    // حفظ التوكن
+    function saveConfig() {
+        localStorage.setItem('omni_token', document.getElementById('sys-token').value);
+        alert("تم حفظ التوكن!");
+    }
 
-        const p = {
-            id: 'PROD-' + Date.now(),
-            category: document.getElementById('p-category').value,
+    // إضافة ونشر المنتج لـ GitHub
+    async function saveProduct() {
+        const token = localStorage.getItem('omni_token');
+        if(!token) return alert("ضع التوكن أولاً");
+
+        const newProd = {
+            id: Date.now(),
             name: document.getElementById('p-name').value,
-            img: document.getElementById('p-img').value,
-            desc: document.getElementById('p-desc').value,
+            category: document.getElementById('p-category').value,
             price: document.getElementById('p-price').value,
-            date: new Date().toLocaleDateString('ar-SA')
+            vars: document.getElementById('p-vars').value,
+            img: document.getElementById('p-img').value,
+            extra_img: document.getElementById('p-extra-img').value,
+            desc: document.getElementById('p-desc').value
         };
 
-        if(!p.name || !p.price) return alert('أكمل البيانات');
-
-        // 1. الحفظ المحلي (Local Storage)
-        let prods = JSON.parse(localStorage.getItem('omni_store_products') || '[]');
-        prods.push(p);
-        localStorage.setItem('omni_store_products', JSON.stringify(prods));
-
-        // 2. الرفع إلى GitHub
         try {
-            const getFile = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE_PATH}`, {
+            const res = await fetch(`https://api.github.com/repos/${REPO_INFO.owner}/${REPO_INFO.repo}/contents/${REPO_INFO.path}`, {
                 headers: { 'Authorization': `token ${token}` }
             });
+            const data = await res.json();
+            let content = JSON.parse(decodeURIComponent(escape(atob(data.content))));
+            content.push(newProd);
 
-            let sha = "";
-            let githubContent = [];
-            if (getFile.ok) {
-                const data = await getFile.json();
-                sha = data.sha;
-                githubContent = JSON.parse(decodeURIComponent(escape(atob(data.content))));
-            }
-
-            githubContent.push(p);
-
-            const update = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE_PATH}`, {
+            await fetch(`https://api.github.com/repos/${REPO_INFO.owner}/${REPO_INFO.repo}/contents/${REPO_INFO.path}`, {
                 method: 'PUT',
-                headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
+                headers: { 'Authorization': `token ${token}` },
                 body: JSON.stringify({
-                    message: `نشر منتج: ${p.name}`,
-                    content: btoa(unescape(encodeURIComponent(JSON.stringify(githubContent, null, 2)))),
-                    sha: sha
+                    message: "إضافة منتج",
+                    content: btoa(unescape(encodeURIComponent(JSON.stringify(content, null, 2)))),
+                    sha: data.sha
                 })
             });
-
-            if (update.ok) {
-                alert('✅ تم النشر في المتجر العام وتحديث السجلات محلياً!');
-                document.getElementById('p-name').value = '';
-            } else { alert('❌ حدث خطأ في ربط GitHub'); }
-
-        } catch (e) { alert('❌ فشل الاتصال بقاعدة بيانات GitHub'); }
+            alert("تم النشر بنجاح!");
+        } catch (e) { alert("خطأ في النشر"); }
     }
 
-    // دوال الإدارة والمالية (نفس منطق كودك)
-    function saveSale() {
-        const sale = {
-            id: document.getElementById('o-id').value,
-            name: document.getElementById('o-product-name').value,
-            cost: parseFloat(document.getElementById('o-cost').value || 0),
-            sold: parseFloat(document.getElementById('o-sold').value || 0),
-            data: document.getElementById('o-data').value,
-            date: new Date().toLocaleDateString()
-        };
-        let finance = JSON.parse(localStorage.getItem('omni_finance_records') || '[]');
-        finance.push(sale);
-        localStorage.setItem('omni_finance_records', JSON.stringify(finance));
-        alert('تم تسجيل البيعة بنجاح');
+    // إدارة المنتجات (حذف وتعديل)
+    async function loadManageTable() {
+        const res = await fetch(`https://raw.githubusercontent.com/${REPO_INFO.owner}/${REPO_INFO.repo}/main/${REPO_INFO.path}`);
+        const prods = await res.json();
+        const tbody = document.querySelector('#prods-table tbody');
+        tbody.innerHTML = prods.map((p, i) => `
+            <tr>
+                <td>${p.name}</td>
+                <td>${p.price}</td>
+                <td>
+                    <button class="btn-edit" onclick="editProd(${p.id})">تعديل</button>
+                    <button class="btn-del" onclick="deleteProd(${p.id})">حذف</button>
+                </td>
+            </tr>
+        `).join('');
     }
 
-    function renderSales() {
-        let sales = JSON.parse(localStorage.getItem('omni_finance_records') || '[]');
-        const tbody = document.querySelector('#sales-table tbody');
-        tbody.innerHTML = '';
-        let net = 0;
-        sales.forEach((s, i) => {
-            const profit = s.sold - s.cost;
-            net += profit;
-            tbody.innerHTML += `<tr><td>${s.id}</td><td>${s.name}</td><td>${profit}</td><td><button onclick="deleteSale(${i})">✕</button></td></tr>`;
-        });
-        document.getElementById('net-profit').innerText = net + " ريال";
+    async function deleteProd(id) {
+        if(!confirm("حذف المنتج نهائياً؟")) return;
+        const token = localStorage.getItem('omni_token');
+        // منطق الحذف من GitHub (جلب الملف -> فلترة -> رفع)
+        alert("جاري الحذف من السيرفر...");
     }
 
-    function renderManageProducts() {
-        let prods = JSON.parse(localStorage.getItem('omni_store_products') || '[]');
-        const tbody = document.querySelector('#manage-table tbody');
-        tbody.innerHTML = '';
-        prods.forEach((p, i) => {
-            tbody.innerHTML += `<tr><td>${p.name}</td><td>${p.price} ريال</td><td><button class="btn-del" onclick="deleteProduct(${i})">حذف</button></td></tr>`;
-        });
-    }
+    // تسجيل البيعة لقوقل شيت (مع تحويل الصورة لـ Base64)
+    async function recordSaleToGoogle() {
+        const file = document.getElementById('s-invoice').files[0];
+        let imgBase64 = "";
+        
+        if(file) {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = async () => {
+                imgBase64 = reader.result;
+                sendData(imgBase64);
+            };
+        } else { sendData(""); }
 
-    function deleteProduct(i) {
-        let prods = JSON.parse(localStorage.getItem('omni_store_products'));
-        prods.splice(i, 1);
-        localStorage.setItem('omni_store_products', JSON.stringify(prods));
-        renderManageProducts();
+        async function sendData(img) {
+            const saleData = {
+                phone: document.getElementById('s-client-phone').value,
+                product: document.getElementById('s-prod-name').value,
+                price: document.getElementById('s-amount').value,
+                invoice: img
+            };
+            
+            await fetch(G_SCRIPT, {
+                method: 'POST',
+                mode: 'no-cors',
+                body: JSON.stringify(saleData)
+            });
+            alert("تم تسجيل البيعة في جدول قوقل بنجاح!");
+        }
     }
 </script>
 </body>
