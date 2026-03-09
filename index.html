@@ -6,7 +6,6 @@
     <title>متجر أومني | OMNI STORE</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        /* التنسيقات الأساسية */
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { background: #000; color: white; font-family: 'Cairo', sans-serif; overflow-x: hidden; }
 
@@ -39,7 +38,6 @@
             display: flex; justify-content: center; align-items: center; font-weight: bold; 
         }
 
-        /* القائمة الجانبية */
         #side-menu { 
             position: fixed; top: 0; right: -100%; width: 85%; height: 100vh; 
             background: #080808; z-index: 2000; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
@@ -48,32 +46,65 @@
         #side-menu.active { right: 0; }
         .menu-header { text-align: center; margin-bottom: 25px; padding-bottom: 20px; border-bottom: 1px solid #222; }
         .menu-logo { width: 100px; height: 100px; border-radius: 50%; border: 2px solid #d4af37; object-fit: cover; }
-        .menu-item { padding: 15px; display: flex; align-items: center; gap: 12px; font-size: 1.1rem; border-bottom: 1px solid #111; cursor: pointer; }
+        .menu-section-title { color: #888; font-size: 0.85rem; margin: 20px 0 10px; font-weight: bold; }
+        .menu-item { 
+            padding: 15px; display: flex; align-items: center; gap: 12px; 
+            font-size: 1.1rem; border-radius: 12px; transition: 0.2s; cursor: pointer; border-bottom: 1px solid #111;
+        }
+        .menu-item:active { background: #1a1a1a; color: #d4af37; }
 
-        /* المحتوى الرئيسي */
         #main-content { padding-top: 100px; }
-        .hero-banner { width: 92%; margin: 0 auto 30px; display: block; border-radius: 20px; }
+        .hero-banner { 
+            width: 92%; margin: 0 auto 30px; display: block; 
+            border-radius: 20px; border: 1px solid #222; box-shadow: 0 5px 20px rgba(0,0,0,0.6); 
+        }
         .container { padding: 0 15px 60px; }
         .cat-item { margin-bottom: 30px; text-align: center; cursor: pointer; }
-        .cat-item img { width: 100%; border-radius: 20px; aspect-ratio: 2/1; object-fit: cover; }
+        .cat-item img { width: 100%; border-radius: 20px; border: 1px solid #1a1a1a; aspect-ratio: 2/1; object-fit: cover; }
         .cat-label { color: #d4af37; font-weight: 900; margin-top: 12px; font-size: 1.3rem; }
 
         #section-view { display: none; padding: 100px 15px 60px; }
         .product-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .product-card { background: #0d0d0d; border: 1px solid #1a1a1a; border-radius: 18px; padding: 12px; text-align: center; }
-        .product-card img { width: 100%; border-radius: 12px; aspect-ratio: 1/1; object-fit: cover; }
+        .product-card { 
+            background: #0d0d0d; border: 1px solid #1a1a1a; border-radius: 18px; 
+            padding: 12px; text-align: center; position: relative;
+        }
+        .product-card img { width: 100%; border-radius: 12px; aspect-ratio: 1/1; object-fit: cover; margin-bottom: 10px; }
+        .product-card h3 { font-size: 0.95rem; margin-bottom: 8px; height: 45px; overflow: hidden; }
+        .product-price { color: #d4af37; font-weight: 900; font-size: 1.1rem; }
 
-        /* النوافذ المنبثقة */
         .modal { 
             position: fixed; bottom: -100%; left: 0; width: 100%; 
             max-height: 92vh; background: #0a0a0a; z-index: 3000; 
             border-top: 3px solid #d4af37; border-radius: 30px 30px 0 0; 
-            transition: 0.5s; padding: 30px 20px; overflow-y: auto; 
+            transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); padding: 30px 20px; overflow-y: auto; 
         }
         .modal.active { bottom: 0; }
-        #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: rgba(0,0,0,0.85); z-index: 1500; display: none; }
+        #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: rgba(0,0,0,0.85); z-index: 1500; display: none; backdrop-filter: blur(5px); }
         
-        .btn-main { background: linear-gradient(90deg, #d4af37, #f2d06b); color: #000; border: none; padding: 18px; width: 100%; border-radius: 15px; font-weight: 900; margin-top: 15px; cursor: pointer; }
+        .variant-grid { display: flex; flex-direction: column; gap: 10px; margin: 20px 0; }
+        .variant-option { 
+            background: #111; border: 1px solid #222; padding: 15px; 
+            border-radius: 12px; display: flex; justify-content: space-between; align-items: center;
+        }
+        .variant-option input[type="radio"] { accent-color: #d4af37; width: 22px; height: 22px; }
+        
+        .custom-qty-container { margin-top: 15px; padding-top: 15px; border-top: 1px dashed #333; }
+        .custom-qty { 
+            width: 100%; padding: 15px; background: #000; border: 1px solid #d4af37; 
+            color: #fff; border-radius: 12px; font-family: 'Cairo'; 
+            font-size: 1rem; text-align: center; outline: none; transition: 0.3s;
+        }
+        .custom-qty:focus { box-shadow: 0 0 10px rgba(212, 175, 55, 0.5); }
+
+        .btn-main { 
+            background: linear-gradient(90deg, #d4af37, #f2d06b); color: #000; 
+            border: none; padding: 18px; width: 100%; border-radius: 15px; 
+            font-weight: 900; font-size: 1.1rem; cursor: pointer; margin-top: 15px;
+        }
+        
+        .steam-instructions-grid { display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 20px; }
+        .steam-instructions-grid img { width: 100%; border-radius: 12px; border: 1px solid #333; }
     </style>
 </head>
 <body>
@@ -98,124 +129,353 @@
     <div id="overlay" onclick="closeAll()"></div>
 
     <div id="side-menu">
-        <div class="menu-header"><img src="لوقو المتجر.jpeg" class="menu-logo"></div>
-        <div class="menu-item ripple" onclick="goHome(); closeAll();">🏠 الرئيسية</div>
-        <div class="menu-item ripple" onclick="openSection('قسم ستيم أوفلاين'); closeAll();">🕹️ ستيم أوفلاين</div>
-        <div class="menu-item ripple" onclick="openSection('قسم انستا'); closeAll();">📸 انستقرام</div>
-        <div class="menu-item ripple" onclick="window.open('https://wa.me/966548512295')">💬 الدعم الفني</div>
+        <div class="menu-header">
+            <img src="لوقو المتجر.jpeg" class="menu-logo">
+            <h2 style="color:#d4af37; margin-top:10px; font-weight:900;">OMNI STORE</h2>
+        </div>
+        
+        <div class="menu-section-title">التنقل السريع</div>
+        <div class="menu-item ripple" onclick="goHome(); closeAll();">🏠 الصفحة الرئيسية</div>
+        
+        <div class="menu-section-title">أقسام المتجر</div>
+        <div class="menu-item ripple" onclick="openSection('قسم ستيم أوفلاين'); closeAll();">🕹️ قسم ستيم أوفلاين</div>
+        <div class="menu-item ripple" onclick="openSection('قسم انستا'); closeAll();">📸 خدمات انستقرام</div>
+        <div class="menu-item ripple" onclick="openSection('قسم تيك توك'); closeAll();">📱 خدمات تيك توك</div>
+        <div class="menu-item ripple" onclick="openSection('قسم الترفيه'); closeAll();">🍿 اشتراكات الترفيه</div>
+        <div class="menu-item ripple" onclick="openSection('قسم الذكاء الاصطناعي'); closeAll();">🤖 الذكاء الاصطناعي</div>
+        
+        <div class="menu-section-title">الدعم والمساعدة</div>
+        <div class="menu-item ripple" onclick="window.open('https://wa.me/966548512295')" style="color:#25d366; font-weight:bold;">💬 تواصل مع الدعم الفني</div>
     </div>
 
     <div id="main-content">
         <img src="القائمه الرئيسيه .jpeg" class="hero-banner">
         <div class="container">
             <div class="cat-item ripple" onclick="openSection('قسم ستيم أوفلاين')"><img src="قسم ستيم اوفلاين.jpeg"><div class="cat-label">قسم ستيم أوفلاين</div></div>
+            <div class="cat-item ripple" onclick="openSection('قسم انستا')"><img src="قسم انستا .jpeg"><div class="cat-label">خدمات انستقرام</div></div>
+            <div class="cat-item ripple" onclick="openSection('قسم تيك توك')"><img src="قسم تيك توك .jpeg"><div class="cat-label">خدمات تيك توك</div></div>
+            <div class="cat-item ripple" onclick="openSection('قسم الترفيه')"><img src="قسم اشتراكات الترفيه.jpeg"><div class="cat-label">اشتراكات الترفيه</div></div>
             <div class="cat-item ripple" onclick="openSection('قسم الذكاء الاصطناعي')"><img src="قسم الذكاء الاصطناعي .jpeg"><div class="cat-label">الذكاء الاصطناعي</div></div>
         </div>
     </div>
 
     <div id="section-view">
-        <h2 id="sec-title-display" style="text-align:center; color:#d4af37; margin-bottom:25px;"></h2>
+        <h2 id="sec-title-display" style="text-align:center; color:#d4af37; margin-bottom:25px; font-weight:900; font-size:1.5rem;"></h2>
         <div class="product-grid" id="products-list"></div>
     </div>
 
-    <div id="product-detail-modal" class="modal"><div id="detail-content"></div></div>
+    <div id="product-detail-modal" class="modal">
+        <div onclick="closeAll()" style="cursor:pointer; color:#fff; float:left; font-size:26px; padding:10px;">✕</div>
+        <div id="detail-content"></div>
+    </div>
 
     <div id="cart-modal" class="modal">
-        <h2 style="color:#d4af37; margin-bottom:20px;">سلة المشتريات</h2>
+        <div onclick="closeAll()" style="cursor:pointer; color:#fff; float:left; font-size:26px; padding:10px;">✕</div>
+        <h2 style="color:#d4af37; margin-bottom:20px; border-bottom:1px solid #222; padding-bottom:15px;">سلة المشتريات</h2>
         <div id="cart-items"></div>
-        <div id="cart-total" style="margin:20px 0; font-weight:900; color:#d4af37;"></div>
+        <div id="cart-total" style="margin:20px 0; font-weight:900; font-size:1.3rem; text-align:left; color:#d4af37;"></div>
         <button class="btn-main ripple" onclick="checkout()">تأكيد الطلب عبر واتساب 💬</button>
     </div>
 
     <script>
         const storeData = {
             'قسم ستيم أوفلاين': [
-                { id: 'cinema_25', name: 'Cinema Simulator 2025', price: 15, img: 'منتج لعبه  اوفلاين Cinema Simulator 2025.jpg', desc: 'لعبة نظامية من ستيم أوفلاين.' }
+                {
+                    id: 'cinema_sim_2025',
+                    name: 'Cinema Simulator 2025',
+                    price: 15,
+                    img: 'منتج لعبه  اوفلاين Cinema Simulator 2025.jpg',
+                    desc: `اللعبه نظاميه من ستيم<br><br>كل زبون له تختيمه الخاص<br><br><b style="color:red;">تنبيه :</b> لاتنسى قبل ماتشغل اللعبه تتاكد ان الحساب اوف لاين<br><br><b style="color:#d4af37;">كيف اسوي اوفلاين؟</b><br>اطفي النت, اوبعد ماتحمل اللعبه تروح فوق يسار لكلمة steam وتضغط go offline.<br><br><b style="color:#d4af37;">اقدر اسوي فاميلي شير؟</b><br>لا واذا سويت راح يتم طردك من الحساب ولن يتم استرجاع اي مبلغ<br><br>جدا مهم لتحويل الحساب اوفلاين عشان لا يسحب منك الصور الان احطه لا تلخبط<br>
+                    <div class="steam-instructions-grid">
+                        <img src="ستيم 1 .jpeg">
+                        <img src="ستيم 2 .jpeg">
+                        <img src="ستيم 3 .jpeg">
+                        <img src="ستيم 4 .jpeg">
+                        <img src="ستيم 5 .jpeg">
+                    </div>
+                    <br><span style="color:#00ff00;">الضمان: التسليم فقط.</span>`
+                }
+            ],
+            'قسم انستا': [
+                { 
+                    id: 'ig_view', 
+                    name: 'مشاهدات انستا', 
+                    price: 'اختيار', 
+                    img: 'قسم انستا .jpeg', 
+                    desc: 'خدمة زيادة مشاهدات انستقرام.<br><span style="color:#00ff00;">الضمان: التسليم فقط.</span>', 
+                    vars: [
+                        {n: '1000 مشاهده', p: 5}, 
+                        {n: '3000 مشاهد', p: 8}, 
+                        {n: '6000 مشاهد', p: 11}, 
+                        {n: '10000 مشاهد', p: 15}
+                    ], 
+                    allowCustom: true 
+                },
+                { 
+                    id: 'ig_follow', 
+                    name: 'متابعين انستا', 
+                    price: 'اختيار', 
+                    img: 'قسم انستا .jpeg', 
+                    desc: 'خدمة زيادة متابعين انستقرام.<br><span style="color:#00ff00;">الضمان: التسليم فقط.</span>', 
+                    vars: [
+                        {n: '1000 متابع', p: 6}, 
+                        {n: '3000 متابع', p: 14}, 
+                        {n: '6000 متابع', p: 24}, 
+                        {n: '10000 متابع', p: 34}
+                    ], 
+                    allowCustom: true 
+                }
+            ],
+            'قسم تيك توك': [
+                { 
+                    id: 'tk_view', 
+                    name: 'مشاهدات تيك توك', 
+                    price: 'اختيار', 
+                    img: 'قسم تيك توك .jpeg', 
+                    desc: 'خدمة زيادة مشاهدات تيك توك.<br><span style="color:#00ff00;">الضمان: التسليم فقط.</span>', 
+                    vars: [
+                        {n: '1000 مشاهده', p: 5}, 
+                        {n: '3000 مشاهد', p: 8}, 
+                        {n: '6000 مشاهد', p: 11}, 
+                        {n: '10000 مشاهد', p: 15}
+                    ], 
+                    allowCustom: true 
+                },
+                { 
+                    id: 'tk_follow', 
+                    name: 'متابعين تيك توك', 
+                    price: 'اختيار', 
+                    img: 'قسم تيك توك .jpeg', 
+                    desc: 'خدمة زيادة متابعين تيك توك.<br><span style="color:#00ff00;">الضمان: التسليم فقط.</span>', 
+                    vars: [
+                        {n: '1000 متابع', p: 10}, 
+                        {n: '3000 متابع', p: 20}, 
+                        {n: '6000 متابع', p: 34}, 
+                        {n: '10000 متابع', p: 55}
+                    ], 
+                    allowCustom: true 
+                }
+            ],
+            'قسم الترفيه': [
+                { 
+                    id: 'yt_prem', 
+                    name: 'يوتيوب بريميوم', 
+                    price: 'اختيار', 
+                    img: 'قسم اشتراكات الترفيه.jpeg', 
+                    desc: 'يوتيوب بريميوم بحسابك الشخصي.<br><span style="color:#00ff00;">الضمان: التسليم فقط.</span>', 
+                    vars: [
+                        {n: 'شهر بحسابك', p: 11.99}, 
+                        {n: 'شهرين بحسابك', p: 20.99}, 
+                        {n: 'ثلاث شهور بحسابك', p: 26.99}, 
+                        {n: 'اربع شهور بحسابك', p: 34.99}, 
+                        {n: 'خمس شهور في حسابك', p: 40.99}, 
+                        {n: 'ست شهور بحسابك', p: 45.99}
+                    ] 
+                }
             ],
             'قسم الذكاء الاصطناعي': [
-                { id: 'gpt_1', name: 'شات جي بي تي شهر', price: 12.99, img: 'قسم الذكاء الاصطناعي .jpeg', desc: 'حساب مشترك شهر.' }
+                { 
+                    id: 'gpt_1m', 
+                    name: 'شات جي بي تي شهر', 
+                    price: '12.99', 
+                    img: 'قسم الذكاء الاصطناعي .jpeg', 
+                    desc: 'الحساب مشترك انا اعطيك هو مو ايميل خاص فيك وعدم تغير الايميل او كلمة المرور او العبث في الحساب.<br><span style="color:#00ff00;">الضمان: التسليم فقط.</span>',
+                    vars: [{n: 'شات جي بي تي شهر', p: 12.99}]
+                },
+                { 
+                    id: 'canva_12m', 
+                    name: 'كانفا 12 شهر بحسابك', 
+                    price: '20', 
+                    img: 'قسم الذكاء الاصطناعي .jpeg', 
+                    desc: 'تفعيل اشتراك كانفا برو لمدة 12 شهر على حسابك الشخصي.<br><span style="color:#00ff00;">الضمان: التسليم فقط.</span>',
+                    vars: [{n: 'كانفا 12 شهر', p: 20}]
+                }
             ]
         };
 
         let cart = [];
 
-        function openSection(name) {
+        function openSection(categoryName) {
             document.getElementById('main-content').style.display = 'none';
             document.getElementById('section-view').style.display = 'block';
-            document.getElementById('back-btn').style.display = 'block';
-            document.getElementById('sec-title-display').innerText = name;
-            const list = document.getElementById('products-list');
+            document.getElementById('back-btn').style.display = 'block'; 
+            document.getElementById('sec-title-display').innerText = categoryName;
+            
+            const list = document.getElementById('products-list'); 
             list.innerHTML = '';
-            storeData[name].forEach(p => {
-                list.innerHTML += `<div class="product-card ripple" onclick="showDetails('${name}','${p.id}')"><img src="${p.img}"><h3>${p.name}</h3></div>`;
+            
+            storeData[categoryName].forEach(product => {
+                let displayPrice = product.price === 'اختيار' ? 'خيارات متعددة' : product.price + ' ريال';
+                list.innerHTML += `
+                <div class="product-card ripple" onclick="showProductDetails('${categoryName}', '${product.id}')">
+                    <img src="${product.img}">
+                    <h3>${product.name}</h3>
+                    <div class="product-price">${displayPrice}</div>
+                </div>`;
             });
+            window.scrollTo(0,0);
         }
 
-        function showDetails(cat, id) {
+        function showProductDetails(cat, id) {
             const p = storeData[cat].find(x => x.id === id);
+            let varHtml = '';
+            
+            if(p.vars) {
+                varHtml = `<div class="variant-grid">`;
+                p.vars.forEach((v) => {
+                    varHtml += `
+                    <label class="variant-option">
+                        <span style="font-weight:bold;">${v.n} <br><span style="color:#d4af37; font-size:0.9rem;">${v.p} ريال</span></span>
+                        <input type="radio" name="prod_variant" value="${v.n}" data-price="${v.p}" onclick="document.getElementById('custom_val').value = '';">
+                    </label>`;
+                });
+                
+                if(p.allowCustom) {
+                    varHtml += `
+                    <div class="custom-qty-container">
+                        <p style="margin-bottom:10px; color:#888; font-size:0.9rem;">أو أدخل العدد المخصص:</p>
+                        <input type="number" id="custom_val" class="custom-qty" placeholder="اكتب العدد هنا" onclick="document.querySelectorAll('input[name=prod_variant]').forEach(r => r.checked = false);">
+                    </div>`;
+                }
+                varHtml += `</div>`;
+            }
+
             document.getElementById('detail-content').innerHTML = `
-                <img src="${p.img}" style="width:100%; border-radius:20px;">
-                <h2 style="color:#d4af37; margin:15px 0;">${p.name}</h2>
-                <p>${p.desc}</p>
-                <button class="btn-main ripple" onclick="addToCart('${cat}','${id}')">إضافة للسلة</button>
+                <img src="${p.img}" style="width:100%; border-radius:20px; border:1px solid #333; margin-bottom:15px; box-shadow:0 5px 15px rgba(0,0,0,0.5);">
+                <h2 style="color:#d4af37; font-size:1.6rem;">${p.name}</h2>
+                <div style="color:#ccc; line-height:1.7; margin:15px 0; font-size:1.05rem;">${p.desc}</div>
+                ${varHtml}
+                <button class="btn-main ripple" onclick="addToCart('${cat}','${id}')" style="margin-top:25px;">إضافة إلى السلة 🛒</button>
             `;
+            
             document.getElementById('product-detail-modal').classList.add('active');
             document.getElementById('overlay').style.display = 'block';
         }
 
         function addToCart(cat, id) {
             const p = storeData[cat].find(x => x.id === id);
-            cart.push({ name: p.name, price: p.price });
+            let finalName = p.name;
+            let finalPrice = '';
+            let numPrice = 0;
+            
+            if(p.vars || p.allowCustom) {
+                const customInput = document.getElementById('custom_val');
+                const selectedRadio = document.querySelector('input[name="prod_variant"]:checked');
+                
+                const hasCustomVal = customInput && customInput.value !== "";
+                
+                if(!hasCustomVal && !selectedRadio) {
+                    return alert('إجباري تختار واحد من الخيارات أو تكتب العدد المطلوب!');
+                }
+
+                if(hasCustomVal) {
+                    finalName += " (العدد المطلوب: " + customInput.value + ")";
+                    finalPrice = "السعر يتحدد بالخاص";
+                    numPrice = 0;
+                } else {
+                    finalName += " (" + selectedRadio.value + ")";
+                    finalPrice = selectedRadio.dataset.price + " ريال";
+                    numPrice = parseFloat(selectedRadio.dataset.price);
+                }
+            } else {
+                finalPrice = p.price + " ريال";
+                numPrice = parseFloat(p.price);
+            }
+            
+            cart.push({ name: finalName, priceText: finalPrice, numericPrice: numPrice });
             document.getElementById('cart-count').innerText = cart.length;
             closeAll();
         }
 
         function toggleCart() {
-            const itemsDiv = document.getElementById('cart-items');
-            itemsDiv.innerHTML = '';
+            const list = document.getElementById('cart-items'); 
+            const totalDiv = document.getElementById('cart-total');
+            list.innerHTML = '';
             let total = 0;
-            cart.forEach((item, i) => {
-                total += item.price;
-                itemsDiv.innerHTML += `<div style="padding:10px 0; border-bottom:1px solid #222;">${item.name} - ${item.price} ريال</div>`;
-            });
-            document.getElementById('cart-total').innerText = 'المجموع: ' + total.toFixed(2) + ' ريال';
+            let hasCustom = false;
+
+            if(cart.length === 0) {
+                list.innerHTML = `<div style="text-align:center; padding:30px; color:#666;">السلة فارغة حالياً</div>`;
+                totalDiv.innerText = '';
+            } else {
+                cart.forEach((item, index) => {
+                    total += item.numericPrice;
+                    if(item.numericPrice === 0) hasCustom = true;
+                    
+                    list.innerHTML += `
+                    <div style="display:flex; justify-content:space-between; align-items:center; padding:15px 0; border-bottom:1px solid #1a1a1a;">
+                        <div style="flex:1;">
+                            <div style="font-weight:bold; font-size:1.05rem; margin-bottom:5px;">${item.name}</div>
+                            <div style="color:#d4af37;">${item.priceText}</div>
+                        </div>
+                        <div onclick="removeFromCart(${index})" style="color:#ff4444; font-size:24px; cursor:pointer; padding:0 10px;">✕</div>
+                    </div>`;
+                });
+                
+                let totalText = `المجموع: ${total.toFixed(2)} ريال`;
+                if(hasCustom) totalText += ` + (باقات تتحدد بالخاص)`;
+                totalDiv.innerText = totalText;
+            }
+
             document.getElementById('cart-modal').classList.add('active');
             document.getElementById('overlay').style.display = 'block';
         }
 
-        // الدالة المحدثة لإنشاء رمز الطلب والتاريخ
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            document.getElementById('cart-count').innerText = cart.length;
+            toggleCart();
+        }
+
+        // التعديل الجديد هنا لإضافة الرمز والتاريخ
         function checkout() {
             if(cart.length === 0) return alert('السلة فارغة!');
             
-            // 1. توليد رمز طلب فريد (وقت الزبون بالثواني + رقم عشوائي)
-            const orderID = Math.floor(Date.now() / 1000).toString().slice(-4) + Math.floor(1000 + Math.random() * 9000);
+            // 1. توليد رمز طلب رقمي فريد يعتمد على الوقت + أرقام عشوائية
+            const orderID = Math.floor(Date.now() / 1000).toString() + Math.floor(Math.random() * 9999);
             
-            // 2. الحصول على التاريخ الحالي
-            const d = new Date();
-            const dateStr = `${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`;
-            const timeStr = `${d.getHours()}:${d.getMinutes()}`;
+            // 2. الحصول على التاريخ الحالي (يوم/شهر/سنة)
+            const today = new Date();
+            const day = String(today.getDate()).padStart(2, '0');
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const year = today.getFullYear();
+            const dateStr = `${day}/${month}/${year}`;
 
-            let msg = `*طلب جديد من متجر أومني*\n`;
-            msg += `--------------------------\n`;
-            msg += `*الرمز الفريد:* #${orderID}\n`;
-            msg += `*التاريخ:* ${dateStr} | *الوقت:* ${timeStr}\n`;
-            msg += `--------------------------\n`;
+            let message = `*طلب جديد من متجر أومني*\n`;
+            message += `*رقم الطلب:* #${orderID}\n`; // إضافة الرمز
+            message += `*التاريخ:* ${dateStr}\n`;     // إضافة التاريخ
+            message += `==========================\n`;
             
             let total = 0;
-            cart.forEach((item, i) => {
-                msg += `${i+1}. ${item.name} [${item.price} ريال]\n`;
-                total += item.price;
+            let hasCustom = false;
+            
+            cart.forEach((item, idx) => {
+                message += `${idx + 1}. ${item.name} | [${item.priceText}]\n`;
+                total += item.numericPrice;
+                if(item.numericPrice === 0) hasCustom = true;
             });
             
-            msg += `--------------------------\n`;
-            msg += `*الإجمالي:* ${total.toFixed(2)} ريال`;
+            message += `==========================\n`;
+            message += `*الإجمالي التقريبي: ${total.toFixed(2)} ريال*\n`;
+            if(hasCustom) message += `*(السعر النهائي يتحدد بالخاص لوجود باقات مخصصة)*`;
             
-            window.open(`https://wa.me/966548512295?text=${encodeURIComponent(msg)}`);
+            window.open(`https://wa.me/966548512295?text=${encodeURIComponent(message)}`);
         }
 
-        function goHome() { document.getElementById('main-content').style.display = 'block'; document.getElementById('section-view').style.display = 'none'; document.getElementById('back-btn').style.display = 'none'; }
-        function toggleMenu() { document.getElementById('side-menu').classList.add('active'); document.getElementById('overlay').style.display = 'block'; }
-        function closeAll() { document.querySelectorAll('.modal').forEach(m => m.classList.remove('active')); document.getElementById('side-menu').classList.remove('active'); document.getElementById('overlay').style.display = 'none'; }
+        function goHome() { 
+            document.getElementById('main-content').style.display = 'block'; 
+            document.getElementById('section-view').style.display = 'none'; 
+            document.getElementById('back-btn').style.display = 'none'; 
+        }
+        function toggleMenu() { 
+            document.getElementById('side-menu').classList.add('active'); 
+            document.getElementById('overlay').style.display = 'block'; 
+        }
+        function closeAll() { 
+            document.querySelectorAll('.modal').forEach(m => m.classList.remove('active')); 
+            document.getElementById('side-menu').classList.remove('active'); 
+            document.getElementById('overlay').style.display = 'none'; 
+        }
     </script>
 </body>
 </html>
