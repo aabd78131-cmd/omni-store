@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام أومني المحاسبي | OMNI ADMIN</title>
+    <title>نظام أومني المتكامل | OMNI ADMIN</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root { --gold: #d4af37; --bg: #0a0a0a; --card: #151515; --green: #2ecc71; --red: #e74c3c; }
@@ -22,15 +22,17 @@
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; color: var(--gold); font-size: 0.9rem; }
+        label { display: block; margin-bottom: 5px; color: var(--gold); font-size: 0.9rem; font-weight: bold; }
         input, textarea, select { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #333; background: #000; color: white; outline: none; }
+        input:focus { border-color: var(--gold); }
         
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px; }
         .stat-box { background: #111; padding: 20px; border-radius: 15px; border: 1px solid #222; text-align: center; }
         .stat-box h3 { font-size: 0.8rem; color: #888; margin-bottom: 10px; }
         .stat-box p { font-size: 1.4rem; font-weight: 900; }
 
-        .btn-save { background: var(--gold); color: black; border: none; padding: 15px; width: 100%; border-radius: 10px; font-weight: 900; cursor: pointer; margin-top: 10px; }
+        .btn-save { background: var(--gold); color: black; border: none; padding: 15px; width: 100%; border-radius: 10px; font-weight: 900; cursor: pointer; margin-top: 10px; transition: 0.3s; }
+        .btn-save:hover { opacity: 0.8; }
         
         table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 0.85rem; }
         th, td { border: 1px solid #222; padding: 12px; text-align: center; }
@@ -39,14 +41,14 @@
         .profit { color: var(--green); font-weight: bold; }
         .loss { color: var(--red); font-weight: bold; }
         
-        .search-box { position: relative; margin-bottom: 20px; }
+        .hint { font-size: 0.75rem; color: #666; margin-top: 4px; }
         .result-item { background: #000; padding: 15px; border-radius: 10px; border: 1px dashed var(--gold); margin-top: 10px; line-height: 1.8; }
     </style>
 </head>
 <body>
 
 <div class="admin-container">
-    <h1>لوحة تحكم أومني الذكية</h1>
+    <h1>لوحة تحكم أومني الشاملة</h1>
 
     <div class="tabs">
         <button class="tab-btn active" onclick="showTab('products')">📦 إضافة منتج</button>
@@ -57,29 +59,47 @@
 
     <div id="products" class="section active">
         <div class="form-group">
-            <label>القسم:</label>
+            <label>اختر قسم المتجر:</label>
             <select id="p-category">
-                <option>قسم ستيم أوفلاين</option><option>قسم انستا</option>
-                <option>قسم تيك توك</option><option>قسم الترفيه</option>
+                <option>قسم ستيم أوفلاين</option>
+                <option>قسم انستا</option>
+                <option>قسم تيك توك</option>
+                <option>قسم الترفيه</option>
                 <option>قسم الذكاء الاصطناعي</option>
             </select>
         </div>
         <div class="form-group"><label>اسم المنتج:</label><input type="text" id="p-name"></div>
+        <div class="form-group"><label>اسم الصورة الرئيسية:</label><input type="text" id="p-img" placeholder="image.jpeg"></div>
+        <div class="form-group"><label>الوصف:</label><textarea id="p-desc" rows="2"></textarea></div>
+        
+        <div class="form-group">
+            <label>صور إضافية للوصف (اختياري):</label>
+            <input type="text" id="p-extra-imgs" placeholder="مثال: img1.jpg, img2.png">
+            <p class="hint">ضع أسماء الصور مفصولة بفاصلة</p>
+        </div>
+
         <div class="form-group"><label>سعر البيع الافتراضي:</label><input type="number" id="p-price"></div>
-        <button class="btn-save" onclick="saveProduct()">حفظ المنتج</button>
+        
+        <div class="form-group">
+            <label>خيارات المنتج (اختياري):</label>
+            <textarea id="p-vars" rows="2" placeholder="شهر=10, شهرين=20"></textarea>
+            <p class="hint">اتركها فارغة إذا لم توجد خيارات</p>
+        </div>
+
+        <button class="btn-save" onclick="saveProduct()">نشر المنتج في المتجر</button>
     </div>
 
     <div id="orders" class="section">
-        <div class="form-group"><label>اسم المنتج المباع:</label><input type="text" id="o-product-name" placeholder="مثلاً: يوتيوب سنة"></div>
-        <div class="form-group"><label>الرمز (للبحث لاحقاً):</label><input type="text" id="o-id"></div>
-        <div class="form-group"><label>سعر التكلفة (كم دفعته أنت للمورد):</label><input type="number" id="o-cost" placeholder="0.00"></div>
+        <div class="form-group"><label>اسم المنتج المباع:</label><input type="text" id="o-product-name"></div>
+        <div class="form-group"><label>الرمز (للبحث لاحقاً):</label><input type="text" id="o-id" placeholder="مثال: #A10"></div>
+        <div class="form-group"><label>سعر التكلفة (كم كلفك):</label><input type="number" id="o-cost" placeholder="0.00"></div>
         <div class="form-group"><label>سعر البيع (كم دفع الزبون):</label><input type="number" id="o-sold" placeholder="0.00"></div>
-        <div class="form-group"><label>بيانات العميل (اختياري):</label><textarea id="o-data"></textarea></div>
-        <button class="btn-save" onclick="saveSale()">تسجيل العملية</button>
+        <div class="form-group"><label>بيانات العميل أو ملاحظات:</label><textarea id="o-data" rows="3"></textarea></div>
+        <button class="btn-save" onclick="saveSale()">تسجيل العملية وحساب الربح</button>
     </div>
 
     <div id="search" class="section">
-        <input type="text" id="search-input" oninput="doSearch()" placeholder="اكتب الرمز هنا للبحث عن البيانات...">
+        <input type="text" id="search-input" oninput="doSearch()" placeholder="أدخل الرمز للبحث عن بيانات الطلب...">
         <div id="search-res"></div>
     </div>
 
@@ -118,12 +138,21 @@
     }
 
     function saveProduct() {
-        const p = { name: document.getElementById('p-name').value, cat: document.getElementById('p-category').value };
-        if(!p.name) return alert('أدخل الاسم');
-        let prods = JSON.parse(localStorage.getItem('store_prods') || '[]');
+        const p = {
+            category: document.getElementById('p-category').value,
+            name: document.getElementById('p-name').value,
+            img: document.getElementById('p-img').value,
+            desc: document.getElementById('p-desc').value,
+            extraImgs: document.getElementById('p-extra-imgs').value,
+            price: document.getElementById('p-price').value,
+            vars: document.getElementById('p-vars').value
+        };
+        if(!p.name) return alert('اسم المنتج مطلوب');
+        
+        let prods = JSON.parse(localStorage.getItem('omni_store_products') || '[]');
         prods.push(p);
-        localStorage.setItem('store_prods', JSON.stringify(prods));
-        alert('تم الحفظ');
+        localStorage.setItem('omni_store_products', JSON.stringify(prods));
+        alert('تم حفظ المنتج بنجاح في قسم ' + p.category);
     }
 
     function saveSale() {
@@ -135,17 +164,17 @@
             data: document.getElementById('o-data').value,
             date: new Date().toLocaleDateString('ar-SA')
         };
-        if(!sale.id || !sale.name) return alert('أكمل البيانات الأساسية');
+        if(!sale.id || !sale.name) return alert('يرجى إكمال الرمز واسم المنتج');
 
-        let sales = JSON.parse(localStorage.getItem('omni_finance') || '[]');
-        sales.push(sale);
-        localStorage.setItem('omni_finance', JSON.stringify(sales));
-        alert('تم تسجيل البيعة وحساب الربح');
+        let finance = JSON.parse(localStorage.getItem('omni_finance_records') || '[]');
+        finance.push(sale);
+        localStorage.setItem('omni_finance_records', JSON.stringify(finance));
+        alert('تم تسجيل العملية المالية');
         ['o-id', 'o-product-name', 'o-cost', 'o-sold', 'o-data'].forEach(id => document.getElementById(id).value = '');
     }
 
     function renderSales() {
-        let sales = JSON.parse(localStorage.getItem('omni_finance') || '[]');
+        let sales = JSON.parse(localStorage.getItem('omni_finance_records') || '[]');
         const tbody = document.querySelector('#sales-table tbody');
         tbody.innerHTML = '';
         
@@ -163,10 +192,10 @@
                 <tr>
                     <td>${s.id}</td>
                     <td>${s.name}</td>
-                    <td>${s.cost}</td>
-                    <td>${s.sold}</td>
+                    <td>${s.cost} ريال</td>
+                    <td>${s.sold} ريال</td>
                     <td class="${profit >= 0 ? 'profit' : 'loss'}">${profit.toFixed(2)}</td>
-                    <td><button onclick="deleteSale(${i})" style="background:none; border:none; color:red; cursor:pointer;">✕</button></td>
+                    <td><button onclick="deleteSale(${i})" style="color:red; cursor:pointer; background:none; border:none;">✕</button></td>
                 </tr>`;
         });
 
@@ -174,7 +203,6 @@
         document.getElementById('total-costs').innerText = costs.toFixed(2) + " ريال";
         document.getElementById('net-profit').innerText = net.toFixed(2) + " ريال";
         
-        // حساب الأكثر والأقل مبيعاً
         let sorted = Object.entries(counts).sort((a,b) => b[1] - a[1]);
         if(sorted.length > 0) {
             document.getElementById('top-product').innerText = sorted[0][0];
@@ -187,25 +215,26 @@
         const res = document.getElementById('search-res');
         if(!val) { res.innerHTML = ''; return; }
         
-        let sales = JSON.parse(localStorage.getItem('omni_finance') || '[]');
+        let sales = JSON.parse(localStorage.getItem('omni_finance_records') || '[]');
         const found = sales.find(s => s.id === val);
         
         if(found) {
             res.innerHTML = `
                 <div class="result-item">
-                    <b>📦 المنتج:</b> ${found.name} <br>
-                    <b>💰 التكلفة:</b> ${found.cost} | <b>💵 البيع:</b> ${found.sold} <br>
+                    <b style="color:var(--gold)">📦 المنتج:</b> ${found.name} <br>
+                    <b>💰 التكلفة:</b> ${found.cost} ريال | <b>💵 سعر البيع:</b> ${found.sold} ريال <br>
                     <b>📅 التاريخ:</b> ${found.date} <br>
-                    <b>📝 البيانات:</b> <br> ${found.data}
+                    <hr style="border:0; border-top:1px solid #333; margin:5px 0;">
+                    <b>📝 البيانات المخزنة:</b> <br> ${found.data}
                 </div>`;
-        } else { res.innerHTML = '<p style="margin-top:10px; color:#666;">لا يوجد بيانات لهذا الرمز</p>'; }
+        } else { res.innerHTML = '<p style="color:#666; margin-top:10px;">لا يوجد سجل لهذا الرمز</p>'; }
     }
 
     function deleteSale(i) {
-        if(!confirm('حذف العملية؟')) return;
-        let sales = JSON.parse(localStorage.getItem('omni_finance'));
+        if(!confirm('هل تريد حذف هذه العملية من السجلات؟')) return;
+        let sales = JSON.parse(localStorage.getItem('omni_finance_records'));
         sales.splice(i, 1);
-        localStorage.setItem('omni_finance', JSON.stringify(sales));
+        localStorage.setItem('omni_finance_records', JSON.stringify(sales));
         renderSales();
     }
 </script>
