@@ -2,315 +2,78 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام أومني المتكامل | OMNI ADMIN</title>
+    <title>OMNI Dashboard | لوحة التحكم</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
-    <style>
-        :root { --gold: #d4af37; --bg: #0a0a0a; --card: #151515; --green: #2ecc71; --red: #e74c3c; --blue: #3498db; }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
-        body { background: var(--bg); color: white; padding: 10px; }
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <style>
+        :root { --main-color: #d4af37; --bg-dark: #0a0a0a; --card-bg: #161616; }
+        body { font-family: 'Cairo', sans-serif; background: var(--bg-dark); color: white; margin: 0; }
         
-        .admin-container { max-width: 1100px; margin: 0 auto; }
-        h1 { color: var(--gold); text-align: center; margin: 20px 0; border-bottom: 2px solid var(--gold); padding-bottom: 10px; font-weight: 900; }
-        
-        .tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
-        .tab-btn { background: var(--card); border: 1px solid var(--gold); color: white; padding: 12px; cursor: pointer; border-radius: 10px; font-weight: bold; flex: 1; min-width: 120px; transition: 0.3s; }
-        .tab-btn.active { background: var(--gold); color: black; }
-        
-        .section { display: none; background: var(--card); padding: 20px; border-radius: 15px; border: 1px solid #333; animation: fadeIn 0.3s; }
-        .section.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        /* Sidebar Menu */
+        .sidebar { width: 250px; height: 100vh; background: #000; position: fixed; border-left: 1px solid var(--main-color); padding: 20px; }
+        .nav-item { padding: 15px; cursor: pointer; border-radius: 10px; transition: 0.3s; margin-bottom: 10px; }
+        .nav-item:hover, .nav-item.active { background: var(--main-color); color: #000; font-weight: bold; }
 
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; color: var(--gold); font-size: 0.9rem; font-weight: bold; }
-        input, textarea, select { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #333; background: #000; color: white; outline: none; }
-        input:focus { border-color: var(--gold); }
-        
-        .date-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+        /* Main Content */
+        .main-content { margin-right: 270px; padding: 30px; }
+        .glass-card { background: var(--card-bg); border: 1px solid #333; border-radius: 20px; padding: 25px; margin-bottom: 20px; }
 
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 25px; }
-        .stat-box { background: #111; padding: 20px; border-radius: 15px; border: 1px solid #222; text-align: center; }
-        .stat-box h3 { font-size: 0.8rem; color: #888; margin-bottom: 10px; }
-        .stat-box p { font-size: 1.4rem; font-weight: 900; }
+        /* Stock Arrow Effect */
+        .stock-indicator { font-size: 2rem; display: flex; align-items: center; gap: 10px; }
+        .up { color: #00ff00; text-shadow: 0 0 10px #00ff00; }
+        .down { color: #ff0000; text-shadow: 0 0 10px #ff0000; }
 
-        .btn-save { background: var(--gold); color: black; border: none; padding: 15px; width: 100%; border-radius: 10px; font-weight: 900; cursor: pointer; margin-top: 10px; transition: 0.3s; }
-        .btn-save:hover { opacity: 0.8; }
-        
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 0.85rem; }
-        th, td { border: 1px solid #222; padding: 12px; text-align: center; }
-        th { background: #1a1a1a; color: var(--gold); }
-        
-        .profit { color: var(--green); font-weight: bold; }
-        .loss { color: var(--red); font-weight: bold; }
-        
-        .hint { font-size: 0.75rem; color: #666; margin-top: 4px; }
-        .result-item { background: #000; padding: 15px; border-radius: 10px; border: 1px dashed var(--gold); margin-top: 10px; line-height: 1.8; }
-
-        .action-btns { display: flex; gap: 5px; justify-content: center; }
-        .btn-edit { background: var(--blue); color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
-        .btn-del { background: var(--red); color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
-        .btn-disc { background: var(--green); color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
-
-        @media (max-width: 600px) {
-            table { font-size: 0.7rem; }
-            th, td { padding: 5px; }
-            .date-row { grid-template-columns: 1fr; }
-        }
+        /* Forms */
+        input, textarea, select { width: 100%; padding: 12px; margin: 10px 0; background: #222; border: 1px solid #444; color: white; border-radius: 8px; }
+        button { background: var(--main-color); color: black; border: none; padding: 15px 30px; border-radius: 10px; font-weight: bold; cursor: pointer; width: 100%; transition: 0.3s; }
+        button:hover { transform: scale(1.02); box-shadow: 0 0 15px var(--main-color); }
     </style>
 </head>
 <body>
 
-<div class="admin-container">
-    <h1>لوحة تحكم أومني الشاملة</h1>
+<div class="sidebar">
+    <h2 style="color: var(--main-color); text-align: center;">OMNI ADMIN</h2>
+    <div class="nav-item active" onclick="showSection('add-product')">➕ إضافة منتج</div>
+    <div class="nav-item" onclick="showSection('sales-reg')">📑 تسجيل بيعة</div>
+    <div class="nav-item" onclick="showSection('search-order')">🔍 بحث بالرمز</div>
+    <div class="nav-item" onclick="showSection('stats')">📈 المبيعات والإحصائيات</div>
+    <div class="nav-item" onclick="showSection('edit-products')">⚙️ تعديل المنتجات</div>
+</div>
 
-    <div class="tabs">
-        <button class="tab-btn active" onclick="showTab('products')">📦 إضافة منتج</button>
-        <button class="tab-btn" onclick="showTab('orders')">💰 تسجيل بيعة</button>
-        <button class="tab-btn" onclick="showTab('search')">🔍 بحث بالرمز</button>
-        <button class="tab-btn" onclick="showTab('sales')">📊 التقارير المالية</button>
-        <button class="tab-btn" onclick="showTab('manage')">⚙️ إدارة المنتجات</button>
+<div class="main-content">
+    <div id="add-product" class="section glass-card">
+        <h3>إضافة منتج جديد للمتجر</h3>
+        <input type="text" id="p-name" placeholder="اسم المنتج (إلزامي)">
+        <input type="text" id="p-img" placeholder="اسم الصورة في GitHub (مثال: game1.jpg)">
+        <input type="number" id="p-price" placeholder="السعر الأساسي">
+        <textarea id="p-desc" placeholder="وصف المنتج..."></textarea>
+        <input type="text" id="p-desc-img" placeholder="رابط صورة داخل الوصف (اختياري)">
+        <hr>
+        <h4>خيارات إضافية (اختياري)</h4>
+        <div id="options-container">
+            <input type="text" placeholder="اسم الخيار (مثلاً: شهر)">
+            <input type="number" placeholder="سعر الخيار">
+        </div>
+        <button onclick="saveProduct()">نشر المنتج في المتجر فوراً 🚀</button>
     </div>
 
-    <div id="products" class="section active">
-        <div class="form-group">
-            <label>اختر قسم المتجر:</label>
-            <select id="p-category">
-                <option value="steam_offline">قسم ستيم أوفلاين</option>
-                <option value="insta">قسم انستا</option>
-                <option value="tiktok">قسم تيك توك</option>
-                <option value="entertainment">قسم الترفيه</option>
-                <option value="ai">قسم الذكاء الاصطناعي</option>
-            </select>
+    <div id="stats" class="section glass-card" style="display:none;">
+        <h3>مؤشر أداء المتجر</h3>
+        <div class="stock-indicator up">
+            <span>▲</span> 15% زيادة في المبيعات اليوم
         </div>
-        <div class="form-group"><label>اسم المنتج:</label><input type="text" id="p-name"></div>
-        <div class="form-group"><label>اسم الصورة الرئيسية:</label><input type="text" id="p-img" placeholder="image.jpeg"></div>
-        <div class="form-group"><label>الوصف:</label><textarea id="p-desc" rows="2"></textarea></div>
-        
-        <div class="form-group">
-            <label>صور إضافية للوصف (اختياري):</label>
-            <input type="text" id="p-extra-imgs" placeholder="مثال: img1.jpg, img2.png">
-        </div>
-
-        <div class="form-group"><label>سعر البيع الافتراضي:</label><input type="number" id="p-price"></div>
-        
-        <div class="form-group">
-            <label>خيارات المنتج (اختياري):</label>
-            <textarea id="p-vars" rows="2" placeholder="شهر=10, شهرين=20"></textarea>
-        </div>
-
-        <button class="btn-save" onclick="saveProduct()">نشر المنتج في المتجر وتحديث الأوامر</button>
-    </div>
-
-    <div id="orders" class="section">
-        <div class="form-group"><label>اسم المنتج المباع:</label><input type="text" id="o-product-name"></div>
-        <div class="form-group"><label>الرمز (للبحث لاحقاً):</label><input type="text" id="o-id" placeholder="مثال: #A10"></div>
-        
-        <label>تاريخ العملية:</label>
-        <div class="form-group date-row">
-            <input type="number" id="o-day" placeholder="اليوم">
-            <input type="number" id="o-month" placeholder="الشهر">
-            <input type="number" id="o-year" placeholder="السنة">
-        </div>
-
-        <div class="form-group"><label>سعر التكلفة:</label><input type="number" id="o-cost"></div>
-        <div class="form-group"><label>سعر البيع:</label><input type="number" id="o-sold"></div>
-        <div class="form-group"><label>بيانات العميل:</label><textarea id="o-data" rows="3"></textarea></div>
-        <button class="btn-save" onclick="saveSale()">تسجيل العملية وتحديث التقارير</button>
-    </div>
-
-    <div id="search" class="section">
-        <input type="text" id="search-input" oninput="doSearch()" placeholder="أدخل الرمز للبحث عن بيانات الطلب...">
-        <div id="search-res"></div>
-    </div>
-
-    <div id="sales" class="section">
-        <div class="stats-grid">
-            <div class="stat-box"><h3>إجمالي المبيعات</h3><p id="total-revenue">0</p></div>
-            <div class="stat-box"><h3>إجمالي التكلفة</h3><p id="total-costs">0</p></div>
-            <div class="stat-box"><h3>صافي الربح</h3><p id="net-profit" style="color:var(--green)">0</p></div>
-            <div class="stat-box"><h3>الأكثر مبيعاً</h3><p id="top-product" style="font-size:1rem; color:var(--gold)">-</p></div>
-        </div>
-        <table id="sales-table">
-            <thead>
-                <tr>
-                    <th>الرمز</th><th>التاريخ</th><th>المنتج</th><th>التكلفة</th><th>البيع</th><th>الربح</th><th>حذف</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </div>
-
-    <div id="manage" class="section">
-        <div id="edit-form-container" style="display:none; border: 1px solid var(--gold); padding: 15px; border-radius: 10px; margin-bottom: 20px;">
-            <h3 style="color:var(--gold); margin-bottom:10px;">تعديل المنتج</h3>
-            <input type="hidden" id="edit-index">
-            <div class="form-group"><label>الاسم:</label><input type="text" id="edit-name"></div>
-            <div class="form-group"><label>السعر:</label><input type="number" id="edit-price"></div>
-            <div class="form-group"><label>القسم:</label><input type="text" id="edit-category"></div>
-            <button class="btn-save" onclick="updateProduct()">تحديث الأوامر وحفظ</button>
-            <button class="btn-save" style="background:#444; color:white;" onclick="hideEditForm()">إلغاء</button>
-        </div>
-        <table id="manage-table">
-            <thead>
-                <tr><th>المنتج</th><th>القسم</th><th>السعر</th><th>التحكم</th></tr>
-            </thead>
-            <tbody></tbody>
-        </table>
+        <canvas id="salesChart" width="400" height="150"></canvas>
     </div>
 </div>
 
 <script>
-    // --- المحرك البرمجي للربط (Store Sync Engine) ---
-    
-    // وظيفة ترسل الأوامر للمتجر عبر التخزين المشترك
-    function syncToStore() {
-        const prods = JSON.parse(localStorage.getItem('omni_store_products') || '[]');
-        const storeCommands = {
-            lastUpdate: new Date().getTime(),
-            activeProducts: prods.length,
-            categories: [...new Set(prods.map(p => p.category))],
-            action: "REFRESH_STORE_VIEW"
-        };
-        localStorage.setItem('omni_store_sync_signal', JSON.stringify(storeCommands));
-        console.log("Commands Synced to Store:", storeCommands);
+    function showSection(id) {
+        document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
+        document.getElementById(id).style.display = 'block';
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        event.currentTarget.classList.add('active');
     }
 
-    window.onload = () => {
-        const d = new Date();
-        document.getElementById('o-day').value = d.getDate();
-        document.getElementById('o-month').value = d.getMonth() + 1;
-        document.getElementById('o-year').value = d.getFullYear();
-    };
-
-    function showTab(tabId) {
-        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(tabId).classList.add('active');
-        const btn = [...document.querySelectorAll('.tab-btn')].find(b => b.innerText.includes(
-            tabId === 'products' ? 'إضافة' : 
-            tabId === 'orders' ? 'تسجيل' : 
-            tabId === 'search' ? 'بحث' : 
-            tabId === 'sales' ? 'التقارير' : 'إدارة'
-        ));
-        if(btn) btn.classList.add('active');
-        if(tabId === 'sales') renderSales();
-        if(tabId === 'manage') renderManageProducts();
-    }
-
-    function saveProduct() {
-        const p = {
-            id: 'PROD-' + Date.now(),
-            category: document.getElementById('p-category').value,
-            name: document.getElementById('p-name').value,
-            img: document.getElementById('p-img').value,
-            desc: document.getElementById('p-desc').value,
-            extraImgs: document.getElementById('p-extra-imgs').value,
-            price: document.getElementById('p-price').value,
-            vars: document.getElementById('p-vars').value
-        };
-        if(!p.name || !p.price) return alert('أكمل البيانات الأساسية');
-        
-        let prods = JSON.parse(localStorage.getItem('omni_store_products') || '[]');
-        prods.push(p);
-        localStorage.setItem('omni_store_products', JSON.stringify(prods));
-        
-        syncToStore(); // تنفيذ أمر الربط
-        alert('تم النشر بنجاح وتحديث أوامر المتجر');
-        document.getElementById('p-name').value = '';
-    }
-
-    function saveSale() {
-        const sale = {
-            id: document.getElementById('o-id').value,
-            name: document.getElementById('o-product-name').value,
-            cost: parseFloat(document.getElementById('o-cost').value || 0),
-            sold: parseFloat(document.getElementById('o-sold').value || 0),
-            data: document.getElementById('o-data').value,
-            date: `${document.getElementById('o-year').value}/${document.getElementById('o-month').value}/${document.getElementById('o-day').value}`
-        };
-        if(!sale.id || !sale.name) return alert('الرمز والاسم مطلوبان');
-        let finance = JSON.parse(localStorage.getItem('omni_finance_records') || '[]');
-        finance.push(sale);
-        localStorage.setItem('omni_finance_records', JSON.stringify(finance));
-        alert('تم الحفظ وتحديث السجلات المالية');
-    }
-
-    function renderSales() {
-        let sales = JSON.parse(localStorage.getItem('omni_finance_records') || '[]');
-        const tbody = document.querySelector('#sales-table tbody');
-        tbody.innerHTML = '';
-        let rev = 0, costs = 0, net = 0;
-        sales.forEach((s, i) => {
-            const profit = s.sold - s.cost;
-            rev += s.sold; costs += s.cost; net += profit;
-            tbody.innerHTML += `<tr><td>${s.id}</td><td>${s.date}</td><td>${s.name}</td><td>${s.cost}</td><td>${s.sold}</td><td class="${profit >= 0 ? 'profit' : 'loss'}">${profit.toFixed(2)}</td><td><button onclick="deleteSale(${i})" style="color:red; background:none; border:none; cursor:pointer">✕</button></td></tr>`;
-        });
-        document.getElementById('total-revenue').innerText = rev.toFixed(2) + " ريال";
-        document.getElementById('total-costs').innerText = costs.toFixed(2) + " ريال";
-        document.getElementById('net-profit').innerText = net.toFixed(2) + " ريال";
-    }
-
-    function renderManageProducts() {
-        let prods = JSON.parse(localStorage.getItem('omni_store_products') || '[]');
-        const tbody = document.querySelector('#manage-table tbody');
-        tbody.innerHTML = '';
-        prods.forEach((p, i) => {
-            tbody.innerHTML += `<tr><td>${p.name}</td><td>${p.category}</td><td>${p.price} ريال</td><td><div class="action-btns"><button class="btn-edit" onclick="editProduct(${i})">تعديل</button><button class="btn-del" onclick="deleteProduct(${i})">حذف</button></div></td></tr>`;
-        });
-    }
-
-    function deleteProduct(i) {
-        if(!confirm('حذف نهائي؟')) return;
-        let prods = JSON.parse(localStorage.getItem('omni_store_products'));
-        prods.splice(i, 1);
-        localStorage.setItem('omni_store_products', JSON.stringify(prods));
-        syncToStore();
-        renderManageProducts();
-    }
-
-    function editProduct(i) {
-        let prods = JSON.parse(localStorage.getItem('omni_store_products'));
-        let p = prods[i];
-        document.getElementById('edit-index').value = i;
-        document.getElementById('edit-name').value = p.name;
-        document.getElementById('edit-price').value = p.price;
-        document.getElementById('edit-category').value = p.category;
-        document.getElementById('edit-form-container').style.display = 'block';
-    }
-
-    function updateProduct() {
-        let i = document.getElementById('edit-index').value;
-        let prods = JSON.parse(localStorage.getItem('omni_store_products'));
-        prods[i].name = document.getElementById('edit-name').value;
-        prods[i].price = document.getElementById('edit-price').value;
-        prods[i].category = document.getElementById('edit-category').value;
-        localStorage.setItem('omni_store_products', JSON.stringify(prods));
-        syncToStore();
-        hideEditForm();
-        renderManageProducts();
-        alert('تم تحديث المتجر بالأوامر الجديدة');
-    }
-
-    function hideEditForm() { document.getElementById('edit-form-container').style.display = 'none'; }
-
-    function doSearch() {
-        const val = document.getElementById('search-input').value;
-        const res = document.getElementById('search-res');
-        if(!val) { res.innerHTML = ''; return; }
-        let sales = JSON.parse(localStorage.getItem('omni_finance_records') || '[]');
-        const found = sales.find(s => s.id === val);
-        if(found) {
-            res.innerHTML = `<div class="result-item"><b style="color:var(--gold)">📦 المنتج:</b> ${found.name}<br><b>💵 السعر:</b> ${found.sold} ريال<br><b>📅 التاريخ:</b> ${found.date}<br><hr style="border-top:1px solid #333; margin:5px 0;"><b>📝 ملاحظات:</b><br>${found.data}</div>`;
-        } else { res.innerHTML = '<p style="color:#666; margin-top:10px;">لا يوجد سجل</p>'; }
-    }
-
-    function deleteSale(i) {
-        if(!confirm('حذف العملية؟')) return;
-        let sales = JSON.parse(localStorage.getItem('omni_finance_records'));
-        sales.splice(i, 1);
-        localStorage.setItem('omni_finance_records', JSON.stringify(sales));
-        renderSales();
-    }
+    // هنا سيتم ربط الـ API الخاص بـ GitHub و Google Sheets لاحقاً
 </script>
 </body>
 </html>
