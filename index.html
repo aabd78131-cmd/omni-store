@@ -27,6 +27,13 @@
             display: flex; justify-content: space-between; align-items: center;
             padding: 0 15px; z-index: 1000;
         }
+        
+        /* إضافة كلاس لتوسيط العنوان وزر الرجوع */
+        .header-center {
+            position: absolute; left: 50%; transform: translateX(-50%);
+            display: flex; align-items: center;
+        }
+
         .header-title { color: #d4af37; font-weight: 900; font-size: 1.1rem; display: flex; align-items: center; gap: 8px; }
         .saudi-flag { width: 22px; animation: wave 2s infinite ease-in-out; }
         @keyframes wave { 0%, 100% { transform: rotate(0); } 50% { transform: rotate(10deg) translateY(-3px); } }
@@ -81,18 +88,19 @@
 <body>
 
     <header>
-        <div class="header-left">
-            <div class="nav-icon ripple" onclick="toggleMenu()">&#8942;</div>
-            <div class="cart-wrapper ripple" onclick="toggleCart()" style="position:relative;">
-                <div class="nav-icon">🛒</div>
-                <div class="cart-badge" id="cart-count">0</div>
+        <div class="nav-icon ripple" onclick="toggleMenu()">&#9776;</div>
+        
+        <div class="header-center">
+            <div class="header-title" id="main-title">
+                متجر أومني
             </div>
+            <div class="back-btn ripple" id="back-btn" onclick="goHome()">&#8594;</div>
         </div>
-        <div class="header-title" id="main-title">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/0/0d/Flag_of_Saudi_Arabia.svg" class="saudi-flag">
-            متجر أومني
+
+        <div class="cart-wrapper ripple" onclick="toggleCart()" style="position:relative;">
+            <div class="nav-icon">🛒</div>
+            <div class="cart-badge" id="cart-count">0</div>
         </div>
-        <div class="back-btn ripple" id="back-btn" onclick="goHome()">&#8594;</div>
     </header>
 
     <div id="overlay" onclick="closeAll()"></div>
@@ -315,7 +323,6 @@
             document.getElementById('cart-total').innerText = total.toFixed(2);
         }
 
-        // --- تعديل رسالة الواتساب حسب طلبك ---
         function checkout() {
             if(cart.length === 0) return alert('السلة فارغة!');
             
