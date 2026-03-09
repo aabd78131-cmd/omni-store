@@ -177,14 +177,78 @@
         }
     }
 
-    // وظيفة نشر المنتج لـ GitHub (تستخدم التوكن السري)
-    async function publishProduct() {
-        const token = localStorage.getItem('omni_token');
-        if(!token) { alert('يرجى ضبط التوكن أولاً!'); return; }
-
-        // كود الرفع لـ GitHub باستخدام التوكن المحفوظ...
-        alert('جاري معالجة الطلب ورفعه للمتجر العام...');
+  async function publishProduct() {
+    const token = localStorage.getItem('omni_token');
+    if (!token) { 
+        alert('يرجى ضبط التوكن أولاً من إعدادات المتجر!'); 
+        return; 
     }
-</script>
-</body>
-</html>
+
+    // بيانات المستودع الخاص بك
+    const OWNER = 'aabd78131-cmd'; 
+    const REPO = 'omni-store';     
+    const FILE_PATH = 'products.json'; 
+
+    // تجميع بيانات المنتج من الخانات
+    const newProduct = {
+        name: document.getElementById('p-name').value,
+        price: document.getElementById('p-price').value,
+        category: document.getElementById('p-category').value,
+        desc: document.getElementById('p-desc').value,
+        image: document.getElementById('p-img-name')?.value || "default.jpg",
+        date: new Date().toLocaleString('ar-SA')
+    };
+
+    if(!newProduct.name || !newProduct.price) {
+        alert("يرجى ملء اسم المنتج وسعره على الأقل!");
+        return;
+    }
+
+    try {
+        // 1. محاولة جلب الملف الحالي
+        const getFile = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE_PATH}`, {
+            headers: { 'Authorization': `token ${token}` }
+        });
+
+        let sha = "";
+        let content = [];
+        
+        if (getFile.ok) {
+            const fileData = await getFile.json();
+            sha = fileData.sha;
+            // فك التشفير من Base64 مع دعم اللغة العربية
+            content = JSON.parse(decodeURIComponent(escape(atob(fileData.content))));
+        }
+
+        // 2. إضافة المنتج الجديد
+        content.push(newProduct);
+
+        // 3. رفع الملف المحدث لـ GitHub
+        const updateFile = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE_PATH}`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `token ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                message: `إضافة منتج جديد: ${newProduct.name}`,
+                content: btoa(unescape(encodeURIComponent(JSON.stringify(content, null, 2)))),
+                sha: sha
+            })
+        });
+
+        if (updateFile.ok) {
+            alert('🎉 تم نشر المنتج بنجاح في متجر OMNI!');
+            // مسح الخانات بعد النجاح
+            document.getElementById('p-name').value = "";
+            document.getElementById('p-price').value = "";
+        } else {
+            const errData = await updateFile.json();
+            alert('❌ فشل النشر: ' + errData.message);
+        }
+
+    } catch (error) {
+        console.error(error);
+        alert('❌ حدث خطأ في الاتصال. تأكد من الإنترنت وصلاحيات التوكن.');
+    }
+}
