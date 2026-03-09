@@ -3,252 +3,223 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OMNI ELITE | لوحة التحكم المتكاملة</title>
+    <title>نظام أومني المتكامل | OMNI ADMIN</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --gold: #d4af37; --bg: #050505; --card: #111111; --green: #00ff88; --red: #ff3e3e; }
+        :root { --gold: #d4af37; --bg: #0a0a0a; --card: #151515; --green: #2ecc71; --red: #e74c3c; --blue: #3498db; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
-        body { background: var(--bg); color: white; padding: 20px; line-height: 1.6; }
-        
-        .admin-container { max-width: 1100px; margin: 0 auto; border: 1px solid #222; padding: 30px; border-radius: 20px; background: rgba(255,255,255,0.02); }
-        h1 { color: var(--gold); text-align: center; margin-bottom: 30px; font-weight: 900; font-size: 2.2rem; text-shadow: 0 0 10px rgba(212,175,55,0.3); }
-
-        /* نظام التبويب */
-        .tabs { display: flex; gap: 10px; margin-bottom: 25px; overflow-x: auto; padding-bottom: 10px; }
-        .tab-btn { background: #1a1a1a; border: 1px solid #333; color: #888; padding: 12px 25px; cursor: pointer; border-radius: 12px; font-weight: bold; white-space: nowrap; transition: 0.3s; flex: 1; }
-        .tab-btn.active { background: var(--gold); color: black; border-color: var(--gold); }
-
-        .section { display: none; animation: fadeIn 0.4s ease-out; }
+        body { background: var(--bg); color: white; padding: 10px; }
+        .admin-container { max-width: 1100px; margin: 0 auto; }
+        h1 { color: var(--gold); text-align: center; margin: 20px 0; border-bottom: 2px solid var(--gold); padding-bottom: 10px; font-weight: 900; }
+        .tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+        .tab-btn { background: var(--card); border: 1px solid var(--gold); color: white; padding: 12px; cursor: pointer; border-radius: 10px; font-weight: bold; flex: 1; min-width: 120px; transition: 0.3s; }
+        .tab-btn.active { background: var(--gold); color: black; }
+        .section { display: none; background: var(--card); padding: 20px; border-radius: 15px; border: 1px solid #333; animation: fadeIn 0.3s; }
         .section.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* النماذج */
-        .form-group { margin-bottom: 20px; }
-        label { display: block; margin-bottom: 8px; color: var(--gold); font-weight: bold; font-size: 0.95rem; }
-        input, textarea, select { width: 100%; padding: 14px; border-radius: 10px; border: 1px solid #333; background: #000; color: white; transition: 0.3s; }
-        input:focus, select:focus { border-color: var(--gold); outline: none; box-shadow: 0 0 8px rgba(212,175,55,0.2); }
-
-        /* سهم الأسهم والتقارير */
-        .stock-box { background: #111; padding: 25px; border-radius: 15px; border: 1px solid #222; display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px; }
-        .arrow-up { color: var(--green); font-size: 3rem; }
-        .arrow-down { color: var(--red); font-size: 3rem; }
-        .total-amount { font-size: 1.8rem; font-weight: 900; color: white; }
-
-        .btn-action { background: var(--gold); color: black; border: none; padding: 16px; width: 100%; border-radius: 12px; font-weight: 900; cursor: pointer; font-size: 1rem; transition: 0.3s; }
-        .btn-action:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(212,175,55,0.3); }
-
-        table { width: 100%; margin-top: 20px; border-collapse: collapse; background: #0a0a0a; border-radius: 10px; overflow: hidden; }
-        th, td { padding: 15px; text-align: center; border-bottom: 1px solid #222; }
-        th { background: #151515; color: var(--gold); font-weight: bold; }
-        
-        .setup-warning { background: rgba(255, 62, 62, 0.1); border: 1px solid var(--red); padding: 15px; border-radius: 10px; margin-bottom: 20px; text-align: center; color: var(--red); font-weight: bold; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; color: var(--gold); font-size: 0.9rem; font-weight: bold; }
+        input, textarea, select { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #333; background: #000; color: white; outline: none; }
+        input:focus { border-color: var(--gold); }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 25px; }
+        .stat-box { background: #111; padding: 20px; border-radius: 15px; border: 1px solid #222; text-align: center; }
+        .stat-box h3 { font-size: 0.8rem; color: #888; margin-bottom: 10px; }
+        .stat-box p { font-size: 1.4rem; font-weight: 900; }
+        .btn-save { background: var(--gold); color: black; border: none; padding: 15px; width: 100%; border-radius: 10px; font-weight: 900; cursor: pointer; margin-top: 10px; transition: 0.3s; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 0.85rem; }
+        th, td { border: 1px solid #222; padding: 12px; text-align: center; }
+        th { background: #1a1a1a; color: var(--gold); }
+        .profit { color: var(--green); font-weight: bold; }
+        .loss { color: var(--red); font-weight: bold; }
+        .action-btns { display: flex; gap: 5px; justify-content: center; }
+        .btn-edit { background: var(--blue); color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
+        .btn-del { background: var(--red); color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
     </style>
 </head>
 <body>
 
 <div class="admin-container">
-    <h1>OMNI ELITE ADMIN</h1>
-
-    <div id="auth-check" class="setup-warning" style="display:none;">
-        ⚠️ التوكن غير موجود! يرجى إضافته من قسم "إدارة المتجر" لتتمكن من رفع المنتجات.
-    </div>
+    <h1>لوحة تحكم أومني الشاملة</h1>
 
     <div class="tabs">
         <button class="tab-btn active" onclick="showTab('products')">📦 إضافة منتج</button>
         <button class="tab-btn" onclick="showTab('orders')">💰 تسجيل بيعة</button>
-        <button class="tab-btn" onclick="showTab('reports')">📈 التقارير</button>
-        <button class="tab-btn" onclick="showTab('config')">⚙️ إدارة المتجر</button>
+        <button class="tab-btn" onclick="showTab('search')">🔍 بحث بالرمز</button>
+        <button class="tab-btn" onclick="showTab('sales')">📊 التقارير المالية</button>
+        <button class="tab-btn" onclick="showTab('manage')">⚙️ إدارة المنتجات</button>
+        <button class="tab-btn" onclick="showTab('config')">🔑 إعدادات الربط</button>
     </div>
 
     <div id="products" class="section active">
-        <div class="form-group"><label>اسم المنتج:</label><input type="text" id="p-name" placeholder="مثلاً: شات جي بي تي"></div>
-        <div class="form-group"><label>السعر:</label><input type="number" id="p-price" placeholder="45"></div>
         <div class="form-group">
-            <label>قسم المنتج:</label>
+            <label>اختر قسم المتجر:</label>
             <select id="p-category">
-                <option value="ذكاء اصطناعي">الذكاء الاصطناعي 🤖</option>
-                <option value="ستيم أوفلاين">ستيم أوفلاين 🎮</option>
-                <option value="ستيم أونلاين">ستيم أونلاين 🌐</option>
-                <option value="اشتراكات ترفيهية">اشتراكات ترفيهية 📺</option>
+                <option value="ذكاء اصطناعي">قسم الذكاء الاصطناعي 🤖</option>
+                <option value="ستيم أوفلاين">قسم ستيم أوفلاين 🎮</option>
+                <option value="انستا">قسم انستا 📸</option>
+                <option value="تيك توك">قسم تيك توك 📱</option>
+                <option value="ترفيه">قسم الترفيه 📺</option>
             </select>
         </div>
-        <div class="form-group"><label>وصف المنتج:</label><textarea id="p-desc" rows="3" placeholder="وصف موجز للمنتج..."></textarea></div>
-        <button class="btn-action" onclick="publishProduct()">نشر المنتج في متجر OMNI 🚀</button>
+        <div class="form-group"><label>اسم المنتج:</label><input type="text" id="p-name"></div>
+        <div class="form-group"><label>اسم الصورة (بالضبط كما في GitHub):</label><input type="text" id="p-img" placeholder="image.jpeg"></div>
+        <div class="form-group"><label>الوصف:</label><textarea id="p-desc" rows="2"></textarea></div>
+        <div class="form-group"><label>سعر البيع:</label><input type="number" id="p-price"></div>
+        <button class="btn-save" onclick="saveAndPublishProduct()">نشر المنتج في المتجر العام 🚀</button>
     </div>
 
     <div id="orders" class="section">
-        <div class="form-group"><label>اسم العميل:</label><input type="text" id="o-name"></div>
-        <div class="form-group"><label>المنتج:</label><input type="text" id="o-prod"></div>
-        <div class="form-group"><label>المبلغ المدفوع:</label><input type="number" id="o-price"></div>
-        <div class="form-group"><label>رمز الطلب:</label><input type="text" id="o-id"></div>
-        <button class="btn-action" onclick="recordSale()">تأكيد وتسجيل العملية ✅</button>
+        <div class="form-group"><label>الرمز (#A10):</label><input type="text" id="o-id"></div>
+        <div class="form-group"><label>اسم المنتج:</label><input type="text" id="o-product-name"></div>
+        <div class="form-group"><label>سعر التكلفة:</label><input type="number" id="o-cost"></div>
+        <div class="form-group"><label>سعر البيع:</label><input type="number" id="o-sold"></div>
+        <div class="form-group"><label>بيانات العميل:</label><textarea id="o-data" rows="3"></textarea></div>
+        <button class="btn-save" onclick="saveSale()">تسجيل العملية مالياً ✅</button>
     </div>
 
-    <div id="reports" class="section">
-        <div class="stock-box">
-            <div>
-                <p id="total-val" class="total-amount">المجموع: 0 ريال</p>
-                <p id="profit-status" style="color: #888;">حالة المبيعات مستقرة</p>
-            </div>
-            <div id="arrow-icon" class="arrow-up">▬</div>
-        </div>
-        <table id="sales-table">
-            <thead><tr><th>الرمز</th><th>المنتج</th><th>المبلغ</th><th>التاريخ</th></tr></thead>
-            <tbody></tbody>
-        </table>
-    </div>
+    <div id="search" class="section"><input type="text" id="search-input" oninput="doSearch()" placeholder="ابحث بالرمز..."><div id="search-res"></div></div>
+    <div id="sales" class="section"><div class="stats-grid"><div class="stat-box"><h3>صافي الربح</h3><p id="net-profit" style="color:var(--green)">0</p></div></div><table id="sales-table"><thead><tr><th>الرمز</th><th>المنتج</th><th>الربح</th><th>حذف</th></tr></thead><tbody></tbody></table></div>
+    <div id="manage" class="section"><table id="manage-table"><thead><tr><th>المنتج</th><th>السعر</th><th>التحكم</th></tr></thead><tbody></tbody></table></div>
 
     <div id="config" class="section">
-        <div style="background:#111; padding:20px; border-radius:15px; border:1px dashed var(--gold);">
-            <h3 style="color:var(--gold); margin-bottom:10px;">إعدادات الأمان (GitHub)</h3>
-            <p style="font-size:0.85rem; color:#888; margin-bottom:15px;">الصق التوكن الجديد هنا. سيتم حفظه في متصفحك فقط ولن يراه أحد غيرك في المتجر العام.</p>
-            <input type="password" id="sys-token" placeholder="ghp_...">
-            <button class="btn-action" onclick="saveToken()" style="background:var(--green); margin-top:15px; padding:10px;">حفظ المفتاح في المتصفح</button>
+        <div style="border:1px dashed var(--gold); padding:15px; border-radius:10px;">
+            <label>توكن GitHub الخاص بك (Token):</label>
+            <input type="password" id="sys-token" placeholder="ghp_xxxx">
+            <button class="btn-save" onclick="saveSettings()" style="background:var(--green)">حفظ التوكن في متصفحي</button>
         </div>
     </div>
 </div>
 
 <script>
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxbYwConHNyO-Pxoh9d6cyoJof1WV28lKcD9AXl4rNjkrPL50254T_T19WPcmpjWPZS/exec'; // رابط السكريبت الخاص بك
-    
-    // تحميل التوكن عند الفتح
+    // --- المحرك البرمجي المتكامل ---
+
+    const OWNER = 'aabd78131-cmd'; //
+    const REPO = 'omni-store';     //
+    const FILE_PATH = 'products.json';
+
     window.onload = () => {
         const token = localStorage.getItem('omni_token');
-        if(!token) {
-            document.getElementById('auth-check').style.display = 'block';
-        } else {
-            document.getElementById('sys-token').value = token;
-        }
+        if(token) document.getElementById('sys-token').value = token;
+        renderSales();
+        renderManageProducts();
     };
 
-    function saveToken() {
+    function saveSettings() {
         const token = document.getElementById('sys-token').value;
         if(token.startsWith('ghp_')) {
             localStorage.setItem('omni_token', token);
-            alert('تم حفظ التوكن بنجاح! اللوحة جاهزة الآن.');
-            location.reload();
-        } else {
-            alert('خطأ: التوكن غير صحيح.');
-        }
+            alert('تم الحفظ بنجاح! يمكنك النشر الآن.');
+        } else { alert('التوكن غير صحيح!'); }
     }
 
-    function showTab(id) {
+    function showTab(tabId) {
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        event.target.classList.add('active');
-        if(id === 'reports') loadReports();
+        document.getElementById(tabId).classList.add('active');
+        if(tabId === 'sales') renderSales();
+        if(tabId === 'manage') renderManageProducts();
     }
 
-    // وظيفة تسجيل البيعة في قوقل شيت
-    async function recordSale() {
-        const data = {
-            customerName: document.getElementById('o-name').value,
-            product: document.getElementById('o-prod').value,
-            price: document.getElementById('o-price').value,
-            orderId: document.getElementById('o-id').value
+    // الدالة الرئيسية: دمج النشر المحلي والرفع لـ GitHub
+    async function saveAndPublishProduct() {
+        const token = localStorage.getItem('omni_token');
+        if(!token) return alert('يرجى وضع التوكن في قسم الإعدادات أولاً!');
+
+        const p = {
+            id: 'PROD-' + Date.now(),
+            category: document.getElementById('p-category').value,
+            name: document.getElementById('p-name').value,
+            img: document.getElementById('p-img').value,
+            desc: document.getElementById('p-desc').value,
+            price: document.getElementById('p-price').value,
+            date: new Date().toLocaleDateString('ar-SA')
         };
-        const response = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(data) });
-        if(response.ok) alert('تم تسجيل البيعة بنجاح! ✅');
+
+        if(!p.name || !p.price) return alert('أكمل البيانات');
+
+        // 1. الحفظ المحلي (Local Storage)
+        let prods = JSON.parse(localStorage.getItem('omni_store_products') || '[]');
+        prods.push(p);
+        localStorage.setItem('omni_store_products', JSON.stringify(prods));
+
+        // 2. الرفع إلى GitHub
+        try {
+            const getFile = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE_PATH}`, {
+                headers: { 'Authorization': `token ${token}` }
+            });
+
+            let sha = "";
+            let githubContent = [];
+            if (getFile.ok) {
+                const data = await getFile.json();
+                sha = data.sha;
+                githubContent = JSON.parse(decodeURIComponent(escape(atob(data.content))));
+            }
+
+            githubContent.push(p);
+
+            const update = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE_PATH}`, {
+                method: 'PUT',
+                headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    message: `نشر منتج: ${p.name}`,
+                    content: btoa(unescape(encodeURIComponent(JSON.stringify(githubContent, null, 2)))),
+                    sha: sha
+                })
+            });
+
+            if (update.ok) {
+                alert('✅ تم النشر في المتجر العام وتحديث السجلات محلياً!');
+                document.getElementById('p-name').value = '';
+            } else { alert('❌ حدث خطأ في ربط GitHub'); }
+
+        } catch (e) { alert('❌ فشل الاتصال بقاعدة بيانات GitHub'); }
     }
 
-    // وظيفة جلب التقارير وتحديث سهم الأسهم
-    async function loadReports() {
-        const res = await fetch(SCRIPT_URL);
-        const data = await res.json();
+    // دوال الإدارة والمالية (نفس منطق كودك)
+    function saveSale() {
+        const sale = {
+            id: document.getElementById('o-id').value,
+            name: document.getElementById('o-product-name').value,
+            cost: parseFloat(document.getElementById('o-cost').value || 0),
+            sold: parseFloat(document.getElementById('o-sold').value || 0),
+            data: document.getElementById('o-data').value,
+            date: new Date().toLocaleDateString()
+        };
+        let finance = JSON.parse(localStorage.getItem('omni_finance_records') || '[]');
+        finance.push(sale);
+        localStorage.setItem('omni_finance_records', JSON.stringify(finance));
+        alert('تم تسجيل البيعة بنجاح');
+    }
+
+    function renderSales() {
+        let sales = JSON.parse(localStorage.getItem('omni_finance_records') || '[]');
         const tbody = document.querySelector('#sales-table tbody');
         tbody.innerHTML = '';
-        let total = 0;
-        
-        data.rows.forEach(r => {
-            total += parseFloat(r[3]);
-            tbody.innerHTML += `<tr><td>${r[6]}</td><td>${r[2]}</td><td>${r[3]} ريال</td><td>${r[4]}</td></tr>`;
+        let net = 0;
+        sales.forEach((s, i) => {
+            const profit = s.sold - s.cost;
+            net += profit;
+            tbody.innerHTML += `<tr><td>${s.id}</td><td>${s.name}</td><td>${profit}</td><td><button onclick="deleteSale(${i})">✕</button></td></tr>`;
         });
-
-        document.getElementById('total-val').innerText = `المجموع: ${total} ريال`;
-        
-        const arrow = document.getElementById('arrow-icon');
-        if(total > 500) { 
-            arrow.innerHTML = '▲'; arrow.className = 'arrow-up';
-            document.getElementById('profit-status').innerText = 'الأرباح في تصاعد مستمر 📈';
-        } else {
-            arrow.innerHTML = '▼'; arrow.className = 'arrow-down';
-            document.getElementById('profit-status').innerText = 'بانتظار مزيد من المبيعات';
-        }
+        document.getElementById('net-profit').innerText = net + " ريال";
     }
 
-  async function publishProduct() {
-    const token = localStorage.getItem('omni_token');
-    if (!token) { 
-        alert('يرجى ضبط التوكن أولاً من إعدادات المتجر!'); 
-        return; 
-    }
-
-    // بيانات المستودع الخاص بك
-    const OWNER = 'aabd78131-cmd'; 
-    const REPO = 'omni-store';     
-    const FILE_PATH = 'products.json'; 
-
-    // تجميع بيانات المنتج من الخانات
-    const newProduct = {
-        name: document.getElementById('p-name').value,
-        price: document.getElementById('p-price').value,
-        category: document.getElementById('p-category').value,
-        desc: document.getElementById('p-desc').value,
-        image: document.getElementById('p-img-name')?.value || "default.jpg",
-        date: new Date().toLocaleString('ar-SA')
-    };
-
-    if(!newProduct.name || !newProduct.price) {
-        alert("يرجى ملء اسم المنتج وسعره على الأقل!");
-        return;
-    }
-
-    try {
-        // 1. محاولة جلب الملف الحالي
-        const getFile = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE_PATH}`, {
-            headers: { 'Authorization': `token ${token}` }
+    function renderManageProducts() {
+        let prods = JSON.parse(localStorage.getItem('omni_store_products') || '[]');
+        const tbody = document.querySelector('#manage-table tbody');
+        tbody.innerHTML = '';
+        prods.forEach((p, i) => {
+            tbody.innerHTML += `<tr><td>${p.name}</td><td>${p.price} ريال</td><td><button class="btn-del" onclick="deleteProduct(${i})">حذف</button></td></tr>`;
         });
-
-        let sha = "";
-        let content = [];
-        
-        if (getFile.ok) {
-            const fileData = await getFile.json();
-            sha = fileData.sha;
-            // فك التشفير من Base64 مع دعم اللغة العربية
-            content = JSON.parse(decodeURIComponent(escape(atob(fileData.content))));
-        }
-
-        // 2. إضافة المنتج الجديد
-        content.push(newProduct);
-
-        // 3. رفع الملف المحدث لـ GitHub
-        const updateFile = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE_PATH}`, {
-            method: 'PUT',
-            headers: {
-                'Authorization': `token ${token}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                message: `إضافة منتج جديد: ${newProduct.name}`,
-                content: btoa(unescape(encodeURIComponent(JSON.stringify(content, null, 2)))),
-                sha: sha
-            })
-        });
-
-        if (updateFile.ok) {
-            alert('🎉 تم نشر المنتج بنجاح في متجر OMNI!');
-            // مسح الخانات بعد النجاح
-            document.getElementById('p-name').value = "";
-            document.getElementById('p-price').value = "";
-        } else {
-            const errData = await updateFile.json();
-            alert('❌ فشل النشر: ' + errData.message);
-        }
-
-    } catch (error) {
-        console.error(error);
-        alert('❌ حدث خطأ في الاتصال. تأكد من الإنترنت وصلاحيات التوكن.');
     }
-}
+
+    function deleteProduct(i) {
+        let prods = JSON.parse(localStorage.getItem('omni_store_products'));
+        prods.splice(i, 1);
+        localStorage.setItem('omni_store_products', JSON.stringify(prods));
+        renderManageProducts();
+    }
+</script>
+</body>
+</html>
