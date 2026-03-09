@@ -3,126 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة التحكم المتقدمة | أومني</title>
+    <title>نظام أومني المحاسبي | OMNI ADMIN</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --gold: #d4af37; --bg: #0a0a0a; --card: #151515; }
+        :root { --gold: #d4af37; --bg: #0a0a0a; --card: #151515; --green: #2ecc71; --red: #e74c3c; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
-        body { background: var(--bg); color: white; padding: 20px; }
+        body { background: var(--bg); color: white; padding: 10px; }
         
-        .admin-container { max-width: 1000px; margin: 0 auto; }
-        h1 { color: var(--gold); text-align: center; margin-bottom: 30px; border-bottom: 2px solid var(--gold); padding-bottom: 10px; }
+        .admin-container { max-width: 1100px; margin: 0 auto; }
+        h1 { color: var(--gold); text-align: center; margin: 20px 0; border-bottom: 2px solid var(--gold); padding-bottom: 10px; font-weight: 900; }
         
-        .tabs { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; justify-content: center; }
-        .tab-btn { background: var(--card); border: 1px solid var(--gold); color: white; padding: 10px 20px; cursor: pointer; border-radius: 10px; font-weight: bold; flex: 1; min-width: 120px; }
+        .tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+        .tab-btn { background: var(--card); border: 1px solid var(--gold); color: white; padding: 12px; cursor: pointer; border-radius: 10px; font-weight: bold; flex: 1; min-width: 100px; transition: 0.3s; }
         .tab-btn.active { background: var(--gold); color: black; }
         
-        .section { display: none; background: var(--card); padding: 20px; border-radius: 15px; border: 1px solid #333; }
+        .section { display: none; background: var(--card); padding: 20px; border-radius: 15px; border: 1px solid #333; animation: fadeIn 0.3s; }
         .section.active { display: block; }
-        
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
         .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; color: var(--gold); font-weight: bold; }
-        input, textarea, select { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #333; background: #000; color: white; font-size: 1rem; outline: none; }
-        input:focus { border-color: var(--gold); }
+        label { display: block; margin-bottom: 5px; color: var(--gold); font-size: 0.9rem; }
+        input, textarea, select { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #333; background: #000; color: white; outline: none; }
         
-        .btn-add { background: var(--gold); color: black; border: none; padding: 15px; width: 100%; border-radius: 10px; font-weight: 900; cursor: pointer; margin-top: 10px; transition: 0.3s; }
-        .btn-add:hover { opacity: 0.8; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px; }
+        .stat-box { background: #111; padding: 20px; border-radius: 15px; border: 1px solid #222; text-align: center; }
+        .stat-box h3 { font-size: 0.8rem; color: #888; margin-bottom: 10px; }
+        .stat-box p { font-size: 1.4rem; font-weight: 900; }
+
+        .btn-save { background: var(--gold); color: black; border: none; padding: 15px; width: 100%; border-radius: 10px; font-weight: 900; cursor: pointer; margin-top: 10px; }
         
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: #000; font-size: 0.9rem; }
-        th, td { border: 1px solid #333; padding: 12px; text-align: center; }
-        th { background: var(--gold); color: black; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 0.85rem; }
+        th, td { border: 1px solid #222; padding: 12px; text-align: center; }
+        th { background: #1a1a1a; color: var(--gold); }
         
-        .search-result { background: #1a1a1a; padding: 20px; border-radius: 10px; margin-top: 20px; border: 1px dashed var(--gold); display: none; }
-        .delete-btn { background: #ff4444; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
+        .profit { color: var(--green); font-weight: bold; }
+        .loss { color: var(--red); font-weight: bold; }
         
-        .hint { font-size: 0.8rem; color: #888; margin-top: 4px; }
+        .search-box { position: relative; margin-bottom: 20px; }
+        .result-item { background: #000; padding: 15px; border-radius: 10px; border: 1px dashed var(--gold); margin-top: 10px; line-height: 1.8; }
     </style>
 </head>
 <body>
 
 <div class="admin-container">
-    <h1>لوحة التحكم الاحترافية</h1>
+    <h1>لوحة تحكم أومني الذكية</h1>
 
     <div class="tabs">
         <button class="tab-btn active" onclick="showTab('products')">📦 إضافة منتج</button>
-        <button class="tab-btn" onclick="showTab('orders')">📝 إضافة طلب</button>
+        <button class="tab-btn" onclick="showTab('orders')">💰 تسجيل بيعة</button>
         <button class="tab-btn" onclick="showTab('search')">🔍 بحث بالرمز</button>
-        <button class="tab-btn" onclick="showTab('sales')">📊 المبيعات</button>
+        <button class="tab-btn" onclick="showTab('sales')">📊 التقارير المالية</button>
     </div>
 
     <div id="products" class="section active">
         <div class="form-group">
-            <label>اختر قسم المتجر:</label>
+            <label>القسم:</label>
             <select id="p-category">
-                <option value="قسم ستيم أوفلاين">قسم ستيم أوفلاين</option>
-                <option value="قسم انستا">خدمات انستقرام</option>
-                <option value="قسم تيك توك">خدمات تيك توك</option>
-                <option value="قسم الترفيه">اشتراكات الترفيه</option>
-                <option value="قسم الذكاء الاصطناعي">الذكاء الاصطناعي</option>
+                <option>قسم ستيم أوفلاين</option><option>قسم انستا</option>
+                <option>قسم تيك توك</option><option>قسم الترفيه</option>
+                <option>قسم الذكاء الاصطناعي</option>
             </select>
         </div>
-        <div class="form-group">
-            <label>اسم المنتج:</label>
-            <input type="text" id="p-name" placeholder="مثلاً: يوتيوب بريميوم">
-        </div>
-        <div class="form-group">
-            <label>اسم الصورة الرئيسية:</label>
-            <input type="text" id="p-img" placeholder="image.jpeg">
-        </div>
-        <div class="form-group">
-            <label>الوصف:</label>
-            <textarea id="p-desc" rows="2"></textarea>
-        </div>
-        <div class="form-group">
-            <label>صور إضافية للوصف (اختياري):</label>
-            <input type="text" id="p-extra-imgs" placeholder="ضع أسماء الصور هنا مفصولة بفاصلة">
-        </div>
-        <div class="form-group">
-            <label>السعر الأساسي:</label>
-            <input type="text" id="p-price" placeholder="مثلاً: 20">
-        </div>
-        <div class="form-group">
-            <label>خيارات المنتج (اختياري):</label>
-            <textarea id="p-vars" rows="2" placeholder="اكتبها بهذا الشكل: شهر=10, شهرين=20"></textarea>
-            <p class="hint">اتركها فارغة إذا لا يوجد خيارات</p>
-        </div>
-        <button class="btn-add" onclick="saveProduct()">نشر المنتج في القسم المختار</button>
+        <div class="form-group"><label>اسم المنتج:</label><input type="text" id="p-name"></div>
+        <div class="form-group"><label>سعر البيع الافتراضي:</label><input type="number" id="p-price"></div>
+        <button class="btn-save" onclick="saveProduct()">حفظ المنتج</button>
     </div>
 
     <div id="orders" class="section">
-        <div class="form-group">
-            <label>رقم الطلب أو الرمز:</label>
-            <input type="text" id="o-id" placeholder="مثلاً: #7788">
-        </div>
-        <div class="form-group">
-            <label>بيانات العميل والطلب بالكامل:</label>
-            <textarea id="o-data" rows="5" placeholder="اكتب كل شيء هنا..."></textarea>
-        </div>
-        <div class="form-group">
-            <label>المبلغ:</label>
-            <input type="number" id="o-amount">
-        </div>
-        <button class="btn-add" onclick="saveOrder()">حفظ البيانات في الأرشيف</button>
+        <div class="form-group"><label>اسم المنتج المباع:</label><input type="text" id="o-product-name" placeholder="مثلاً: يوتيوب سنة"></div>
+        <div class="form-group"><label>الرمز (للبحث لاحقاً):</label><input type="text" id="o-id"></div>
+        <div class="form-group"><label>سعر التكلفة (كم دفعته أنت للمورد):</label><input type="number" id="o-cost" placeholder="0.00"></div>
+        <div class="form-group"><label>سعر البيع (كم دفع الزبون):</label><input type="number" id="o-sold" placeholder="0.00"></div>
+        <div class="form-group"><label>بيانات العميل (اختياري):</label><textarea id="o-data"></textarea></div>
+        <button class="btn-save" onclick="saveSale()">تسجيل العملية</button>
     </div>
 
     <div id="search" class="section">
-        <div class="form-group">
-            <label>أدخل الرمز أو رقم الطلب للبحث:</label>
-            <input type="text" id="search-input" oninput="searchOrder()" placeholder="اكتب الرمز هنا...">
-        </div>
-        <div id="search-result-box" class="search-result">
-            <h3 style="color:var(--gold)">تم العثور على البيانات:</h3>
-            <div id="result-content" style="margin-top:10px; white-space: pre-wrap; line-height: 1.6;"></div>
-        </div>
+        <input type="text" id="search-input" oninput="doSearch()" placeholder="اكتب الرمز هنا للبحث عن البيانات...">
+        <div id="search-res"></div>
     </div>
 
     <div id="sales" class="section">
+        <div class="stats-grid">
+            <div class="stat-box"><h3>إجمالي المبيعات</h3><p id="total-revenue">0</p></div>
+            <div class="stat-box"><h3>إجمالي التكلفة</h3><p id="total-costs">0</p></div>
+            <div class="stat-box"><h3>صافي الربح</h3><p id="net-profit" style="color:var(--green)">0</p></div>
+            <div class="stat-box"><h3>الأكثر مبيعاً</h3><p id="top-product" style="font-size:1rem; color:var(--gold)">-</p></div>
+            <div class="stat-box"><h3>الأقل مبيعاً</h3><p id="low-product" style="font-size:1rem;">-</p></div>
+        </div>
+
         <table id="sales-table">
             <thead>
                 <tr>
                     <th>الرمز</th>
-                    <th>البيانات</th>
-                    <th>المبلغ</th>
+                    <th>المنتج</th>
+                    <th>التكلفة</th>
+                    <th>البيع</th>
+                    <th>الربح</th>
                     <th>حذف</th>
                 </tr>
             </thead>
@@ -137,92 +114,99 @@
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         document.getElementById(tabId).classList.add('active');
         event.currentTarget.classList.add('active');
-        if(tabId === 'sales') updateSalesTable();
+        if(tabId === 'sales') renderSales();
     }
 
-    // حفظ المنتج
     function saveProduct() {
-        const product = {
-            category: document.getElementById('p-category').value,
-            name: document.getElementById('p-name').value,
-            img: document.getElementById('p-img').value,
-            desc: document.getElementById('p-desc').value,
-            extraImgs: document.getElementById('p-extra-imgs').value,
-            price: document.getElementById('p-price').value,
-            vars: document.getElementById('p-vars').value
-        };
-        
-        if(!product.name) return alert('اسم المنتج مطلوب');
-        
-        let products = JSON.parse(localStorage.getItem('omni_products') || '[]');
-        products.push(product);
-        localStorage.setItem('omni_products', JSON.stringify(products));
-        alert('تمت إضافة المنتج بنجاح إلى ' + product.category);
+        const p = { name: document.getElementById('p-name').value, cat: document.getElementById('p-category').value };
+        if(!p.name) return alert('أدخل الاسم');
+        let prods = JSON.parse(localStorage.getItem('store_prods') || '[]');
+        prods.push(p);
+        localStorage.setItem('store_prods', JSON.stringify(prods));
+        alert('تم الحفظ');
     }
 
-    // حفظ الطلب
-    function saveOrder() {
-        const order = {
+    function saveSale() {
+        const sale = {
             id: document.getElementById('o-id').value,
+            name: document.getElementById('o-product-name').value,
+            cost: parseFloat(document.getElementById('o-cost').value || 0),
+            sold: parseFloat(document.getElementById('o-sold').value || 0),
             data: document.getElementById('o-data').value,
-            amount: document.getElementById('o-amount').value,
-            date: new Date().toLocaleString('ar-SA')
+            date: new Date().toLocaleDateString('ar-SA')
         };
-        if(!order.id) return alert('يجب وضع رمز للبحث لاحقاً');
+        if(!sale.id || !sale.name) return alert('أكمل البيانات الأساسية');
 
-        let sales = JSON.parse(localStorage.getItem('omni_sales') || '[]');
-        sales.push(order);
-        localStorage.setItem('omni_sales', JSON.stringify(sales));
-        alert('تم حفظ البيانات بنجاح');
-        document.getElementById('o-id').value = '';
-        document.getElementById('o-data').value = '';
+        let sales = JSON.parse(localStorage.getItem('omni_finance') || '[]');
+        sales.push(sale);
+        localStorage.setItem('omni_finance', JSON.stringify(sales));
+        alert('تم تسجيل البيعة وحساب الربح');
+        ['o-id', 'o-product-name', 'o-cost', 'o-sold', 'o-data'].forEach(id => document.getElementById(id).value = '');
     }
 
-    // البحث بالرمز
-    function searchOrder() {
-        const val = document.getElementById('search-input').value.trim();
-        const resultBox = document.getElementById('search-result-box');
-        const resultContent = document.getElementById('result-content');
+    function renderSales() {
+        let sales = JSON.parse(localStorage.getItem('omni_finance') || '[]');
+        const tbody = document.querySelector('#sales-table tbody');
+        tbody.innerHTML = '';
         
-        if(!val) { resultBox.style.display = 'none'; return; }
+        let rev = 0, costs = 0, net = 0;
+        let counts = {};
 
-        let sales = JSON.parse(localStorage.getItem('omni_sales') || '[]');
-        const found = sales.find(s => s.id === val);
+        sales.forEach((s, i) => {
+            const profit = s.sold - s.cost;
+            rev += s.sold;
+            costs += s.cost;
+            net += profit;
+            counts[s.name] = (counts[s.name] || 0) + 1;
 
-        if(found) {
-            resultBox.style.display = 'block';
-            resultContent.innerHTML = `
-                <b>الرمز:</b> ${found.id} <br>
-                <b>التاريخ:</b> ${found.date} <br>
-                <b>المبلغ:</b> ${found.amount} ريال <br>
-                <hr style="border:0; border-top:1px solid #333; margin:10px 0;">
-                <b>البيانات المحفوظة:</b> <br> ${found.data}
-            `;
-        } else {
-            resultBox.style.display = 'none';
+            tbody.innerHTML += `
+                <tr>
+                    <td>${s.id}</td>
+                    <td>${s.name}</td>
+                    <td>${s.cost}</td>
+                    <td>${s.sold}</td>
+                    <td class="${profit >= 0 ? 'profit' : 'loss'}">${profit.toFixed(2)}</td>
+                    <td><button onclick="deleteSale(${i})" style="background:none; border:none; color:red; cursor:pointer;">✕</button></td>
+                </tr>`;
+        });
+
+        document.getElementById('total-revenue').innerText = rev.toFixed(2) + " ريال";
+        document.getElementById('total-costs').innerText = costs.toFixed(2) + " ريال";
+        document.getElementById('net-profit').innerText = net.toFixed(2) + " ريال";
+        
+        // حساب الأكثر والأقل مبيعاً
+        let sorted = Object.entries(counts).sort((a,b) => b[1] - a[1]);
+        if(sorted.length > 0) {
+            document.getElementById('top-product').innerText = sorted[0][0];
+            document.getElementById('low-product').innerText = sorted[sorted.length-1][0];
         }
     }
 
-    function updateSalesTable() {
-        let sales = JSON.parse(localStorage.getItem('omni_sales') || '[]');
-        const tbody = document.querySelector('#sales-table tbody');
-        tbody.innerHTML = '';
-        sales.forEach((s, index) => {
-            tbody.innerHTML += `<tr>
-                <td>${s.id}</td>
-                <td style="text-align:right">${s.data.substring(0,30)}...</td>
-                <td>${s.amount}</td>
-                <td><button class="delete-btn" onclick="deleteSales(${index})">حذف</button></td>
-            </tr>`;
-        });
+    function doSearch() {
+        const val = document.getElementById('search-input').value;
+        const res = document.getElementById('search-res');
+        if(!val) { res.innerHTML = ''; return; }
+        
+        let sales = JSON.parse(localStorage.getItem('omni_finance') || '[]');
+        const found = sales.find(s => s.id === val);
+        
+        if(found) {
+            res.innerHTML = `
+                <div class="result-item">
+                    <b>📦 المنتج:</b> ${found.name} <br>
+                    <b>💰 التكلفة:</b> ${found.cost} | <b>💵 البيع:</b> ${found.sold} <br>
+                    <b>📅 التاريخ:</b> ${found.date} <br>
+                    <b>📝 البيانات:</b> <br> ${found.data}
+                </div>`;
+        } else { res.innerHTML = '<p style="margin-top:10px; color:#666;">لا يوجد بيانات لهذا الرمز</p>'; }
     }
 
-    function deleteSales(index) {
-        if(!confirm('حذف البيانات؟')) return;
-        let sales = JSON.parse(localStorage.getItem('omni_sales'));
-        sales.splice(index, 1);
-        localStorage.setItem('omni_sales', JSON.stringify(sales));
-        updateSalesTable();
+    function deleteSale(i) {
+        if(!confirm('حذف العملية؟')) return;
+        let sales = JSON.parse(localStorage.getItem('omni_finance'));
+        sales.splice(i, 1);
+        localStorage.setItem('omni_finance', JSON.stringify(sales));
+        renderSales();
     }
 </script>
 </body>
