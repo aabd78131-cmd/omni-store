@@ -3,374 +3,281 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام أومني المتكامل | OMNI ADMIN</title>
+    <title>OMNI ADMIN | لوحة التحكم الشاملة</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root { --gold: #d4af37; --bg: #0a0a0a; --card: #151515; --green: #2ecc71; --red: #e74c3c; --blue: #3498db; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
-        body { background: var(--bg); color: white; padding: 10px; }
+        body { background: var(--bg); color: white; padding: 15px; line-height: 1.6; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        h1 { color: var(--gold); text-align: center; margin-bottom: 25px; font-weight: 900; border-bottom: 2px solid var(--gold); padding-bottom: 10px; }
         
-        .admin-container { max-width: 1100px; margin: 0 auto; }
-        h1 { color: var(--gold); text-align: center; margin: 20px 0; border-bottom: 2px solid var(--gold); padding-bottom: 10px; font-weight: 900; }
-        
-        .tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
-        .tab-btn { background: var(--card); border: 1px solid var(--gold); color: white; padding: 12px; cursor: pointer; border-radius: 10px; font-weight: bold; flex: 1; min-width: 120px; transition: 0.3s; }
+        /* Tabs */
+        .tabs { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 25px; }
+        .tab-btn { background: var(--card); border: 1px solid var(--gold); color: white; padding: 12px 20px; cursor: pointer; border-radius: 12px; font-weight: bold; flex: 1; min-width: 140px; transition: 0.3s; }
         .tab-btn.active { background: var(--gold); color: black; }
-        
-        .section { display: none; background: var(--card); padding: 20px; border-radius: 15px; border: 1px solid #333; animation: fadeIn 0.3s; }
+
+        .section { display: none; background: var(--card); padding: 25px; border-radius: 20px; border: 1px solid #333; animation: fadeIn 0.4s; }
         .section.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; color: var(--gold); font-size: 0.9rem; font-weight: bold; }
-        input, textarea, select { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #333; background: #000; color: white; outline: none; }
-        input:focus { border-color: var(--gold); }
+        /* Forms */
+        .form-group { margin-bottom: 18px; }
+        label { display: block; margin-bottom: 8px; color: var(--gold); font-weight: bold; font-size: 0.95rem; }
+        input, textarea, select { width: 100%; padding: 14px; border-radius: 10px; border: 1px solid #333; background: #000; color: white; font-size: 1rem; outline: none; transition: 0.3s; }
+        input:focus { border-color: var(--gold); box-shadow: 0 0 10px rgba(212, 175, 55, 0.2); }
         
-        .date-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
+        .btn-main { background: var(--gold); color: black; border: none; padding: 18px; width: 100%; border-radius: 12px; font-weight: 900; cursor: pointer; font-size: 1.1rem; margin-top: 10px; }
+        .btn-main:hover { filter: brightness(1.2); }
 
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 25px; }
+        /* Statistics */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px; }
         .stat-box { background: #111; padding: 20px; border-radius: 15px; border: 1px solid #222; text-align: center; }
-        .stat-box h3 { font-size: 0.8rem; color: #888; margin-bottom: 10px; }
-        .stat-box p { font-size: 1.4rem; font-weight: 900; }
+        .stat-box h3 { font-size: 0.85rem; color: #888; margin-bottom: 10px; }
+        .stat-box p { font-size: 1.6rem; font-weight: 900; color: var(--gold); }
 
-        .btn-save { background: var(--gold); color: black; border: none; padding: 15px; width: 100%; border-radius: 10px; font-weight: 900; cursor: pointer; margin-top: 10px; transition: 0.3s; }
-        .btn-save:hover { opacity: 0.8; }
-        
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 0.85rem; }
-        th, td { border: 1px solid #222; padding: 12px; text-align: center; }
-        th { background: #1a1a1a; color: var(--gold); }
-        
-        .profit { color: var(--green); font-weight: bold; }
-        .loss { color: var(--red); font-weight: bold; }
-        
-        .hint { font-size: 0.75rem; color: #666; margin-top: 4px; }
-        .result-item { background: #000; padding: 15px; border-radius: 10px; border: 1px dashed var(--gold); margin-top: 10px; line-height: 1.8; }
+        /* Tables */
+        .table-container { overflow-x: auto; margin-top: 20px; }
+        table { width: 100%; border-collapse: collapse; min-width: 600px; }
+        th, td { border: 1px solid #222; padding: 15px; text-align: center; }
+        th { background: #1a1a1a; color: var(--gold); font-weight: 900; }
+        tr:hover { background: #1c1c1c; }
+        .action-btn { padding: 6px 12px; border-radius: 6px; border: none; cursor: pointer; font-weight: bold; margin: 2px; }
+        .btn-del { background: var(--red); color: white; }
+        .btn-edit { background: var(--blue); color: white; }
 
-        .action-btns { display: flex; gap: 5px; justify-content: center; }
-        .btn-edit { background: var(--blue); color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
-        .btn-del { background: var(--red); color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
-        .btn-disc { background: var(--green); color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
-
-        .backup-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
-        .btn-backup { background: #333; color: white; border: 1px solid #555; padding: 15px; border-radius: 10px; cursor: pointer; font-weight: bold; }
-
-        @media (max-width: 600px) {
-            table { font-size: 0.7rem; }
-            th, td { padding: 5px; }
-            .date-row { grid-template-columns: 1fr; }
-        }
+        /* Search */
+        .search-box { margin-bottom: 20px; position: relative; }
+        #search-result { margin-top: 15px; }
+        .result-card { background: #000; padding: 20px; border-radius: 15px; border: 1px solid var(--gold); }
     </style>
 </head>
 <body>
 
-<div class="admin-container">
-    <h1>لوحة تحكم أومني الشاملة</h1>
+<div class="container">
+    <h1>لوحة تحكم OMNI الشاملة</h1>
 
     <div class="tabs">
-        <button class="tab-btn active" onclick="showTab('products')">📦 إضافة منتج</button>
-        <button class="tab-btn" onclick="showTab('orders')">💰 تسجيل بيعة</button>
-        <button class="tab-btn" onclick="showTab('search')">🔍 بحث بالرمز</button>
-        <button class="tab-btn" onclick="showTab('sales')">📊 التقارير المالية</button>
-        <button class="tab-btn" onclick="showTab('manage')">⚙️ إدارة المنتجات</button>
-        <button class="tab-btn" onclick="showTab('backup')">💾 النسخ الاحتياطي</button>
+        <button class="tab-btn active" onclick="showTab('add-prod')">📦 إضافة منتج</button>
+        <button class="tab-btn" onclick="showTab('manage-prods')">⚙️ إدارة المتجر</button>
+        <button class="tab-btn" onclick="showTab('sales-reg')">💰 تسجيل مبيعات</button>
+        <button class="tab-btn" onclick="showTab('reports')">📊 التقارير</button>
+        <button class="tab-btn" onclick="showTab('search')">🔍 بحث</button>
     </div>
 
-    <div id="products" class="section active">
-        <div class="form-group">
-            <label>اختر قسم المتجر:</label>
-            <select id="p-category">
-                <option value="steam_offline">قسم ستيم أوفلاين</option>
-                <option value="insta">قسم انستا</option>
-                <option value="tiktok">قسم تيك توك</option>
-                <option value="entertainment">قسم الترفيه</option>
-                <option value="ai">قسم الذكاء الاصطناعي</option>
-            </select>
+    <div id="add-prod" class="section active">
+        <div class="grid-3">
+            <div class="form-group">
+                <label>القسم:</label>
+                <select id="p-cat">
+                    <option value="steam">ستيم أوفلاين</option>
+                    <option value="social">سوشيال ميديا</option>
+                    <option value="apps">اشتراكات برامج</option>
+                    <option value="ai">ذكاء اصطناعي</option>
+                </select>
+            </div>
+            <div class="form-group"><label>اسم المنتج:</label><input type="text" id="p-name"></div>
+            <div class="form-group"><label>السعر (ريال):</label><input type="number" id="p-price"></div>
         </div>
-        <div class="form-group"><label>اسم المنتج:</label><input type="text" id="p-name"></div>
-        <div class="form-group"><label>اسم الصورة الرئيسية (نفس اللي في github):</label><input type="text" id="p-img" placeholder="image.jpeg"></div>
-        <div class="form-group"><label>الوصف (يظهر للعميل):</label><textarea id="p-desc" rows="2"></textarea></div>
-        
-        <div class="form-group">
-            <label>صور إضافية للوصف (اختياري):</label>
-            <input type="text" id="p-extra-imgs" placeholder="مثال: img1.jpg, img2.png">
-        </div>
-
-        <div class="form-group"><label>سعر البيع الافتراضي:</label><input type="number" id="p-price"></div>
-        
-        <div class="form-group">
-            <label>خيارات المنتج (اختياري):</label>
-            <textarea id="p-vars" rows="2" placeholder="شهر=10, شهرين=20"></textarea>
-        </div>
-
-        <button class="btn-save" onclick="saveProduct()">نشر المنتج في المتجر وتحديث الأوامر</button>
+        <div class="form-group"><label>اسم الصورة (في GitHub):</label><input type="text" id="p-img" placeholder="مثال: product1.png"></div>
+        <div class="form-group"><label>الوصف الكامل:</label><textarea id="p-desc" rows="4"></textarea></div>
+        <button class="btn-main" onclick="saveProduct()">🚀 نشر المنتج فوراً</button>
     </div>
 
-    <div id="orders" class="section">
-        <div class="form-group"><label>اسم المنتج المباع:</label><input type="text" id="o-product-name"></div>
-        <div class="form-group"><label>الرمز (للبحث لاحقاً):</label><input type="text" id="o-id" placeholder="مثال: #A10"></div>
-        
-        <label>تاريخ العملية:</label>
-        <div class="form-group date-row">
-            <input type="number" id="o-day" placeholder="اليوم">
-            <input type="number" id="o-month" placeholder="الشهر">
-            <input type="number" id="o-year" placeholder="السنة">
+    <div id="manage-prods" class="section">
+        <div id="edit-box" style="display:none; margin-bottom: 30px; border: 2px solid var(--blue); padding: 20px; border-radius: 15px;">
+            <h3 style="color:var(--blue)">تعديل المنتج</h3>
+            <input type="hidden" id="edit-id">
+            <div class="grid-3">
+                <input type="text" id="edit-name" placeholder="الاسم">
+                <input type="number" id="edit-price" placeholder="السعر">
+                <input type="text" id="edit-img" placeholder="اسم الصورة">
+            </div>
+            <textarea id="edit-desc" rows="3" style="margin-top:10px" placeholder="الوصف"></textarea>
+            <button class="btn-main" style="background:var(--blue); color:white" onclick="updateProduct()">تأكيد التعديل</button>
         </div>
+        <div class="table-container">
+            <table>
+                <thead><tr><th>المنتج</th><th>القسم</th><th>السعر</th><th>التحكم</th></tr></thead>
+                <tbody id="prod-table-body"></tbody>
+            </table>
+        </div>
+    </div>
 
-        <div class="form-group"><label>سعر التكلفة:</label><input type="number" id="o-cost"></div>
-        <div class="form-group"><label>سعر البيع:</label><input type="number" id="o-sold"></div>
-        <div class="form-group"><label>بيانات العميل:</label><textarea id="o-data" rows="3"></textarea></div>
-        <button class="btn-save" onclick="saveSale()">تسجيل العملية وتحديث التقارير</button>
+    <div id="sales-reg" class="section">
+        <div class="grid-3">
+            <div class="form-group"><label>رمز الطلب (#):</label><input type="text" id="s-id"></div>
+            <div class="form-group"><label>اسم المنتج:</label><input type="text" id="s-name"></div>
+            <div class="form-group"><label>التكلفة علينا:</label><input type="number" id="s-cost"></div>
+        </div>
+        <div class="grid-3">
+            <div class="form-group"><label>سعر البيع:</label><input type="number" id="s-price"></div>
+            <div class="form-group"><label>تاريخ اليوم:</label><input type="date" id="s-date"></div>
+        </div>
+        <div class="form-group"><label>بيانات العميل / ملاحظات:</label><textarea id="s-note" rows="3"></textarea></div>
+        <button class="btn-main" style="background:var(--green); color:black" onclick="saveSale()">✅ تسجيل العملية</button>
+    </div>
+
+    <div id="reports" class="section">
+        <div class="stats-grid">
+            <div class="stat-box"><h3>إجمالي المبيعات</h3><p id="stat-rev">0</p></div>
+            <div class="stat-box"><h3>إجمالي التكلفة</h3><p id="stat-cost">0</p></div>
+            <div class="stat-box"><h3>صافي الربح</h3><p id="stat-profit" style="color:var(--green)">0</p></div>
+        </div>
+        <div class="table-container">
+            <table>
+                <thead><tr><th>الرمز</th><th>المنتج</th><th>الربح</th><th>التاريخ</th><th>حذف</th></tr></thead>
+                <tbody id="sales-table-body"></tbody>
+            </table>
+        </div>
     </div>
 
     <div id="search" class="section">
-        <input type="text" id="search-input" oninput="doSearch()" placeholder="أدخل الرمز للبحث عن بيانات الطلب...">
-        <div id="search-res"></div>
-    </div>
-
-    <div id="sales" class="section">
-        <div class="stats-grid">
-            <div class="stat-box"><h3>إجمالي المبيعات</h3><p id="total-revenue">0</p></div>
-            <div class="stat-box"><h3>إجمالي التكلفة</h3><p id="total-costs">0</p></div>
-            <div class="stat-box"><h3>صافي الربح</h3><p id="net-profit" style="color:var(--green)">0</p></div>
-            <div class="stat-box"><h3>أرباح هذا الشهر</h3><p id="month-profit" style="color:var(--blue)">0</p></div>
+        <div class="search-box">
+            <label>ابحث برمز الطلب:</label>
+            <input type="text" id="search-input" oninput="searchOrder()" placeholder="اكتب الرمز هنا...">
         </div>
-        <table id="sales-table">
-            <thead>
-                <tr>
-                    <th>الرمز</th><th>التاريخ</th><th>المنتج</th><th>التكلفة</th><th>البيع</th><th>الربح</th><th>حذف</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </div>
-
-    <div id="manage" class="section">
-        <div id="edit-form-container" style="display:none; border: 1px solid var(--gold); padding: 15px; border-radius: 10px; margin-bottom: 20px;">
-            <h3 style="color:var(--gold); margin-bottom:10px;">تعديل المنتج</h3>
-            <input type="hidden" id="edit-index">
-            <div class="form-group"><label>الاسم:</label><input type="text" id="edit-name"></div>
-            <div class="form-group"><label>اسم الصورة (كما في GitHub):</label><input type="text" id="edit-img"></div>
-            <div class="form-group"><label>الوصف:</label><textarea id="edit-desc" rows="2"></textarea></div>
-            <div class="form-group"><label>السعر:</label><input type="number" id="edit-price"></div>
-            <div class="form-group"><label>القسم:</label><input type="text" id="edit-category"></div>
-            <button class="btn-save" onclick="updateProduct()">تحديث الأوامر وحفظ</button>
-            <button class="btn-save" style="background:#444; color:white;" onclick="hideEditForm()">إلغاء</button>
-        </div>
-        <table id="manage-table">
-            <thead>
-                <tr><th>المنتج</th><th>القسم</th><th>السعر</th><th>التحكم</th></tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </div>
-
-    <div id="backup" class="section">
-        <h3 style="color:var(--gold)">النسخ الاحتياطي</h3>
-        <div class="backup-btns">
-            <button class="btn-backup" onclick="exportData()">📤 تصدير البيانات</button>
-            <button class="btn-backup" onclick="document.getElementById('importFile').click()">📥 استيراد بيانات</button>
-        </div>
-        <input type="file" id="importFile" style="display:none" onchange="importData(event)">
+        <div id="search-result"></div>
     </div>
 </div>
 
 <script>
-    function syncToStore() {
-        const prods = JSON.parse(localStorage.getItem('omni_store_products') || '[]');
-        const storeCommands = {
-            lastUpdate: new Date().getTime(),
-            activeProducts: prods.length,
-            categories: [...new Set(prods.map(p => p.category))],
-            action: "REFRESH_STORE_VIEW"
-        };
-        localStorage.setItem('omni_store_sync_signal', JSON.stringify(storeCommands));
-        console.log("Commands Synced to Store:", storeCommands);
-    }
-
-    window.onload = () => {
-        const d = new Date();
-        document.getElementById('o-day').value = d.getDate();
-        document.getElementById('o-month').value = d.getMonth() + 1;
-        document.getElementById('o-year').value = d.getFullYear();
-    };
-
-    function showTab(tabId) {
+    // الدوال الأساسية
+    function showTab(id) {
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(tabId).classList.add('active');
-        const btn = [...document.querySelectorAll('.tab-btn')].find(b => b.innerText.includes(
-            tabId === 'products' ? 'إضافة' : 
-            tabId === 'orders' ? 'تسجيل' : 
-            tabId === 'search' ? 'بحث' : 
-            tabId === 'sales' ? 'التقارير' : 
-            tabId === 'manage' ? 'إدارة' : 'النسخ'
-        ));
-        if(btn) btn.classList.add('active');
-        if(tabId === 'sales') renderSales();
-        if(tabId === 'manage') renderManageProducts();
+        document.getElementById(id).classList.add('active');
+        event.currentTarget.classList.add('active');
+        if(id === 'manage-prods') renderProducts();
+        if(id === 'reports') renderSales();
     }
 
+    // إدارة المنتجات
     function saveProduct() {
         const p = {
-            id: 'PROD-' + Date.now(),
-            category: document.getElementById('p-category').value,
+            id: Date.now(),
+            cat: document.getElementById('p-cat').value,
             name: document.getElementById('p-name').value,
-            img: document.getElementById('p-img').value,
-            desc: document.getElementById('p-desc').value,
-            extraImgs: document.getElementById('p-extra-imgs').value,
             price: document.getElementById('p-price').value,
-            vars: document.getElementById('p-vars').value
+            img: document.getElementById('p-img').value,
+            desc: document.getElementById('p-desc').value
         };
-        if(!p.name || !p.price) return alert('أكمل البيانات الأساسية');
-        
-        let prods = JSON.parse(localStorage.getItem('omni_store_products') || '[]');
+        if(!p.name || !p.price) return alert('عبي البيانات كاملة!');
+        let prods = JSON.parse(localStorage.getItem('omni_products') || '[]');
         prods.push(p);
-        localStorage.setItem('omni_store_products', JSON.stringify(prods));
-        
-        syncToStore();
-        alert('تم النشر بنجاح وتحديث أوامر المتجر');
-        document.getElementById('p-name').value = '';
+        localStorage.setItem('omni_products', JSON.stringify(prods));
+        localStorage.setItem('omni_sync', Date.now()); // إشارة للمتجر
+        alert('تم النشر بنجاح!');
+        location.reload();
     }
 
-    function saveSale() {
-        const sale = {
-            id: document.getElementById('o-id').value,
-            name: document.getElementById('o-product-name').value,
-            cost: parseFloat(document.getElementById('o-cost').value || 0),
-            sold: parseFloat(document.getElementById('o-sold').value || 0),
-            data: document.getElementById('o-data').value,
-            month: parseInt(document.getElementById('o-month').value),
-            year: parseInt(document.getElementById('o-year').value),
-            date: `${document.getElementById('o-year').value}/${document.getElementById('o-month').value}/${document.getElementById('o-day').value}`
-        };
-        if(!sale.id || !sale.name) return alert('الرمز والاسم مطلوبان');
-        let finance = JSON.parse(localStorage.getItem('omni_finance_records') || '[]');
-        finance.push(sale);
-        localStorage.setItem('omni_finance_records', JSON.stringify(finance));
-        alert('تم الحفظ وتحديث السجلات المالية');
+    function renderProducts() {
+        let prods = JSON.parse(localStorage.getItem('omni_products') || '[]');
+        const body = document.getElementById('prod-table-body');
+        body.innerHTML = prods.map((p, i) => `
+            <tr>
+                <td>${p.name}</td>
+                <td>${p.cat}</td>
+                <td>${p.price} ريال</td>
+                <td>
+                    <button class="action-btn btn-edit" onclick="openEdit(${i})">تعديل</button>
+                    <button class="action-btn btn-del" onclick="deleteProd(${i})">حذف</button>
+                </td>
+            </tr>
+        `).join('');
     }
 
-    function renderSales() {
-        let sales = JSON.parse(localStorage.getItem('omni_finance_records') || '[]');
-        const tbody = document.querySelector('#sales-table tbody');
-        tbody.innerHTML = '';
-        let rev = 0, costs = 0, net = 0, currentMonthProfit = 0;
-        
-        const now = new Date();
-        const curM = now.getMonth() + 1;
-        const curY = now.getFullYear();
-
-        sales.forEach((s, i) => {
-            const profit = s.sold - s.cost;
-            rev += s.sold; costs += s.cost; net += profit;
-            
-            if(s.month == curM && s.year == curY) {
-                currentMonthProfit += profit;
-            }
-
-            tbody.innerHTML += `<tr><td>${s.id}</td><td>${s.date}</td><td>${s.name}</td><td>${s.cost}</td><td>${s.sold}</td><td class="${profit >= 0 ? 'profit' : 'loss'}">${profit.toFixed(2)}</td><td><button onclick="deleteSale(${i})" style="color:red; background:none; border:none; cursor:pointer">✕</button></td></tr>`;
-        });
-        document.getElementById('total-revenue').innerText = rev.toFixed(2) + " ريال";
-        document.getElementById('total-costs').innerText = costs.toFixed(2) + " ريال";
-        document.getElementById('net-profit').innerText = net.toFixed(2) + " ريال";
-        document.getElementById('month-profit').innerText = currentMonthProfit.toFixed(2) + " ريال";
-    }
-
-    function renderManageProducts() {
-        let prods = JSON.parse(localStorage.getItem('omni_store_products') || '[]');
-        const tbody = document.querySelector('#manage-table tbody');
-        tbody.innerHTML = '';
-        prods.forEach((p, i) => {
-            tbody.innerHTML += `<tr><td>${p.name}</td><td>${p.category}</td><td>${p.price} ريال</td><td><div class="action-btns"><button class="btn-edit" onclick="editProduct(${i})">تعديل</button><button class="btn-del" onclick="deleteProduct(${i})">حذف</button></div></td></tr>`;
-        });
-    }
-
-    function deleteProduct(i) {
-        if(!confirm('حذف نهائي؟')) return;
-        let prods = JSON.parse(localStorage.getItem('omni_store_products'));
+    function deleteProd(i) {
+        if(!confirm('متأكد تبي تحذف المنتج؟')) return;
+        let prods = JSON.parse(localStorage.getItem('omni_products'));
         prods.splice(i, 1);
-        localStorage.setItem('omni_store_products', JSON.stringify(prods));
-        syncToStore();
-        renderManageProducts();
+        localStorage.setItem('omni_products', JSON.stringify(prods));
+        localStorage.setItem('omni_sync', Date.now());
+        renderProducts();
     }
 
-    function editProduct(i) {
-        let prods = JSON.parse(localStorage.getItem('omni_store_products'));
+    function openEdit(i) {
+        let prods = JSON.parse(localStorage.getItem('omni_products'));
         let p = prods[i];
-        document.getElementById('edit-index').value = i;
+        document.getElementById('edit-id').value = i;
         document.getElementById('edit-name').value = p.name;
         document.getElementById('edit-price').value = p.price;
-        document.getElementById('edit-category').value = p.category;
-        document.getElementById('edit-img').value = p.img || '';
-        document.getElementById('edit-desc').value = p.desc || '';
-        document.getElementById('edit-form-container').style.display = 'block';
+        document.getElementById('edit-img').value = p.img;
+        document.getElementById('edit-desc').value = p.desc;
+        document.getElementById('edit-box').style.display = 'block';
+        window.scrollTo(0,0);
     }
 
     function updateProduct() {
-        let i = document.getElementById('edit-index').value;
-        let prods = JSON.parse(localStorage.getItem('omni_store_products'));
+        let i = document.getElementById('edit-id').value;
+        let prods = JSON.parse(localStorage.getItem('omni_products'));
         prods[i].name = document.getElementById('edit-name').value;
         prods[i].price = document.getElementById('edit-price').value;
-        prods[i].category = document.getElementById('edit-category').value;
         prods[i].img = document.getElementById('edit-img').value;
         prods[i].desc = document.getElementById('edit-desc').value;
-        localStorage.setItem('omni_store_products', JSON.stringify(prods));
-        syncToStore();
-        hideEditForm();
-        renderManageProducts();
-        alert('تم تحديث المتجر بالأوامر الجديدة');
+        localStorage.setItem('omni_products', JSON.stringify(prods));
+        localStorage.setItem('omni_sync', Date.now());
+        alert('تم التحديث!');
+        location.reload();
     }
 
-    function hideEditForm() { document.getElementById('edit-form-container').style.display = 'none'; }
-
-    function doSearch() {
-        const val = document.getElementById('search-input').value;
-        const res = document.getElementById('search-res');
-        if(!val) { res.innerHTML = ''; return; }
-        let sales = JSON.parse(localStorage.getItem('omni_finance_records') || '[]');
-        const found = sales.find(s => s.id === val);
-        if(found) {
-            res.innerHTML = `<div class="result-item"><b style="color:var(--gold)">📦 المنتج:</b> ${found.name}<br><b>💵 السعر:</b> ${found.sold} ريال<br><b>📅 التاريخ:</b> ${found.date}<br><hr style="border-top:1px solid #333; margin:5px 0;"><b>📝 ملاحظات:</b><br>${found.data}</div>`;
-        } else { res.innerHTML = '<p style="color:#666; margin-top:10px;">لا يوجد سجل</p>'; }
+    // إدارة المبيعات
+    function saveSale() {
+        const s = {
+            id: document.getElementById('s-id').value,
+            name: document.getElementById('s-name').value,
+            cost: parseFloat(document.getElementById('s-cost').value || 0),
+            price: parseFloat(document.getElementById('s-price').value || 0),
+            date: document.getElementById('s-date').value,
+            note: document.getElementById('s-note').value
+        };
+        if(!s.id || !s.name) return alert('الرمز والاسم أساسيين!');
+        let sales = JSON.parse(localStorage.getItem('omni_sales') || '[]');
+        sales.push(s);
+        localStorage.setItem('omni_sales', JSON.stringify(sales));
+        alert('تم تسجيل البيعة!');
+        showTab('reports');
     }
 
-    function deleteSale(i) {
-        if(!confirm('حذف العملية؟')) return;
-        let sales = JSON.parse(localStorage.getItem('omni_finance_records'));
+    function renderSales() {
+        let sales = JSON.parse(localStorage.getItem('omni_sales') || '[]');
+        const body = document.getElementById('sales-table-body');
+        let rev = 0, cost = 0, profit = 0;
+        
+        body.innerHTML = sales.map((s, i) => {
+            let p = s.price - s.cost;
+            rev += s.price; cost += s.cost; profit += p;
+            return `<tr><td>${s.id}</td><td>${s.name}</td><td style="color:var(--green)">${p}</td><td>${s.date}</td><td><button onclick="delSale(${i})" style="color:red; background:none; border:none; cursor:pointer">✕</button></td></tr>`;
+        }).join('');
+
+        document.getElementById('stat-rev').innerText = rev + " ريال";
+        document.getElementById('stat-cost').innerText = cost + " ريال";
+        document.getElementById('stat-profit').innerText = profit + " ريال";
+    }
+
+    function delSale(i) {
+        let sales = JSON.parse(localStorage.getItem('omni_sales'));
         sales.splice(i, 1);
-        localStorage.setItem('omni_finance_records', JSON.stringify(sales));
+        localStorage.setItem('omni_sales', JSON.stringify(sales));
         renderSales();
     }
 
-    function exportData() {
-        const data = {
-            products: localStorage.getItem('omni_store_products'),
-            finance: localStorage.getItem('omni_finance_records')
-        };
-        const blob = new Blob([JSON.stringify(data)], {type: 'application/json'});
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `Omni_Backup_${new Date().toLocaleDateString()}.json`;
-        a.click();
-    }
-
-    function importData(event) {
-        const file = event.target.files[0];
-        if(!file) return;
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            try {
-                const data = JSON.parse(e.target.result);
-                if(data.products) localStorage.setItem('omni_store_products', data.products);
-                if(data.finance) localStorage.setItem('omni_finance_records', data.finance);
-                alert('تم استيراد البيانات بنجاح!');
-                location.reload();
-            } catch(err) {
-                alert('ملف النسخة الاحتياطية غير صالح');
-            }
-        };
-        reader.readAsText(file);
+    function searchOrder() {
+        const val = document.getElementById('search-input').value;
+        const res = document.getElementById('search-result');
+        if(!val) return res.innerHTML = '';
+        let sales = JSON.parse(localStorage.getItem('omni_sales') || '[]');
+        let s = sales.find(x => x.id === val);
+        if(s) {
+            res.innerHTML = `
+                <div class="result-card">
+                    <p><b>📦 المنتج:</b> ${s.name}</p>
+                    <p><b>💰 سعر البيع:</b> ${s.price} ريال</p>
+                    <p><b>📅 التاريخ:</b> ${s.date}</p>
+                    <p><b>📝 الملاحظات:</b> ${s.note}</p>
+                </div>`;
+        } else { res.innerHTML = '❌ لا يوجد سجل بهذا الرمز'; }
     }
 </script>
 </body>
