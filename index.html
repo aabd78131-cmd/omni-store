@@ -6,7 +6,7 @@
     <title>متجر أومني | OMNI STORE</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        /* --- الأساسيات والمؤثرات --- */
+        /* --- الأساسيات --- */
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { background: #000; color: white; font-family: 'Cairo', sans-serif; overflow-x: hidden; }
 
@@ -19,7 +19,6 @@
         }
         .ripple:active:after { transform: scale(0, 0); opacity: .3; transition: 0s; }
 
-        /* --- الهيدر --- */
         header {
             position: fixed; top: 10px; left: 5%; width: 90%; height: 60px;
             background: rgba(15, 15, 15, 0.9); backdrop-filter: blur(20px);
@@ -28,24 +27,12 @@
             padding: 0 15px; z-index: 1000;
         }
         
-        .header-center {
-            position: absolute; left: 50%; transform: translateX(-50%);
-            display: flex; align-items: center; gap: 8px;
-        }
-
-        .header-title { color: #d4af37; font-weight: 900; font-size: 1.1rem; display: flex; align-items: center; gap: 8px; }
-        .saudi-flag { width: 22px; animation: wave 2s infinite ease-in-out; }
-        @keyframes wave { 0%, 100% { transform: rotate(0); } 50% { transform: rotate(10deg) translateY(-3px); } }
-
-        .nav-icon { font-size: 24px; color: #d4af37; cursor: pointer; }
+        .header-center { position: absolute; left: 50%; transform: translateX(-50%); display: flex; align-items: center; }
+        .header-title { color: #d4af37; font-weight: 900; font-size: 1.1rem; }
+        .nav-icon { font-size: 26px; color: #d4af37; cursor: pointer; }
         .back-btn { font-size: 26px; color: #fff; cursor: pointer; display: none; }
-        .cart-badge { position: absolute; top: -5px; right: -8px; background: #d4af37; color: black; font-size: 11px; width: 18px; height: 18px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: bold; }
+        .cart-badge { position: absolute; top: -5px; right: -8px; background: red; color: white; font-size: 11px; width: 18px; height: 18px; border-radius: 50%; display: flex; justify-content: center; align-items: center; }
 
-        /* --- شريط البحث --- */
-        .search-container { padding: 85px 15px 10px; }
-        .search-input { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #333; background: #111; color: white; font-family: 'Cairo'; }
-
-        /* --- القائمة الجانبية --- */
         #side-menu {
             position: fixed; top: 0; right: -100%; width: 80%; height: 100vh;
             background: rgba(5, 5, 5, 0.98); backdrop-filter: blur(15px);
@@ -55,21 +42,18 @@
         .menu-logo-container { width: 100px; height: 100px; margin: 0 auto 15px; border-radius: 50%; border: 2px solid #d4af37; overflow: hidden; }
         .menu-logo { width: 100%; height: 100%; object-fit: cover; }
 
-        /* --- المحتوى --- */
-        #main-content { padding-top: 10px; }
-        .hero-banner { width: 92%; margin: 0 auto 20px; display: block; border-radius: 20px; border: 1px solid #222; }
+        #main-content { padding-top: 100px; }
+        .hero-banner { width: 92%; margin: 0 auto 30px; display: block; border-radius: 20px; border: 1px solid #222; }
         .container { padding: 0 15px 50px; }
-        .cat-item { margin-bottom: 25px; text-align: center; cursor: pointer; }
-        .cat-item img { width: 100%; border-radius: 20px; border: 1px solid #1a1a1a; aspect-ratio: 16/9; object-fit: cover; }
+        .cat-item { margin-bottom: 30px; text-align: center; cursor: pointer; }
+        .cat-item img { width: 100%; border-radius: 20px; border: 1px solid #1a1a1a; aspect-ratio: 2/1; object-fit: cover; }
         .cat-label { color: #d4af37; font-weight: bold; margin-top: 10px; font-size: 1.2rem; }
 
-        /* --- صفحة المنتجات --- */
-        #section-view { display: none; padding: 20px 15px 50px; }
+        #section-view { display: none; padding: 100px 15px 50px; }
         .product-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .product-card { background: #111; border: 1px solid #222; border-radius: 15px; padding: 10px; text-align: center; cursor: pointer; }
         .product-card img { width: 100%; border-radius: 10px; aspect-ratio: 1/1; object-fit: cover; margin-bottom: 8px; }
 
-        /* --- المودال (النافذة المنبثقة) --- */
         .modal {
             position: fixed; bottom: -100%; left: 0; width: 100%; max-height: 92vh;
             background: #0a0a0a; z-index: 3000; border-top: 2px solid #d4af37;
@@ -78,14 +62,8 @@
         .modal.active { bottom: 0; }
         .variant-box { background: #111; padding: 15px; border-radius: 12px; margin: 15px 0; border: 1px solid #222; }
         .variant-option { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; cursor: pointer; }
-        .variant-option input { accent-color: #d4af37; width: 18px; height: 18px; }
-        .custom-input { width: 100%; padding: 12px; background: #000; border: 1px solid #333; color: #fff; border-radius: 8px; margin-top: 10px; font-family: 'Cairo'; }
-
-        .steam-instructions img { width: 100%; border-radius: 10px; margin-top: 10px; border: 1px solid #333; }
-        .warning-text { color: #ff4d4d; font-weight: bold; margin: 10px 0; font-size: 0.9rem; }
-        
-        .btn-main { background: #d4af37; color: #000; border: none; padding: 15px; width: 100%; border-radius: 12px; font-weight: 900; font-size: 1rem; cursor: pointer; margin-top: 10px; }
-        .btn-delete { color: #ff4d4d; background: none; border: none; font-size: 0.8rem; cursor: pointer; margin-top: 5px; }
+        .custom-input { width: 100%; padding: 12px; background: #000; border: 1px solid #333; color: #fff; border-radius: 8px; margin-top: 10px; }
+        .btn-main { background: #d4af37; color: #000; border: none; padding: 15px; width: 100%; border-radius: 12px; font-weight: 900; cursor: pointer; }
         #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: rgba(0,0,0,0.8); z-index: 1500; display: none; }
     </style>
 </head>
@@ -93,15 +71,10 @@
 
     <header>
         <div class="nav-icon ripple" onclick="toggleMenu()">&#9776;</div>
-        
         <div class="header-center">
-            <div class="header-title" id="main-title">
-                <img src="https://flagcdn.com/w40/sa.png" class="saudi-flag">
-                متجر أومني
-            </div>
+            <div class="header-title" id="main-title">متجر أومني</div>
             <div class="back-btn ripple" id="back-btn" onclick="goHome()">&#8594;</div>
         </div>
-
         <div class="cart-wrapper ripple" onclick="toggleCart()" style="position:relative;">
             <div class="nav-icon">🛒</div>
             <div class="cart-badge" id="cart-count">0</div>
@@ -114,55 +87,39 @@
         <div class="menu-logo-container"><img src="لوقو المتجر.jpeg" class="menu-logo"></div>
         <ul style="list-style:none;">
             <li class="ripple" style="padding:15px; border-bottom:1px solid #222;" onclick="goHome(); closeAll();">🏠 الرئيسية</li>
-            <li class="ripple" style="padding:15px; border-bottom:1px solid #222;" onclick="openSection('قسم الترفيه'); closeAll();">🍿 قسم الترفيه</li>
-            <li class="ripple" style="padding:15px; border-bottom:1px solid #222;" onclick="openSection('قسم انستا'); closeAll();">📸 قسم انستقرام</li>
-            <li class="ripple" style="padding:15px; border-bottom:1px solid #222;" onclick="openSection('قسم تيك توك'); closeAll();">📱 قسم تيك توك</li>
-            <li class="ripple" style="padding:15px; border-bottom:1px solid #222;" onclick="openSection('قسم ستيم أوفلاين'); closeAll();">🕹️ ستيم أوفلاين</li>
-            <li class="ripple" style="padding:15px; border-bottom:1px solid #222;" onclick="openSection('قسم الذكاء الاصطناعي'); closeAll();">🤖 الذكاء الاصطناعي</li>
-            <li class="ripple" style="padding:15px;"><a href="https://wa.me/966548512295" style="color:#25d366; text-decoration:none;">💬 تواصل واتساب</a></li>
+            <li class="ripple" style="padding:15px; border-bottom:1px solid #222;" onclick="openSection('entertainment'); closeAll();">🍿 قسم الترفيه</li>
+            <li class="ripple" style="padding:15px; border-bottom:1px solid #222;" onclick="openSection('insta'); closeAll();">📸 قسم انستقرام</li>
+            <li class="ripple" style="padding:15px; border-bottom:1px solid #222;" onclick="openSection('tiktok'); closeAll();">📱 قسم تيك توك</li>
+            <li class="ripple" style="padding:15px; border-bottom:1px solid #222;" onclick="openSection('steam_offline'); closeAll();">🕹️ ستيم أوفلاين</li>
+            <li class="ripple" style="padding:15px; border-bottom:1px solid #222;" onclick="openSection('ai'); closeAll();">🤖 الذكاء الاصطناعي</li>
         </ul>
     </div>
 
-    <div class="search-container">
-        <input type="text" id="search-box" class="search-input" placeholder="ابحث عن منتج..." onkeyup="searchProducts()">
-    </div>
-
     <div id="product-detail-modal" class="modal">
-        <div onclick="closeAll()" style="cursor:pointer; color:#fff; float:left; font-size: 1.5rem;">✖</div>
+        <div onclick="closeAll()" style="cursor:pointer; color:#fff; float:left;">✖</div>
         <div id="detail-content"></div>
     </div>
 
     <div id="cart-modal" class="modal">
-        <div onclick="closeAll()" style="cursor:pointer; color:#fff; float:left; font-size: 1.5rem;">✖</div>
+        <div onclick="closeAll()" style="cursor:pointer; color:#fff; float:left;">✖</div>
         <h2 style="color:#d4af37; margin-bottom:20px;">سلة المشتريات</h2>
-        
         <div class="variant-box">
-            <h3 style="color:#d4af37; margin-bottom:10px; font-size:1.1rem;">بيانات المستلم</h3>
-            <input type="text" id="user-name" class="custom-input" placeholder="الاسم الكامل">
-            <input type="tel" id="user-phone" class="custom-input" placeholder="رقم الواتساب">
+            <input type="text" id="user-name" class="custom-input" placeholder="الاسم (إجباري)">
+            <input type="tel" id="user-phone" class="custom-input" placeholder="رقم الهاتف (إجباري)">
         </div>
-
         <div id="cart-items"></div>
-        <div style="margin:20px 0; font-size:1.3rem; color:#d4af37; font-weight:bold;">المجموع: <span id="cart-total">0</span> ريال</div>
-        
-        <div class="variant-box">
-            <h3 style="color:#d4af37; margin-bottom:10px; font-size:1.1rem;">طريقة الدفع</h3>
-            <label class="variant-option"><input type="radio" name="bank-transfer" value="بنك الراجحي" checked> مصرف الراجحي</label>
-            <label class="variant-option"><input type="radio" name="bank-transfer" value="برق (Barq)"> تطبيق برق (Barq)</label>
-            <label class="variant-option"><input type="radio" name="bank-transfer" value="STC BANK"> STC BANK</label>
-        </div>
-
-        <button class="btn-main ripple" onclick="checkout()">إرسال الطلب عبر واتساب 🚀</button>
+        <div style="margin:20px 0; font-size:1.2rem; color:#d4af37; font-weight:bold;">المجموع: <span id="cart-total">0</span> ريال</div>
+        <button class="btn-main ripple" onclick="checkout()">تأكيد عبر واتساب</button>
     </div>
 
     <div id="main-content">
         <img src="القائمه الرئيسيه .jpeg" class="hero-banner">
-        <div class="container" id="category-list">
-            <div class="cat-item ripple" onclick="openSection('قسم الترفيه')"><img src="قسم اشتراكات الترفيه.jpeg"><div class="cat-label">قسم الترفيه</div></div>
-            <div class="cat-item ripple" onclick="openSection('قسم انستا')"><img src="قسم انستا .jpeg"><div class="cat-label">قسم انستقرام</div></div>
-            <div class="cat-item ripple" onclick="openSection('قسم تيك توك')"><img src="قسم تيك توك .jpeg"><div class="cat-label">قسم تيك توك</div></div>
-            <div class="cat-item ripple" onclick="openSection('قسم ستيم أوفلاين')"><img src="قسم ستيم اوفلاين.jpeg"><div class="cat-label">ستيم أوفلاين</div></div>
-            <div class="cat-item ripple" onclick="openSection('قسم الذكاء الاصطناعي')"><img src="قسم الذكاء الاصطناعي .jpeg"><div class="cat-label">الذكاء الاصطناعي</div></div>
+        <div class="container">
+            <div class="cat-item ripple" onclick="openSection('entertainment')"><img src="قسم اشتراكات الترفيه.jpeg"><div class="cat-label">قسم الترفيه</div></div>
+            <div class="cat-item ripple" onclick="openSection('insta')"><img src="قسم انستا .jpeg"><div class="cat-label">قسم انستقرام</div></div>
+            <div class="cat-item ripple" onclick="openSection('tiktok')"><img src="قسم تيك توك .jpeg"><div class="cat-label">قسم تيك توك</div></div>
+            <div class="cat-item ripple" onclick="openSection('steam_offline')"><img src="قسم ستيم اوفلاين.jpeg"><div class="cat-label">ستيم أوفلاين</div></div>
+            <div class="cat-item ripple" onclick="openSection('ai')"><img src="قسم الذكاء الاصطناعي .jpeg"><div class="cat-label">الذكاء الاصطناعي</div></div>
         </div>
     </div>
 
@@ -172,169 +129,122 @@
     </div>
 
     <script>
-        const storeData = {
-            'قسم الترفيه': [
-                { id: 'ytp', name: 'يوتيوب بريميوم', basePrice: 11.99, img: 'قسم اشتراكات الترفيه.jpeg', desc: 'اشتراك رسمي في حسابك الشخصي بدون إعلانات وبميزات كاملة.', variants: [{n: 'شهر', p: 11.99}, {n: 'شهرين', p: 20.99}, {n: '3 شهور', p: 26.99}, {n: '6 شهور', p: 45.99}] }
-            ],
-            'قسم انستا': [
-                { id: 'igv', name: 'مشاهدات انستا', basePrice: 5, img: 'قسم انستا .jpeg', desc: 'زيادة مشاهدات ريلز وفيديوهات.', variants: [{n: '1000 مشاهدة', p: 5}, {n: '5000 مشاهدة', p: 15}], allowCustom: true },
-                { id: 'igf', name: 'متابعين انستا', basePrice: 6, img: 'قسم انستا .jpeg', desc: 'متابعين جودة عالية.', variants: [{n: '1000 متابع', p: 6}, {n: '5000 متابع', p: 25}], allowCustom: true }
-            ],
-            'قسم تيك توك': [
-                { id: 'tkv', name: 'مشاهدات تيك توك', basePrice: 5, img: 'قسم تيك توك .jpeg', desc: 'زيادة سريعة للمشاهدات.', variants: [{n: '1000 مشاهدة', p: 5}, {n: '10000 مشاهدة', p: 15}], allowCustom: true }
-            ],
-            'قسم ستيم أوفلاين': [
-                { id: 'cs25', name: 'Cinema Simulator 2025', basePrice: 15, img: 'منتج لعبه  اوفلاين Cinema Simulator 2025.jpg', desc: 'لعبة أوفلاين نظامية من ستيم.<br><b>تنبيه:</b> يجب تشغيل اللعبة في وضع Offline.' }
-            ],
-            'قسم الذكاء الاصطناعي': [
-                { id: 'gpt', name: 'شات جي بي تي شهر', basePrice: 12.99, img: 'قسم الذكاء الاصطناعي .jpeg', desc: 'حساب مشترك بميزات ChatGPT Plus.' },
-                { id: 'canva', name: 'كانفا 12 شهر', basePrice: 25, img: 'قسم الذكاء الاصطناعي .jpeg', desc: 'اشتراك كانفا برو سنة كاملة.' }
-            ]
+        const categoryMap = {
+            'entertainment': 'قسم الترفيه',
+            'insta': 'قسم انستا',
+            'tiktok': 'قسم تيك توك',
+            'steam_offline': 'قسم ستيم أوفلاين',
+            'ai': 'قسم الذكاء الاصطناعي'
         };
 
-        let cart = JSON.parse(localStorage.getItem('omni_cart')) || [];
-        updateCartUI();
+        let cart = [];
 
-        function searchProducts() {
-            const query = document.getElementById('search-box').value.toLowerCase();
-            const results = [];
-            for (let cat in storeData) {
-                storeData[cat].forEach(p => {
-                    if (p.name.toLowerCase().includes(query)) results.push({cat, ...p});
-                });
-            }
-            if (query === "") { goHome(); return; }
-            
-            document.getElementById('main-content').style.display = 'none';
-            document.getElementById('section-view').style.display = 'block';
-            document.getElementById('sec-title').innerText = "نتائج البحث";
-            const list = document.getElementById('products-list');
-            list.innerHTML = results.map(p => `
-                <div class="product-card ripple" onclick="showProductDetails('${p.cat}', '${p.id}')">
-                    <img src="${p.img}">
-                    <h3>${p.name}</h3>
-                    <div style="color:#d4af37;">${p.basePrice} ريال</div>
-                </div>`).join('');
+        // تحويل خيارات المنتج من نص (شهر=10) إلى مصفوفة كائنات
+        function parseVariants(vString) {
+            if(!vString) return null;
+            return vString.split(',').map(item => {
+                const [n, p] = item.split('=');
+                return { n: n.trim(), p: parseFloat(p.trim()) };
+            });
         }
 
-        function openSection(name) {
+        function openSection(catKey) {
+            const allProducts = JSON.parse(localStorage.getItem('omni_store_products') || '[]');
+            const sectionProducts = allProducts.filter(p => p.category === catKey);
+            
             document.getElementById('main-content').style.display = 'none';
             document.getElementById('section-view').style.display = 'block';
             document.getElementById('back-btn').style.display = 'block';
             document.getElementById('main-title').style.display = 'none';
-            document.getElementById('sec-title').innerText = name;
+            document.getElementById('sec-title').innerText = categoryMap[catKey];
+            
             const list = document.getElementById('products-list');
-            list.innerHTML = storeData[name].map(p => `
-                <div class="product-card ripple" onclick="showProductDetails('${name}', '${p.id}')">
-                    <img src="${p.img}">
-                    <h3>${p.name}</h3>
-                    <div style="color:#d4af37;">${p.basePrice} ريال</div>
-                </div>`).join('');
+            list.innerHTML = '';
+            
+            if(sectionProducts.length === 0) {
+                list.innerHTML = '<p style="grid-column: 1/3; text-align:center; color:#666;">لا توجد منتجات حالياً</p>';
+            }
+
+            sectionProducts.forEach(p => {
+                list.innerHTML += `
+                    <div class="product-card ripple" onclick="showProductDetails('${p.id}')">
+                        <img src="${p.img}">
+                        <h3>${p.name}</h3>
+                        <div style="color:#d4af37;">${p.price} ريال</div>
+                    </div>`;
+            });
             window.scrollTo(0,0);
         }
 
-        function showProductDetails(cat, id) {
-            const p = storeData[cat].find(x => x.id === id);
+        function showProductDetails(id) {
+            const allProducts = JSON.parse(localStorage.getItem('omni_store_products') || '[]');
+            const p = allProducts.find(x => x.id === id);
             const content = document.getElementById('detail-content');
-            let variantsHtml = '';
             
-            if(p.variants) {
+            let variantsHtml = '';
+            const variants = parseVariants(p.vars);
+            
+            if(variants) {
                 variantsHtml = `<div class="variant-box"><p style="margin-bottom:10px; font-weight:bold;">اختر العرض:</p>`;
-                p.variants.forEach((v, i) => {
-                    variantsHtml += `<label class="variant-option"><input type="radio" name="prod-var" value="${v.n}" data-price="${v.p}" ${i===0?'checked':''}> ${v.n} - ${v.p} ريال</label>`;
+                variants.forEach((v, i) => {
+                    variantsHtml += `<label class="variant-option"><input type="radio" name="prod-var" value="${v.n}" data-price="${v.p}"> ${v.n} - ${v.p} ريال</label>`;
                 });
-                if(p.allowCustom) {
-                    variantsHtml += `<input type="number" id="custom-num" class="custom-input" placeholder="أو اكتب عدد مخصص">`;
-                }
                 variantsHtml += `</div>`;
             }
 
             content.innerHTML = `
-                <img src="${p.img}" style="width:100%; border-radius:15px; margin-bottom:15px; border:1px solid #222;">
+                <img src="${p.img}" style="width:100%; border-radius:15px; margin-bottom:15px;">
                 <h2>${p.name}</h2>
-                <div style="font-size:1.5rem; color:#d4af37; font-weight:900; margin:10px 0;">${p.basePrice} ريال</div>
-                <div style="color:#ccc; font-size:0.9rem; line-height:1.6;">${p.desc}</div>
+                <div style="font-size:1.5rem; color:#d4af37; font-weight:900; margin:10px 0;">${p.price} ريال</div>
+                <div style="color:#ccc; font-size:0.9rem; line-height:1.6; white-space: pre-line;">${p.desc}</div>
                 ${variantsHtml}
-                <button class="btn-main ripple" onclick="addToCart('${cat}', '${id}')">إضافة للسلة 🛒</button>
+                <button class="btn-main ripple" onclick="handleAddToCart('${p.id}')">إضافة للسلة 🛒</button>
             `;
             document.getElementById('product-detail-modal').classList.add('active');
             document.getElementById('overlay').style.display = 'block';
         }
 
-        function addToCart(cat, id) {
-            const p = storeData[cat].find(x => x.id === id);
+        function handleAddToCart(id) {
+            const allProducts = JSON.parse(localStorage.getItem('omni_store_products') || '[]');
+            const p = allProducts.find(x => x.id === id);
             let finalName = p.name;
-            let finalPrice = p.basePrice;
-            let note = "";
+            let finalPrice = parseFloat(p.price);
 
-            if(p.variants) {
-                const selected = document.querySelector('input[name="prod-var"]:checked');
-                const custom = document.getElementById('custom-num') ? document.getElementById('custom-num').value : "";
-                
-                if(custom) {
-                    note = "عدد مخصص: " + custom;
-                    finalPrice = p.basePrice; // السعر الأساسي أو حسب الاتفاق
-                } else if(selected) {
-                    finalName += " (" + selected.value + ")";
-                    finalPrice = parseFloat(selected.getAttribute('data-price'));
-                }
+            const selectedVar = document.querySelector('input[name="prod-var"]:checked');
+            if(parseVariants(p.vars) && !selectedVar) return alert("يرجى اختيار عرض!");
+
+            if(selectedVar) {
+                finalName += ` (${selectedVar.value})`;
+                finalPrice = selectedVar.getAttribute('data-price');
             }
 
-            cart.push({ id: Date.now(), name: finalName, price: finalPrice, note: note });
-            saveCart();
-            updateCartUI();
+            cart.push({name: finalName, price: finalPrice});
+            updateCart();
+            alert("تمت الإضافة!");
             closeAll();
         }
 
-        function removeFromCart(tempId) {
-            cart = cart.filter(item => item.id !== tempId);
-            saveCart();
-            updateCartUI();
-        }
-
-        function updateCartUI() {
+        function updateCart() {
             document.getElementById('cart-count').innerText = cart.length;
             const list = document.getElementById('cart-items');
             list.innerHTML = '';
             let total = 0;
-            
             cart.forEach(item => {
-                total += item.price;
-                list.innerHTML += `
-                    <div style="padding:15px 0; border-bottom:1px solid #222; display:flex; justify-content:space-between; align-items:center;">
-                        <div>
-                            <b>${item.name}</b><br>
-                            <small style="color:#888;">${item.note}</small><br>
-                            <span style="color:#d4af37;">${item.price} ريال</span>
-                        </div>
-                        <button class="btn-delete" onclick="removeFromCart(${item.id})">حذف 🗑️</button>
-                    </div>`;
+                total += parseFloat(item.price);
+                list.innerHTML += `<div style="padding:10px 0; border-bottom:1px solid #222;"><b>${item.name}</b><div style="color:#d4af37;">${item.price} ريال</div></div>`;
             });
             document.getElementById('cart-total').innerText = total.toFixed(2);
         }
 
-        function saveCart() { localStorage.setItem('omni_cart', JSON.stringify(cart)); }
-
         function checkout() {
-            if(cart.length === 0) return alert('السلة فارغة!');
-            const name = document.getElementById('user-name').value;
-            const phone = document.getElementById('user-phone').value;
-            if(!name || !phone) return alert('يرجى كتابة الاسم ورقم الهاتف!');
-
-            const bank = document.querySelector('input[name="bank-transfer"]:checked').value;
-            const orderId = Math.floor(1000 + Math.random() * 9000);
+            let name = document.getElementById('user-name').value;
+            let phone = document.getElementById('user-phone').value;
+            if(cart.length === 0 || !name || !phone) return alert('أكمل بياناتك والسلة!');
             
-            let msg = `*طلب جديد من متجر أومني 🛒*\n\n`;
-            msg += `*رقم الطلب:* #${orderId}\n`;
-            msg += `*الاسم:* ${name}\n`;
-            msg += `*الهاتف:* ${phone}\n`;
-            msg += `--------------------------\n`;
-            cart.forEach(item => msg += `• ${item.name} (${item.price} ريال)\n`);
-            msg += `--------------------------\n`;
-            msg += `*المجموع الإجمالي: ${document.getElementById('cart-total').innerText} ريال*\n`;
-            msg += `*طريقة الدفع:* ${bank}\n\n`;
-            msg += `⚠️ يرجى إرفاق صورة التحويل البنكي لإتمام الطلب.`;
-
+            let msg = `*طلب جديد من متجر أومني*\nالاسم: ${name}\nالهاتف: ${phone}\n\n*الطلبات:*\n`;
+            cart.forEach(i => msg += `- ${i.name}\n`);
+            msg += `\n*المجموع: ${document.getElementById('cart-total').innerText} ريال*`;
+            
             window.open(`https://wa.me/966548512295?text=${encodeURIComponent(msg)}`);
         }
 
@@ -343,7 +253,6 @@
             document.getElementById('section-view').style.display = 'none'; 
             document.getElementById('back-btn').style.display = 'none'; 
             document.getElementById('main-title').style.display = 'flex'; 
-            document.getElementById('search-box').value = "";
         }
         function toggleMenu() { document.getElementById('side-menu').classList.toggle('active'); document.getElementById('overlay').style.display = 'block'; }
         function toggleCart() { document.getElementById('cart-modal').classList.toggle('active'); document.getElementById('overlay').style.display = 'block'; }
@@ -352,6 +261,15 @@
             document.getElementById('side-menu').classList.remove('active');
             document.getElementById('overlay').style.display = 'none';
         }
+
+        // الاستماع للتغييرات من لوحة التحكم لتحديث المتجر تلقائياً
+        window.addEventListener('storage', () => {
+            if(document.getElementById('section-view').style.display === 'block') {
+                const currentTitle = document.getElementById('sec-title').innerText;
+                const catKey = Object.keys(categoryMap).find(key => categoryMap[key] === currentTitle);
+                if(catKey) openSection(catKey);
+            }
+        });
     </script>
 </body>
 </html>
