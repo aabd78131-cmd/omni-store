@@ -6,7 +6,7 @@
     <title>متجر أومني | OMNI STORE</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        /* --- الأساسيات --- */
+        /* --- الأساسيات والمؤثرات --- */
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { background: #000; color: white; font-family: 'Cairo', sans-serif; overflow-x: hidden; }
 
@@ -19,6 +19,7 @@
         }
         .ripple:active:after { transform: scale(0, 0); opacity: .3; transition: 0s; }
 
+        /* --- الهيدر --- */
         header {
             position: fixed; top: 10px; left: 5%; width: 90%; height: 60px;
             background: rgba(15, 15, 15, 0.9); backdrop-filter: blur(20px);
@@ -33,6 +34,7 @@
         .back-btn { font-size: 26px; color: #fff; cursor: pointer; display: none; }
         .cart-badge { position: absolute; top: -5px; right: -8px; background: red; color: white; font-size: 11px; width: 18px; height: 18px; border-radius: 50%; display: flex; justify-content: center; align-items: center; }
 
+        /* --- القائمة الجانبية --- */
         #side-menu {
             position: fixed; top: 0; right: -100%; width: 80%; height: 100vh;
             background: rgba(5, 5, 5, 0.98); backdrop-filter: blur(15px);
@@ -42,6 +44,7 @@
         .menu-logo-container { width: 100px; height: 100px; margin: 0 auto 15px; border-radius: 50%; border: 2px solid #d4af37; overflow: hidden; }
         .menu-logo { width: 100%; height: 100%; object-fit: cover; }
 
+        /* --- المحتوى --- */
         #main-content { padding-top: 100px; }
         .hero-banner { width: 92%; margin: 0 auto 30px; display: block; border-radius: 20px; border: 1px solid #222; }
         .container { padding: 0 15px 50px; }
@@ -49,11 +52,13 @@
         .cat-item img { width: 100%; border-radius: 20px; border: 1px solid #1a1a1a; aspect-ratio: 2/1; object-fit: cover; }
         .cat-label { color: #d4af37; font-weight: bold; margin-top: 10px; font-size: 1.2rem; }
 
+        /* --- صفحة المنتجات --- */
         #section-view { display: none; padding: 100px 15px 50px; }
         .product-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .product-card { background: #111; border: 1px solid #222; border-radius: 15px; padding: 10px; text-align: center; cursor: pointer; }
         .product-card img { width: 100%; border-radius: 10px; aspect-ratio: 1/1; object-fit: cover; margin-bottom: 8px; }
 
+        /* --- تفاصيل المنتج --- */
         .modal {
             position: fixed; bottom: -100%; left: 0; width: 100%; max-height: 92vh;
             background: #0a0a0a; z-index: 3000; border-top: 2px solid #d4af37;
@@ -62,8 +67,8 @@
         .modal.active { bottom: 0; }
         .variant-box { background: #111; padding: 15px; border-radius: 12px; margin: 15px 0; border: 1px solid #222; }
         .variant-option { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; cursor: pointer; }
-        .custom-input { width: 100%; padding: 12px; background: #000; border: 1px solid #333; color: #fff; border-radius: 8px; margin-top: 10px; }
-        .btn-main { background: #d4af37; color: #000; border: none; padding: 15px; width: 100%; border-radius: 12px; font-weight: 900; cursor: pointer; }
+        .custom-input { width: 100%; padding: 12px; background: #000; border: 1px solid #333; color: #fff; border-radius: 8px; margin-top: 10px; font-family: 'Cairo'; }
+        .btn-main { background: #d4af37; color: #000; border: none; padding: 15px; width: 100%; border-radius: 12px; font-weight: 900; font-size: 1rem; cursor: pointer; }
         #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: rgba(0,0,0,0.8); z-index: 1500; display: none; }
     </style>
 </head>
@@ -92,6 +97,7 @@
             <li class="ripple" style="padding:15px; border-bottom:1px solid #222;" onclick="openSection('tiktok'); closeAll();">📱 قسم تيك توك</li>
             <li class="ripple" style="padding:15px; border-bottom:1px solid #222;" onclick="openSection('steam_offline'); closeAll();">🕹️ ستيم أوفلاين</li>
             <li class="ripple" style="padding:15px; border-bottom:1px solid #222;" onclick="openSection('ai'); closeAll();">🤖 الذكاء الاصطناعي</li>
+            <li class="ripple" style="padding:15px;"><a href="https://wa.me/966548512295" style="color:#25d366; text-decoration:none;">💬 تواصل واتساب</a></li>
         </ul>
     </div>
 
@@ -104,6 +110,7 @@
         <div onclick="closeAll()" style="cursor:pointer; color:#fff; float:left;">✖</div>
         <h2 style="color:#d4af37; margin-bottom:20px;">سلة المشتريات</h2>
         <div class="variant-box">
+            <h3 style="color:#d4af37; margin-bottom:10px; font-size:1.1rem;">قائمة المعلومات</h3>
             <input type="text" id="user-name" class="custom-input" placeholder="الاسم (إجباري)">
             <input type="tel" id="user-phone" class="custom-input" placeholder="رقم الهاتف (إجباري)">
         </div>
@@ -139,19 +146,22 @@
 
         let cart = [];
 
-        // تحويل خيارات المنتج من نص (شهر=10) إلى مصفوفة كائنات
+        function getStoreData() {
+            return JSON.parse(localStorage.getItem('omni_store_products') || '[]');
+        }
+
         function parseVariants(vString) {
             if(!vString) return null;
-            return vString.split(',').map(item => {
-                const [n, p] = item.split('=');
-                return { n: n.trim(), p: parseFloat(p.trim()) };
-            });
+            try {
+                return vString.split(',').map(item => {
+                    const [n, p] = item.split('=');
+                    return { n: n.trim(), p: parseFloat(p.trim()) };
+                });
+            } catch(e) { return null; }
         }
 
         function openSection(catKey) {
-            const allProducts = JSON.parse(localStorage.getItem('omni_store_products') || '[]');
-            const sectionProducts = allProducts.filter(p => p.category === catKey);
-            
+            const products = getStoreData().filter(p => p.category === catKey);
             document.getElementById('main-content').style.display = 'none';
             document.getElementById('section-view').style.display = 'block';
             document.getElementById('back-btn').style.display = 'block';
@@ -159,45 +169,34 @@
             document.getElementById('sec-title').innerText = categoryMap[catKey];
             
             const list = document.getElementById('products-list');
-            list.innerHTML = '';
+            list.innerHTML = products.length ? '' : '<p style="grid-column:1/3; text-align:center; color:#666;">لا توجد منتجات حالياً</p>';
             
-            if(sectionProducts.length === 0) {
-                list.innerHTML = '<p style="grid-column: 1/3; text-align:center; color:#666;">لا توجد منتجات حالياً</p>';
-            }
-
-            sectionProducts.forEach(p => {
-                list.innerHTML += `
-                    <div class="product-card ripple" onclick="showProductDetails('${p.id}')">
-                        <img src="${p.img}">
-                        <h3>${p.name}</h3>
-                        <div style="color:#d4af37;">${p.price} ريال</div>
-                    </div>`;
+            products.forEach(p => {
+                list.innerHTML += `<div class="product-card ripple" onclick="showProductDetails('${p.id}')"><img src="${p.img}"><h3>${p.name}</h3><div style="color:#d4af37;">${p.price} ريال</div></div>`;
             });
             window.scrollTo(0,0);
         }
 
         function showProductDetails(id) {
-            const allProducts = JSON.parse(localStorage.getItem('omni_store_products') || '[]');
-            const p = allProducts.find(x => x.id === id);
+            const p = getStoreData().find(x => x.id === id);
             const content = document.getElementById('detail-content');
+            let vHtml = '';
+            const vars = parseVariants(p.vars);
             
-            let variantsHtml = '';
-            const variants = parseVariants(p.vars);
-            
-            if(variants) {
-                variantsHtml = `<div class="variant-box"><p style="margin-bottom:10px; font-weight:bold;">اختر العرض:</p>`;
-                variants.forEach((v, i) => {
-                    variantsHtml += `<label class="variant-option"><input type="radio" name="prod-var" value="${v.n}" data-price="${v.p}"> ${v.n} - ${v.p} ريال</label>`;
+            if(vars) {
+                vHtml = `<div class="variant-box"><p style="margin-bottom:10px; font-weight:bold;">اختر الطلب:</p>`;
+                vars.forEach(v => {
+                    vHtml += `<label class="variant-option"><input type="radio" name="prod-var" value="${v.n}" data-price="${v.p}"> ${v.n} - ${v.p} ريال</label>`;
                 });
-                variantsHtml += `</div>`;
+                vHtml += `</div>`;
             }
 
             content.innerHTML = `
                 <img src="${p.img}" style="width:100%; border-radius:15px; margin-bottom:15px;">
                 <h2>${p.name}</h2>
                 <div style="font-size:1.5rem; color:#d4af37; font-weight:900; margin:10px 0;">${p.price} ريال</div>
-                <div style="color:#ccc; font-size:0.9rem; line-height:1.6; white-space: pre-line;">${p.desc}</div>
-                ${variantsHtml}
+                <div style="color:#ccc; font-size:0.9rem; line-height:1.6; white-space:pre-line;">${p.desc}</div>
+                ${vHtml}
                 <button class="btn-main ripple" onclick="handleAddToCart('${p.id}')">إضافة للسلة 🛒</button>
             `;
             document.getElementById('product-detail-modal').classList.add('active');
@@ -205,20 +204,14 @@
         }
 
         function handleAddToCart(id) {
-            const allProducts = JSON.parse(localStorage.getItem('omni_store_products') || '[]');
-            const p = allProducts.find(x => x.id === id);
-            let finalName = p.name;
-            let finalPrice = parseFloat(p.price);
+            const p = getStoreData().find(x => x.id === id);
+            let fName = p.name, fPrice = parseFloat(p.price);
+            const selected = document.querySelector('input[name="prod-var"]:checked');
+            
+            if(parseVariants(p.vars) && !selected) return alert("يرجى اختيار عرض!");
+            if(selected) { fName += ` (${selected.value})`; fPrice = selected.getAttribute('data-price'); }
 
-            const selectedVar = document.querySelector('input[name="prod-var"]:checked');
-            if(parseVariants(p.vars) && !selectedVar) return alert("يرجى اختيار عرض!");
-
-            if(selectedVar) {
-                finalName += ` (${selectedVar.value})`;
-                finalPrice = selectedVar.getAttribute('data-price');
-            }
-
-            cart.push({name: finalName, price: finalPrice});
+            cart.push({name: fName, price: fPrice});
             updateCart();
             alert("تمت الإضافة!");
             closeAll();
@@ -237,14 +230,11 @@
         }
 
         function checkout() {
-            let name = document.getElementById('user-name').value;
-            let phone = document.getElementById('user-phone').value;
-            if(cart.length === 0 || !name || !phone) return alert('أكمل بياناتك والسلة!');
-            
-            let msg = `*طلب جديد من متجر أومني*\nالاسم: ${name}\nالهاتف: ${phone}\n\n*الطلبات:*\n`;
+            let n = document.getElementById('user-name').value, ph = document.getElementById('user-phone').value;
+            if(cart.length === 0 || !n || !ph) return alert('أكمل بياناتك!');
+            let msg = `*طلب جديد من أومني*\nالاسم: ${n}\nالهاتف: ${ph}\n\n*الطلبات:*\n`;
             cart.forEach(i => msg += `- ${i.name}\n`);
             msg += `\n*المجموع: ${document.getElementById('cart-total').innerText} ريال*`;
-            
             window.open(`https://wa.me/966548512295?text=${encodeURIComponent(msg)}`);
         }
 
@@ -261,15 +251,6 @@
             document.getElementById('side-menu').classList.remove('active');
             document.getElementById('overlay').style.display = 'none';
         }
-
-        // الاستماع للتغييرات من لوحة التحكم لتحديث المتجر تلقائياً
-        window.addEventListener('storage', () => {
-            if(document.getElementById('section-view').style.display === 'block') {
-                const currentTitle = document.getElementById('sec-title').innerText;
-                const catKey = Object.keys(categoryMap).find(key => categoryMap[key] === currentTitle);
-                if(catKey) openSection(catKey);
-            }
-        });
     </script>
 </body>
 </html>
