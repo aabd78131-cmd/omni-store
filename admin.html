@@ -98,7 +98,7 @@
             <textarea id="p-vars" rows="2" placeholder="شهر=10, شهرين=20"></textarea>
         </div>
 
-        <button class="btn-save" onclick="saveProduct()">نشر المنتج في المتجر وتحديث الأوامر</button>
+        <button class="btn-save" onclick="saveProduct()">نشر المنتج في المتجر 🚀</button>
     </div>
 
     <div id="orders" class="section">
@@ -128,7 +128,6 @@
             <div class="stat-box"><h3>إجمالي المبيعات</h3><p id="total-revenue">0</p></div>
             <div class="stat-box"><h3>إجمالي التكلفة</h3><p id="total-costs">0</p></div>
             <div class="stat-box"><h3>صافي الربح</h3><p id="net-profit" style="color:var(--green)">0</p></div>
-            <div class="stat-box"><h3>الأكثر مبيعاً</h3><p id="top-product" style="font-size:1rem; color:var(--gold)">-</p></div>
         </div>
         <table id="sales-table">
             <thead>
@@ -141,15 +140,6 @@
     </div>
 
     <div id="manage" class="section">
-        <div id="edit-form-container" style="display:none; border: 1px solid var(--gold); padding: 15px; border-radius: 10px; margin-bottom: 20px;">
-            <h3 style="color:var(--gold); margin-bottom:10px;">تعديل المنتج</h3>
-            <input type="hidden" id="edit-index">
-            <div class="form-group"><label>الاسم:</label><input type="text" id="edit-name"></div>
-            <div class="form-group"><label>السعر:</label><input type="number" id="edit-price"></div>
-            <div class="form-group"><label>القسم:</label><input type="text" id="edit-category"></div>
-            <button class="btn-save" onclick="updateProduct()">تحديث الأوامر وحفظ</button>
-            <button class="btn-save" style="background:#444; color:white;" onclick="hideEditForm()">إلغاء</button>
-        </div>
         <table id="manage-table">
             <thead>
                 <tr><th>المنتج</th><th>القسم</th><th>السعر</th><th>التحكم</th></tr>
@@ -159,22 +149,29 @@
     </div>
 </div>
 
-<script>
-    // --- المحرك البرمجي للربط (Store Sync Engine) ---
-    
-    // وظيفة ترسل الأوامر للمتجر عبر التخزين المشترك
-    function syncToStore() {
-        const prods = JSON.parse(localStorage.getItem('omni_store_products') || '[]');
-        const storeCommands = {
-            lastUpdate: new Date().getTime(),
-            activeProducts: prods.length,
-            categories: [...new Set(prods.map(p => p.category))],
-            action: "REFRESH_STORE_VIEW"
-        };
-        localStorage.setItem('omni_store_sync_signal', JSON.stringify(storeCommands));
-        console.log("Commands Synced to Store:", storeCommands);
-    }
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+    import { getDatabase, ref, push, remove, onValue } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
 
+    // 1. بيانات متجرك في Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyCWkjGbA5gZBqr60Qa98WXsyrDZQjYv07I",
+      authDomain: "omnistore-a5251.firebaseapp.com",
+      databaseURL: "https://omnistore-a5251-default-rtdb.firebaseio.com",
+      projectId: "omnistore-a5251",
+      storageBucket: "omnistore-a5251.firebasestorage.app",
+      messagingSenderId: "542087784992",
+      appId: "1:542087784992:web:8a83435b3ef36678c3aa45",
+      measurementId: "G-HGGT5NMFB9"
+    };
+
+    // 2. تشغيل Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    // -----------------------------------------------------------------
+    // دوال التنقل بين التبويبات والتاريخ الافتراضي
+    // -----------------------------------------------------------------
     window.onload = () => {
         const d = new Date();
         document.getElementById('o-day').value = d.getDate();
@@ -182,7 +179,7 @@
         document.getElementById('o-year').value = d.getFullYear();
     };
 
-    function showTab(tabId) {
+    window.showTab = function(tabId) {
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         document.getElementById(tabId).classList.add('active');
@@ -193,33 +190,88 @@
             tabId === 'sales' ? 'التقارير' : 'إدارة'
         ));
         if(btn) btn.classList.add('active');
-        if(tabId === 'sales') renderSales();
-        if(tabId === 'manage') renderManageProducts();
-    }
+        if(tabId === 'sales') window.renderSales();
+        if(tabId === 'manage') window.renderManageProducts();
+    };
 
-    function saveProduct() {
+    // -----------------------------------------------------------------
+    // دالة إضافة المنتج إلى Firebase (المهمة الأساسية)
+    // -----------------------------------------------------------------
+    window.saveProduct = function() {
+        // سحب البيانات من الخانات
         const p = {
-            id: 'PROD-' + Date.now(),
             category: document.getElementById('p-category').value,
             name: document.getElementById('p-name').value,
-            img: document.getElementById('p-img').value,
-            desc: document.getElementById('p-desc').value,
-            extraImgs: document.getElementById('p-extra-imgs').value,
+            img: document.getElementById('p-img').value || "",
+            desc: document.getElementById('p-desc').value || "",
+            extraImgs: document.getElementById('p-extra-imgs').value || "",
             price: document.getElementById('p-price').value,
-            vars: document.getElementById('p-vars').value
+            vars: document.getElementById('p-vars').value || "",
+            dateAdded: new Date().toLocaleDateString()
         };
-        if(!p.name || !p.price) return alert('أكمل البيانات الأساسية');
         
-        let prods = JSON.parse(localStorage.getItem('omni_store_products') || '[]');
-        prods.push(p);
-        localStorage.setItem('omni_store_products', JSON.stringify(prods));
+        // التحقق من أن الاسم والسعر غير فارغين
+        if(!p.name || !p.price) {
+            alert('يا بطل، أكمل البيانات الأساسية (الاسم والسعر) أولاً!');
+            return;
+        }
         
-        syncToStore(); // تنفيذ أمر الربط
-        alert('تم النشر بنجاح وتحديث أوامر المتجر');
-        document.getElementById('p-name').value = '';
-    }
+        // إرسال البيانات فوراً إلى Firebase
+        push(ref(db, 'products'), p)
+            .then(() => {
+                alert('بطل! المنتج نزل في المتجر السحابي بنجاح ✅');
+                // تصفير الخانات بعد الإضافة
+                document.getElementById('p-name').value = '';
+                document.getElementById('p-img').value = '';
+                document.getElementById('p-desc').value = '';
+                document.getElementById('p-extra-imgs').value = '';
+                document.getElementById('p-price').value = '';
+                document.getElementById('p-vars').value = '';
+            })
+            .catch((err) => alert('عفواً، حدث خطأ أثناء النشر: ' + err.message));
+    };
 
-    function saveSale() {
+    // -----------------------------------------------------------------
+    // إدارة المنتجات (جلبها وحذفها من Firebase)
+    // -----------------------------------------------------------------
+    window.renderManageProducts = function() {
+        const tbody = document.querySelector('#manage-table tbody');
+        tbody.innerHTML = '<tr><td colspan="4">جاري تحميل المنتجات من Firebase...</td></tr>';
+        
+        onValue(ref(db, 'products'), (snapshot) => {
+            tbody.innerHTML = '';
+            if (snapshot.exists()) {
+                const data = snapshot.val();
+                for (let key in data) {
+                    const p = data[key];
+                    tbody.innerHTML += `<tr>
+                        <td>${p.name}</td>
+                        <td>${p.category}</td>
+                        <td>${p.price} ريال</td>
+                        <td>
+                            <div class="action-btns">
+                                <button class="btn-del" onclick="deleteProduct('${key}')">حذف</button>
+                            </div>
+                        </td>
+                    </tr>`;
+                }
+            } else {
+                tbody.innerHTML = '<tr><td colspan="4">لا توجد منتجات حالياً.</td></tr>';
+            }
+        });
+    };
+
+    window.deleteProduct = function(key) {
+        if(!confirm('هل أنت متأكد من حذف هذا المنتج من المتجر؟')) return;
+        remove(ref(db, 'products/' + key))
+            .then(() => alert('تم حذف المنتج بنجاح 🗑️'))
+            .catch((err) => alert('خطأ أثناء الحذف: ' + err.message));
+    };
+
+    // -----------------------------------------------------------------
+    // نظام المحاسبة (يعمل محلياً كما طلبته في النسخة السابقة)
+    // -----------------------------------------------------------------
+    window.saveSale = function() {
         const sale = {
             id: document.getElementById('o-id').value,
             name: document.getElementById('o-product-name').value,
@@ -232,10 +284,10 @@
         let finance = JSON.parse(localStorage.getItem('omni_finance_records') || '[]');
         finance.push(sale);
         localStorage.setItem('omni_finance_records', JSON.stringify(finance));
-        alert('تم الحفظ وتحديث السجلات المالية');
-    }
+        alert('تم الحفظ وتحديث السجلات المالية ✅');
+    };
 
-    function renderSales() {
+    window.renderSales = function() {
         let sales = JSON.parse(localStorage.getItem('omni_finance_records') || '[]');
         const tbody = document.querySelector('#sales-table tbody');
         tbody.innerHTML = '';
@@ -248,52 +300,9 @@
         document.getElementById('total-revenue').innerText = rev.toFixed(2) + " ريال";
         document.getElementById('total-costs').innerText = costs.toFixed(2) + " ريال";
         document.getElementById('net-profit').innerText = net.toFixed(2) + " ريال";
-    }
+    };
 
-    function renderManageProducts() {
-        let prods = JSON.parse(localStorage.getItem('omni_store_products') || '[]');
-        const tbody = document.querySelector('#manage-table tbody');
-        tbody.innerHTML = '';
-        prods.forEach((p, i) => {
-            tbody.innerHTML += `<tr><td>${p.name}</td><td>${p.category}</td><td>${p.price} ريال</td><td><div class="action-btns"><button class="btn-edit" onclick="editProduct(${i})">تعديل</button><button class="btn-del" onclick="deleteProduct(${i})">حذف</button></div></td></tr>`;
-        });
-    }
-
-    function deleteProduct(i) {
-        if(!confirm('حذف نهائي؟')) return;
-        let prods = JSON.parse(localStorage.getItem('omni_store_products'));
-        prods.splice(i, 1);
-        localStorage.setItem('omni_store_products', JSON.stringify(prods));
-        syncToStore();
-        renderManageProducts();
-    }
-
-    function editProduct(i) {
-        let prods = JSON.parse(localStorage.getItem('omni_store_products'));
-        let p = prods[i];
-        document.getElementById('edit-index').value = i;
-        document.getElementById('edit-name').value = p.name;
-        document.getElementById('edit-price').value = p.price;
-        document.getElementById('edit-category').value = p.category;
-        document.getElementById('edit-form-container').style.display = 'block';
-    }
-
-    function updateProduct() {
-        let i = document.getElementById('edit-index').value;
-        let prods = JSON.parse(localStorage.getItem('omni_store_products'));
-        prods[i].name = document.getElementById('edit-name').value;
-        prods[i].price = document.getElementById('edit-price').value;
-        prods[i].category = document.getElementById('edit-category').value;
-        localStorage.setItem('omni_store_products', JSON.stringify(prods));
-        syncToStore();
-        hideEditForm();
-        renderManageProducts();
-        alert('تم تحديث المتجر بالأوامر الجديدة');
-    }
-
-    function hideEditForm() { document.getElementById('edit-form-container').style.display = 'none'; }
-
-    function doSearch() {
+    window.doSearch = function() {
         const val = document.getElementById('search-input').value;
         const res = document.getElementById('search-res');
         if(!val) { res.innerHTML = ''; return; }
@@ -302,48 +311,15 @@
         if(found) {
             res.innerHTML = `<div class="result-item"><b style="color:var(--gold)">📦 المنتج:</b> ${found.name}<br><b>💵 السعر:</b> ${found.sold} ريال<br><b>📅 التاريخ:</b> ${found.date}<br><hr style="border-top:1px solid #333; margin:5px 0;"><b>📝 ملاحظات:</b><br>${found.data}</div>`;
         } else { res.innerHTML = '<p style="color:#666; margin-top:10px;">لا يوجد سجل</p>'; }
-    }
+    };
 
-    function deleteSale(i) {
+    window.deleteSale = function(i) {
         if(!confirm('حذف العملية؟')) return;
         let sales = JSON.parse(localStorage.getItem('omni_finance_records'));
         sales.splice(i, 1);
         localStorage.setItem('omni_finance_records', JSON.stringify(sales));
-        renderSales();
-    }<script type="module">
-  // استيراد المكتبات اللازمة
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-  import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
-
-  // بياناتك من Firebase
-  const firebaseConfig = {
-    apiKey: "AIzaSyCWkjGbA5gZBqr60Qa98WXsyrDZQjYv07I",
-    authDomain: "omnistore-a5251.firebaseapp.com",
-    databaseURL: "https://omnistore-a5251-default-rtdb.firebaseio.com",
-    projectId: "omnistore-a5251",
-    storageBucket: "omnistore-a5251.firebasestorage.app",
-    messagingSenderId: "542087784992",
-    appId: "1:542087784992:web:8a83435b3ef36678c3aa45",
-    measurementId: "G-HGGT5NMFB9"
-  };
-
-  // تشغيل المحرك
-  const app = initializeApp(firebaseConfig);
-  const db = getDatabase(app);
-// هكذا نربط الزر بقاعدة البيانات لكي يرسل المنتجات
-const productsRef = ref(db, 'products');
-
-document.getElementById('addBtn').onclick = () => {
-    const name = document.getElementById('pName').value; // خانة اسم المنتج
-    const price = document.getElementById('pPrice').value; // خانة السعر
-
-    if (name && price) {
-        push(productsRef, { name, price })
-            .then(() => alert("بطل! المنتج نزل في المتجر ✅"))
-            .catch((err) => alert("فيه مشكلة: " + err.message));
-    } else {
-        alert("يا بطل، عبي البيانات كاملة أولاً!");
-    }
-};</script>
+        window.renderSales();
+    };
+</script>
 </body>
 </html>
