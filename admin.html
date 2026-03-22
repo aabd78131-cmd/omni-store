@@ -2,176 +2,378 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>OMNI ADMIN | لوحة تحكم أومني الشاملة</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام أومني المتكامل | OMNI ADMIN</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --gold: #d4af37; --bg: #0a0a0a; --card: #151515; --green: #2ecc71; --red: #e74c3c; }
+        :root { --gold: #d4af37; --bg: #0a0a0a; --card: #151515; --green: #2ecc71; --red: #e74c3c; --blue: #3498db; --purple: #9b59b6; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
-        body { background: var(--bg); color: white; padding: 15px; }
-        .admin-container { max-width: 900px; margin: 0 auto; }
-        h1 { color: var(--gold); text-align: center; margin-bottom: 20px; font-weight: 900; }
+        body { background: var(--bg); color: white; padding: 10px; }
         
-        .tabs { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 20px; }
-        .tab-btn { background: var(--card); border: 1px solid var(--gold); color: white; padding: 12px; cursor: pointer; border-radius: 8px; flex: 1; min-width: 100px; font-weight: bold; }
+        .admin-container { max-width: 1100px; margin: 0 auto; }
+        h1 { color: var(--gold); text-align: center; margin: 20px 0; border-bottom: 2px solid var(--gold); padding-bottom: 10px; font-weight: 900; }
+        
+        .tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+        .tab-btn { background: var(--card); border: 1px solid var(--gold); color: white; padding: 12px; cursor: pointer; border-radius: 10px; font-weight: bold; flex: 1; min-width: 120px; transition: 0.3s; }
         .tab-btn.active { background: var(--gold); color: black; }
         
-        .section { display: none; background: var(--card); padding: 20px; border-radius: 15px; border: 1px solid #333; }
+        .section { display: none; background: var(--card); padding: 20px; border-radius: 15px; border: 1px solid #333; animation: fadeIn 0.3s; }
         .section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         .form-group { margin-bottom: 15px; }
-        label { display: block; color: var(--gold); margin-bottom: 5px; font-size: 0.9rem; }
-        input, select, textarea { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #333; background: #000; color: white; }
-        .btn-save { background: var(--gold); color: black; border: none; padding: 15px; width: 100%; border-radius: 10px; font-weight: 900; cursor: pointer; margin-top: 10px; }
+        label { display: block; margin-bottom: 5px; color: var(--gold); font-size: 0.9rem; font-weight: bold; }
+        input, textarea, select { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #333; background: #000; color: white; outline: none; }
+        input:focus { border-color: var(--gold); }
         
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 0.8rem; }
-        th, td { border: 1px solid #222; padding: 10px; text-align: center; }
-        th { color: var(--gold); }
-        .stat-box { background: #111; padding: 15px; border-radius: 10px; text-align: center; border: 1px solid #222; flex: 1; }
+        .date-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 25px; }
+        .stat-box { background: #111; padding: 20px; border-radius: 15px; border: 1px solid #222; text-align: center; }
+        .stat-box h3 { font-size: 0.8rem; color: #888; margin-bottom: 10px; }
+        .stat-box p { font-size: 1.4rem; font-weight: 900; }
+
+        .btn-save { background: var(--gold); color: black; border: none; padding: 15px; width: 100%; border-radius: 10px; font-weight: 900; cursor: pointer; margin-top: 10px; transition: 0.3s; }
+        .btn-save:hover { opacity: 0.8; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 0.85rem; }
+        th, td { border: 1px solid #222; padding: 12px; text-align: center; }
+        th { background: #1a1a1a; color: var(--gold); }
+        
+        .profit { color: var(--green); font-weight: bold; }
+        .loss { color: var(--red); font-weight: bold; }
+        
+        .hint { font-size: 0.75rem; color: #666; margin-top: 4px; }
+        .result-item { background: #000; padding: 15px; border-radius: 10px; border: 1px dashed var(--gold); margin-top: 10px; line-height: 1.8; }
+
+        .action-btns { display: flex; gap: 5px; justify-content: center; }
+        .btn-edit { background: var(--blue); color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
+        .btn-del { background: var(--red); color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
+        .btn-disc { background: var(--green); color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
+        
+        /* تصميم زر النسخ الاحتياطي */
+        .backup-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
+        .btn-backup { background: #333; color: white; border: 1px solid #555; padding: 15px; border-radius: 10px; cursor: pointer; font-weight: bold; }
+
+        @media (max-width: 600px) {
+            table { font-size: 0.7rem; }
+            th, td { padding: 5px; }
+            .date-row { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
 
 <div class="admin-container">
-    <h1>لوحة تحكم أومني</h1>
+    <h1>لوحة تحكم أومني الشاملة</h1>
 
     <div class="tabs">
-        <button class="tab-btn active" onclick="showTab('products')">📦 إضافة للمتجر</button>
-        <button class="tab-btn" onclick="showTab('finance')">💰 تسجيل بيعة</button>
-        <button class="tab-btn" onclick="showTab('reports')">📊 التقارير</button>
-        <button class="tab-btn" onclick="showTab('manage')">⚙️ الإدارة</button>
+        <button class="tab-btn active" onclick="showTab('products')">📦 إضافة منتج</button>
+        <button class="tab-btn" onclick="showTab('orders')">💰 تسجيل بيعة</button>
+        <button class="tab-btn" onclick="showTab('search')">🔍 بحث بالرمز</button>
+        <button class="tab-btn" onclick="showTab('sales')">📊 التقارير المالية</button>
+        <button class="tab-btn" onclick="showTab('manage')">⚙️ إدارة المنتجات</button>
+        <button class="tab-btn" onclick="showTab('backup')">💾 النسخ الاحتياطي</button>
     </div>
 
     <div id="products" class="section active">
-        <div class="form-group"><label>القسم:</label>
+        <div class="form-group">
+            <label>اختر قسم المتجر:</label>
             <select id="p-category">
-                <option value="social">قسم الترفيه</option>
+                <option value="steam_offline">قسم ستيم أوفلاين</option>
                 <option value="insta">قسم انستا</option>
                 <option value="tiktok">قسم تيك توك</option>
-                <option value="steam_offline">ستيم أوفلاين</option>
-                <option value="ai">ذكاء اصطناعي</option>
+                <option value="entertainment">قسم الترفيه</option>
+                <option value="ai">قسم الذكاء الاصطناعي</option>
             </select>
         </div>
         <div class="form-group"><label>اسم المنتج:</label><input type="text" id="p-name"></div>
-        <div class="form-group"><label>رابط الصورة الأساسية:</label><input type="text" id="p-img"></div>
+        <div class="form-group"><label>اسم الصورة الرئيسية:</label><input type="text" id="p-img" placeholder="image.jpeg"></div>
         <div class="form-group"><label>الوصف:</label><textarea id="p-desc" rows="2"></textarea></div>
-        <div class="form-group"><label>صور إضافية (روابط تفصلها فاصلة):</label><input type="text" id="p-extra-imgs" placeholder="link1.png, link2.png"></div>
-        <div class="form-group"><label>خيارات المنتج (مثال: سنة:50, شهر:10):</label><input type="text" id="p-vars"></div>
-        <div class="form-group"><label>السعر الأساسي:</label><input type="number" id="p-price"></div>
-        <button class="btn-save" onclick="saveToFirebase()">نشر في المتجر فوراً 🚀</button>
-    </div>
-
-    <div id="finance" class="section">
-        <div class="form-group"><label>اسم المنتج المباع:</label><input type="text" id="f-name"></div>
-        <div class="form-group"><label>الرمز (#):</label><input type="text" id="f-code"></div>
-        <div class="form-group"><label>سعر التكلفة:</label><input type="number" id="f-cost"></div>
-        <div class="form-group"><label>سعر البيع:</label><input type="number" id="f-sold"></div>
-        <div class="form-group"><label>ملاحظات/بيانات العميل:</label><textarea id="f-data" rows="2"></textarea></div>
-        <button class="btn-save" style="background:var(--green)" onclick="saveFinance()">حفظ السجل المالي 💵</button>
-    </div>
-
-    <div id="reports" class="section">
-        <div style="display:flex; gap:10px; margin-bottom:20px;">
-            <div class="stat-box"><h4>المبيعات</h4><p id="stat-rev">0</p></div>
-            <div class="stat-box"><h4>صافي الربح</h4><p id="stat-profit" style="color:var(--green)">0</p></div>
+        
+        <div class="form-group">
+            <label>صور إضافية للوصف (اختياري):</label>
+            <input type="text" id="p-extra-imgs" placeholder="مثال: img1.jpg, img2.png">
         </div>
-        <table id="finance-table">
-            <thead><tr><th>الرمز</th><th>المنتج</th><th>التكلفة</th><th>البيع</th><th>الربح</th></tr></thead>
+
+        <div class="form-group"><label>سعر البيع الافتراضي:</label><input type="number" id="p-price"></div>
+        
+        <div class="form-group">
+            <label>خيارات المنتج (اختياري):</label>
+            <textarea id="p-vars" rows="2" placeholder="شهر=10, شهرين=20"></textarea>
+        </div>
+
+        <button class="btn-save" onclick="saveProduct()">نشر المنتج في المتجر وتحديث الأوامر</button>
+    </div>
+
+    <div id="orders" class="section">
+        <div class="form-group"><label>اسم المنتج المباع:</label><input type="text" id="o-product-name"></div>
+        <div class="form-group"><label>الرمز (للبحث لاحقاً):</label><input type="text" id="o-id" placeholder="مثال: #A10"></div>
+        
+        <label>تاريخ العملية:</label>
+        <div class="form-group date-row">
+            <input type="number" id="o-day" placeholder="اليوم">
+            <input type="number" id="o-month" placeholder="الشهر">
+            <input type="number" id="o-year" placeholder="السنة">
+        </div>
+
+        <div class="form-group"><label>سعر التكلفة:</label><input type="number" id="o-cost"></div>
+        <div class="form-group"><label>سعر البيع:</label><input type="number" id="o-sold"></div>
+        <div class="form-group"><label>بيانات العميل:</label><textarea id="o-data" rows="3"></textarea></div>
+        <button class="btn-save" onclick="saveSale()">تسجيل العملية وتحديث التقارير</button>
+    </div>
+
+    <div id="search" class="section">
+        <input type="text" id="search-input" oninput="doSearch()" placeholder="أدخل الرمز للبحث عن بيانات الطلب...">
+        <div id="search-res"></div>
+    </div>
+
+    <div id="sales" class="section">
+        <div class="stats-grid">
+            <div class="stat-box"><h3>إجمالي المبيعات</h3><p id="total-revenue">0</p></div>
+            <div class="stat-box"><h3>إجمالي التكلفة</h3><p id="total-costs">0</p></div>
+            <div class="stat-box"><h3>صافي الربح</h3><p id="net-profit" style="color:var(--green)">0</p></div>
+            <div class="stat-box"><h3>أرباح هذا الشهر</h3><p id="month-profit" style="color:var(--blue)">0</p></div>
+        </div>
+        <table id="sales-table">
+            <thead>
+                <tr>
+                    <th>الرمز</th><th>التاريخ</th><th>المنتج</th><th>التكلفة</th><th>البيع</th><th>الربح</th><th>حذف</th>
+                </tr>
+            </thead>
             <tbody></tbody>
         </table>
     </div>
 
     <div id="manage" class="section">
+        <div id="edit-form-container" style="display:none; border: 1px solid var(--gold); padding: 15px; border-radius: 10px; margin-bottom: 20px;">
+            <h3 style="color:var(--gold); margin-bottom:10px;">تعديل المنتج</h3>
+            <input type="hidden" id="edit-index">
+            <div class="form-group"><label>الاسم:</label><input type="text" id="edit-name"></div>
+            <div class="form-group"><label>السعر:</label><input type="number" id="edit-price"></div>
+            <div class="form-group"><label>القسم:</label><input type="text" id="edit-category"></div>
+            <button class="btn-save" onclick="updateProduct()">تحديث الأوامر وحفظ</button>
+            <button class="btn-save" style="background:#444; color:white;" onclick="hideEditForm()">إلغاء</button>
+        </div>
         <table id="manage-table">
-            <thead><tr><th>المنتج</th><th>السعر</th><th>التحكم</th></tr></thead>
+            <thead>
+                <tr><th>المنتج</th><th>القسم</th><th>السعر</th><th>التحكم</th></tr>
+            </thead>
             <tbody></tbody>
         </table>
     </div>
+
+    <div id="backup" class="section">
+        <h3 style="color:var(--gold)">إدارة بيانات النظام</h3>
+        <p style="font-size: 0.8rem; color: #888; margin: 10px 0;">يمكنك تصدير كافة بيانات المنتجات والمبيعات وحفظها كملف خارجي.</p>
+        <div class="backup-btns">
+            <button class="btn-backup" onclick="exportData()">📤 تصدير البيانات (Backup)</button>
+            <button class="btn-backup" onclick="document.getElementById('importFile').click()">📥 استيراد بيانات</button>
+        </div>
+        <input type="file" id="importFile" style="display:none" onchange="importData(event)">
+    </div>
+
 </div>
 
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-    import { getDatabase, ref, push, set, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
-
-    const firebaseConfig = {
-        apiKey: "AIzaSyCWkjGbA5gZBqr60Qa98WXsyrDZQjyV07I",
-        authDomain: "omnistore-a5251.firebaseapp.com",
-        databaseURL: "https://omnistore-a5251-default-rtdb.firebaseio.com",
-        projectId: "omnistore-a5251",
-        storageBucket: "omnistore-a5251.appspot.com",
-        messagingSenderId: "542087784992",
-        appId: "1:542087784992:web:8a83435b3ef36678c3aa45"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-
-    window.saveToFirebase = function() {
-        const productData = {
-            category: document.getElementById('p-category').value,
-            name: document.getElementById('p-name').value,
-            image: document.getElementById('p-img').value,
-            description: document.getElementById('p-desc').value,
-            extraImages: document.getElementById('p-extra-imgs').value,
-            options: document.getElementById('p-vars').value,
-            price: document.getElementById('p-price').value
+<script>
+    // وظيفة ترسل الأوامر للمتجر عبر التخزين المشترك
+    function syncToStore() {
+        const prods = JSON.parse(localStorage.getItem('omni_store_products') || '[]');
+        const storeCommands = {
+            lastUpdate: new Date().getTime(),
+            activeProducts: prods.length,
+            categories: [...new Set(prods.map(p => p.category))],
+            action: "REFRESH_STORE_VIEW"
         };
-        if(!productData.name || !productData.price) return alert('أدخل الاسم والسعر');
-        const newRef = push(ref(db, 'products'));
-        set(newRef, productData).then(() => {
-            alert('تم النشر بنجاح!');
-            document.querySelectorAll('#products input, #products textarea').forEach(i => i.value = '');
-        });
+        localStorage.setItem('omni_store_sync_signal', JSON.stringify(storeCommands));
+        console.log("Commands Synced to Store:", storeCommands);
+    }
+
+    window.onload = () => {
+        const d = new Date();
+        document.getElementById('o-day').value = d.getDate();
+        document.getElementById('o-month').value = d.getMonth() + 1;
+        document.getElementById('o-year').value = d.getFullYear();
     };
 
-    window.showTab = (id) => {
+    function showTab(tabId) {
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        const activeBtn = [...document.querySelectorAll('.tab-btn')].find(b => b.innerText.includes(id === 'products' ? 'إضافة' : id === 'finance' ? 'تسجيل' : id === 'reports' ? 'التقارير' : 'الإدارة'));
-        if(activeBtn) activeBtn.classList.add('active');
-        if(id === 'reports') renderFinance();
-        if(id === 'manage') fetchManage();
-    };
-
-    window.saveFinance = () => {
-        const sale = {
-            code: document.getElementById('f-code').value,
-            name: document.getElementById('f-name').value,
-            cost: parseFloat(document.getElementById('f-cost').value),
-            sold: parseFloat(document.getElementById('f-sold').value)
-        };
-        let records = JSON.parse(localStorage.getItem('omni_finance') || '[]');
-        records.push(sale);
-        localStorage.setItem('omni_finance', JSON.stringify(records));
-        alert('تم حفظ السجل المالي');
-    };
-
-    function renderFinance() {
-        let records = JSON.parse(localStorage.getItem('omni_finance') || '[]');
-        const tbody = document.querySelector('#finance-table tbody');
-        tbody.innerHTML = '';
-        let totalRev = 0, totalProfit = 0;
-        records.forEach(r => {
-            let profit = r.sold - r.cost;
-            totalRev += r.sold; totalProfit += profit;
-            tbody.innerHTML += `<tr><td>${r.code}</td><td>${r.name}</td><td>${r.cost}</td><td>${r.sold}</td><td style="color:var(--green)">${profit}</td></tr>`;
-        });
-        document.getElementById('stat-rev').innerText = totalRev + " ريال";
-        document.getElementById('stat-profit').innerText = totalProfit + " ريال";
-    }
-
-    function fetchManage() {
-        onValue(ref(db, 'products'), (snapshot) => {
-            const data = snapshot.val();
-            const tbody = document.querySelector('#manage-table tbody');
-            tbody.innerHTML = '';
-            for(let id in data) {
-                tbody.innerHTML += `<tr><td>${data[id].name}</td><td>${data[id].price}</td><td><button onclick="delProduct('${id}')" style="background:red; color:white; border:none; padding:5px; border-radius:5px; cursor:pointer;">حذف</button></td></tr>`;
+        document.getElementById(tabId).classList.add('active');
+        
+        // تحسين اختيار الزر النشط
+        const buttons = document.querySelectorAll('.tab-btn');
+        buttons.forEach(btn => {
+            if (btn.getAttribute('onclick').includes(`'${tabId}'`)) {
+                btn.classList.add('active');
             }
         });
+
+        if(tabId === 'sales') renderSales();
+        if(tabId === 'manage') renderManageProducts();
     }
 
-    window.delProduct = (id) => { if(confirm('حذف نهائي؟')) remove(ref(db, `products/${id}`)); };
+    function saveProduct() {
+        const p = {
+            id: 'PROD-' + Date.now(),
+            category: document.getElementById('p-category').value,
+            name: document.getElementById('p-name').value,
+            img: document.getElementById('p-img').value,
+            desc: document.getElementById('p-desc').value,
+            extraImgs: document.getElementById('p-extra-imgs').value,
+            price: document.getElementById('p-price').value,
+            vars: document.getElementById('p-vars').value
+        };
+        if(!p.name || !p.price) return alert('أكمل البيانات الأساسية');
+        
+        let prods = JSON.parse(localStorage.getItem('omni_store_products') || '[]');
+        prods.push(p);
+        localStorage.setItem('omni_store_products', JSON.stringify(prods));
+        
+        syncToStore();
+        alert('تم النشر بنجاح وتحديث أوامر المتجر');
+        document.getElementById('p-name').value = '';
+    }
+
+    function saveSale() {
+        const sale = {
+            id: document.getElementById('o-id').value,
+            name: document.getElementById('o-product-name').value,
+            cost: parseFloat(document.getElementById('o-cost').value || 0),
+            sold: parseFloat(document.getElementById('o-sold').value || 0),
+            data: document.getElementById('o-data').value,
+            day: parseInt(document.getElementById('o-day').value),
+            month: parseInt(document.getElementById('o-month').value),
+            year: parseInt(document.getElementById('o-year').value),
+            date: `${document.getElementById('o-year').value}/${document.getElementById('o-month').value}/${document.getElementById('o-day').value}`
+        };
+        if(!sale.id || !sale.name) return alert('الرمز والاسم مطلوبان');
+        let finance = JSON.parse(localStorage.getItem('omni_finance_records') || '[]');
+        finance.push(sale);
+        localStorage.setItem('omni_finance_records', JSON.stringify(finance));
+        alert('تم الحفظ وتحديث السجلات المالية');
+    }
+
+    function renderSales() {
+        let sales = JSON.parse(localStorage.getItem('omni_finance_records') || '[]');
+        const tbody = document.querySelector('#sales-table tbody');
+        tbody.innerHTML = '';
+        let rev = 0, costs = 0, net = 0, currentMonthProfit = 0;
+        
+        const now = new Date();
+        const curM = now.getMonth() + 1;
+        const curY = now.getFullYear();
+
+        sales.forEach((s, i) => {
+            const profit = s.sold - s.cost;
+            rev += s.sold; costs += s.cost; net += profit;
+            
+            // حساب أرباح الشهر الحالي
+            if(s.month == curM && s.year == curY) {
+                currentMonthProfit += profit;
+            }
+
+            tbody.innerHTML += `<tr><td>${s.id}</td><td>${s.date}</td><td>${s.name}</td><td>${s.cost}</td><td>${s.sold}</td><td class="${profit >= 0 ? 'profit' : 'loss'}">${profit.toFixed(2)}</td><td><button onclick="deleteSale(${i})" style="color:red; background:none; border:none; cursor:pointer">✕</button></td></tr>`;
+        });
+        document.getElementById('total-revenue').innerText = rev.toFixed(2) + " ريال";
+        document.getElementById('total-costs').innerText = costs.toFixed(2) + " ريال";
+        document.getElementById('net-profit').innerText = net.toFixed(2) + " ريال";
+        document.getElementById('month-profit').innerText = currentMonthProfit.toFixed(2) + " ريال";
+    }
+
+    function renderManageProducts() {
+        let prods = JSON.parse(localStorage.getItem('omni_store_products') || '[]');
+        const tbody = document.querySelector('#manage-table tbody');
+        tbody.innerHTML = '';
+        prods.forEach((p, i) => {
+            tbody.innerHTML += `<tr><td>${p.name}</td><td>${p.category}</td><td>${p.price} ريال</td><td><div class="action-btns"><button class="btn-edit" onclick="editProduct(${i})">تعديل</button><button class="btn-del" onclick="deleteProduct(${i})">حذف</button></div></td></tr>`;
+        });
+    }
+
+    function deleteProduct(i) {
+        if(!confirm('حذف نهائي؟')) return;
+        let prods = JSON.parse(localStorage.getItem('omni_store_products'));
+        prods.splice(i, 1);
+        localStorage.setItem('omni_store_products', JSON.stringify(prods));
+        syncToStore();
+        renderManageProducts();
+    }
+
+    function editProduct(i) {
+        let prods = JSON.parse(localStorage.getItem('omni_store_products'));
+        let p = prods[i];
+        document.getElementById('edit-index').value = i;
+        document.getElementById('edit-name').value = p.name;
+        document.getElementById('edit-price').value = p.price;
+        document.getElementById('edit-category').value = p.category;
+        document.getElementById('edit-form-container').style.display = 'block';
+    }
+
+    function updateProduct() {
+        let i = document.getElementById('edit-index').value;
+        let prods = JSON.parse(localStorage.getItem('omni_store_products'));
+        prods[i].name = document.getElementById('edit-name').value;
+        prods[i].price = document.getElementById('edit-price').value;
+        prods[i].category = document.getElementById('edit-category').value;
+        localStorage.setItem('omni_store_products', JSON.stringify(prods));
+        syncToStore();
+        hideEditForm();
+        renderManageProducts();
+        alert('تم تحديث المتجر بالأوامر الجديدة');
+    }
+
+    function hideEditForm() { document.getElementById('edit-form-container').style.display = 'none'; }
+
+    function doSearch() {
+        const val = document.getElementById('search-input').value;
+        const res = document.getElementById('search-res');
+        if(!val) { res.innerHTML = ''; return; }
+        let sales = JSON.parse(localStorage.getItem('omni_finance_records') || '[]');
+        const found = sales.find(s => s.id === val);
+        if(found) {
+            res.innerHTML = `<div class="result-item"><b style="color:var(--gold)">📦 المنتج:</b> ${found.name}<br><b>💵 السعر:</b> ${found.sold} ريال<br><b>📅 التاريخ:</b> ${found.date}<br><hr style="border-top:1px solid #333; margin:5px 0;"><b>📝 ملاحظات:</b><br>${found.data}</div>`;
+        } else { res.innerHTML = '<p style="color:#666; margin-top:10px;">لا يوجد سجل</p>'; }
+    }
+
+    function deleteSale(i) {
+        if(!confirm('حذف العملية؟')) return;
+        let sales = JSON.parse(localStorage.getItem('omni_finance_records'));
+        sales.splice(i, 1);
+        localStorage.setItem('omni_finance_records', JSON.stringify(sales));
+        renderSales();
+    }
+
+    // --- ميزات النسخ الاحتياطي الجديدة ---
+    function exportData() {
+        const data = {
+            products: localStorage.getItem('omni_store_products'),
+            finance: localStorage.getItem('omni_finance_records')
+        };
+        const blob = new Blob([JSON.stringify(data)], {type: 'application/json'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `Omni_Backup_${new Date().toLocaleDateString()}.json`;
+        a.click();
+    }
+
+    function importData(event) {
+        const file = event.target.files[0];
+        if(!file) return;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const data = JSON.parse(e.target.result);
+                if(data.products) localStorage.setItem('omni_store_products', data.products);
+                if(data.finance) localStorage.setItem('omni_finance_records', data.finance);
+                alert('تم استيراد البيانات بنجاح! سيتم إعادة تحميل الصفحة.');
+                location.reload();
+            } catch(err) {
+                alert('ملف غير صالح');
+            }
+        };
+        reader.readAsText(file);
+    }
 </script>
 </body>
 </html>
